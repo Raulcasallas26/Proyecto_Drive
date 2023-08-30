@@ -1,2 +1,2 @@
-const urlBackend="http://localhost:3500"
+const urlBackend="https://repositorio-sena.onrender.com"
 export{urlBackend}
