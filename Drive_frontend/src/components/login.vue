@@ -2,7 +2,7 @@
     <q-layout view="lHh lpR lFf">
         <div class="row">
             <div class="col-5" id="imagen">
-                <img src="https://fulbright.edu.co/wp-content/uploads/2021/09/BARE-5.jpeg" alt="Cargando imagen" id="img">
+                <img :src="currentImage" alt="Cargando imagen..." id="img">
             </div>
             <div class="col-7">
                 <q-card id="card" flat bordered class="my-card">
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 let leftDrawerOpen = ref(false)
 let rightDrawerOpen = ref(false)
@@ -87,7 +87,34 @@ function Ingresar() {
     }
 }
 
+const images = [
+  'https://fulbright.edu.co/wp-content/uploads/2021/09/BARE-5.jpeg',
+  'https://agenciapublicadeempleo.sena.edu.co/imgLayout/Boletines%20de%20prensa/Instructor%20SENA-min%20(1).jpg',
+   'https://www.portafolio.co/files/article_multimedia/uploads/2019/03/13/5c89a35b58374.jpeg',
+  'https://www.culturarecreacionydeporte.gov.co/sites/default/files/styles/1300/public/noticias/imagen/2023-04/sena-scrd_001.jpg?itok=KUwK_eI7',
+  // Agrega más URLs de imágenes aquí
+];
+const currentImageIndex = ref(0);
+const currentImage = ref(null);
 
+const changeImage = () => {
+  currentImageIndex.value = (currentImageIndex.value + 1) % images.length;
+  currentImage.value = images[currentImageIndex.value];
+};
+
+let timer;
+
+onMounted(() => {
+  // Retrasamos el inicio del reloj (timer) para dar tiempo a que las imágenes se carguen
+  setTimeout(() => {
+    changeImage(); // Cambia la imagen inicial
+    timer = setInterval(changeImage, 10000); // Cambia de imagen cada 10 segundos
+  }, 2000); // Retraso de 2 segundos para permitir la carga de la primera imagen
+
+  return () => {
+    clearInterval(timer); // Limpiamos el timer cuando el componente se desmonta
+  };
+});
 
 </script>
 <style scoped>

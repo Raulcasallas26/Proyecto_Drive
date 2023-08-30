@@ -1,0 +1,19 @@
+//deleteCliente: async (req, res) => {
+//     const { cedula } = req.params;
+
+//     try {
+//       // Eliminar el cliente de la base de datos
+//       const clienteEliminado = await ClienteModel.findOneAndDelete({ cedula });
+
+//       if (clienteEliminado) {
+//         res.json({
+//           mensaje: "Cliente eliminado exitosamente.",
+//           cliente: clienteEliminado,
+//         });
+//       } else {
+//         res.json({ mensaje: "No se encontró el cliente" });
+//       }
+//     } catch (error) {
+//       res.status(500).json({ mensaje: "Error al eliminar el cliente", error });
+//     }
+//   },
