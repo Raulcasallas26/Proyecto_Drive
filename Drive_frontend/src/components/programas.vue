@@ -77,7 +77,7 @@
 
 <script setup>
 import { ref,  onMounted,  } from "vue";; // Asegúrate de proporcionar la ruta correcta
-import { useVehiculoStore } from "../stores/vehiculos.js"; // Importa tu store de vehículos
+// import { useVehiculoStore } from "../stores/vehiculos.js"; // Importa tu store de vehículos
 
 const storeVehiculos = useVehiculoStore();
 

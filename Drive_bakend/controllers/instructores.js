@@ -1,5 +1,4 @@
 import InstrutoresModel from "../models/instructores.js"
-import bcryptjs from "bcryptjs"
 
 
 const httpInstructores = { 
@@ -8,19 +7,19 @@ const httpInstructores = {
             const instructores = await InstrutoresModel.find({});
             res.json({ instructores });
         } catch ( error ) {
-            res.status(500).json({ mensaje: "Error al obtener las formaciones", error })
+            res.status(500).json({ mensaje: "Error al obtener los Instructores", error })
         }
     },
 
-    getInstructoresId: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const instructor = await InstrutoresModel.findOne({ id });
-            res.json({ instructor })
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al obtener la formacion", error })
-        }
-    },
+    // getInstructoresId: async (req, res) => {
+    //     const { id } = req.params;
+    //     try {
+    //         const instructor = await InstrutoresModel.findOne({ id });
+    //         res.json({ instructor })
+    //     } catch (error) {
+    //         res.status(500).json({ mensaje: "Error al obtener la formacion", error })
+    //     }
+    // },
 
     postInstructores: async ( req, res ) => {
         const { id, nombres, apellidos, numeroIdentificacion, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento} = req.body;

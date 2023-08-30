@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia'
 import axios from "axios"
-import { urlBackend } from '../routes/direccion'
+import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
-export const useUsuarioStore = defineStore(
-    "usuarios", () => {
+export const useInstructoresStore = defineStore(
+    "instructor", () => {
         let cargar = ref(false)
-        const addUsuario = async (info) => {
+        const addInstructores = async (info) => {
             try {
                 cargar.value = true
-                let res = await axios.post(`${urlBackend}/usuario`, info)
+                let res = await axios.post(`${urlBackend}/instructores`, info)
                 return res
             } catch (error) {
                 cargar.value = true
@@ -19,10 +19,10 @@ export const useUsuarioStore = defineStore(
             }
         }
 
-        const getUsers = async () => {
+        const getInstructores = async () => {
             try {
                 cargar.value = true
-                let res = await axios.get(`${urlBackend}/usuario`)
+                let res = await axios.get(`${urlBackend}/instructores`)
                 return res
             } catch (error) {
                 cargar.value = true
@@ -32,18 +32,18 @@ export const useUsuarioStore = defineStore(
                 cargar.value = false
             }
         }
-        const editUsers = async (id, info) => {
+        const editInstructores = async (id, info) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuario/${id}`, info)
+                let res = await axios.put(`${urlBackend}/instructores/${id}`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
                 return error
             }
         }
-        const activarUser = async (id) => {
+        const activarInstructor = async (id) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuario/estado/${id}`)
+                let res = await axios.put(`${urlBackend}/instructores/estado/${id}`)
                 return res.data
             } catch (error) {
                 console.log("hay un error en activarUser");
@@ -51,7 +51,7 @@ export const useUsuarioStore = defineStore(
             }
         }
         return {
-            addUsuario, getUsers, editUsers, activarUser, cargar
+            addInstructores, getInstructores, editInstructores, activarInstructor, cargar
         }
     }
 )
