@@ -2,7 +2,7 @@ import InstrutoresModel from "../models/instructores.js"
 import bcryptjs from "bcryptjs"
 
 
-const httpInstructores = {
+const httpInstructores = { 
     getInstructores: async (req, res) => {
         try {
             const instructores = await InstrutoresModel.find({});
