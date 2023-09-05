@@ -1,4 +1,4 @@
-import httpFormacion from "../controllers/P-F.js";
+import httpFormacion from "../controllers/ProgramasFormacion.js";
 import { Router } from "express";
 import {check} from "express-validator"
 import {validarResultados} from "../Middlewares/validaciones.js"

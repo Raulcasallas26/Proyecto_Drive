@@ -1,5 +1,5 @@
 import InstrutoresModel from "../models/instructores.js"
-
+import bcrypt from "bcrypt"
 
 const httpInstructores = { 
     getInstructores: async (req, res) => {
@@ -22,29 +22,34 @@ const httpInstructores = {
     // },
 
     postInstructores: async ( req, res ) => {
-        const { id, nombres, apellidos, numeroIdentificacion, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento} = req.body;
-        const instructor = new InstrutoresModel({
-            id,
-            nombres,
-            apellidos,
-            numeroIdentificacion,
-            telefono,
-            email,
-            password,
-            perfilProfesional,
-            curriculum,
-            estado,
-            idRolUsuario,
-            idRedConocimiento
-        });
-
+        const { id, nombres, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento} = req.body;
+        
         try {
+            const hashedPassword = await bcrypt.hash(password, 10); 
+
+            const instructor = new InstrutoresModel({
+                id,
+                nombres,
+                apellidos,
+                cedula,
+                telefono,
+                email,
+                password:hashedPassword,
+                perfilProfesional,
+                curriculum,
+                estado,
+                idRolUsuario,
+                idRedConocimiento
+            });
+    
             const nuevoInstructor = await instructor.save();
 
             res.json({
                 mensaje: "Un instructor insertado!!",
                 nuevoInstructor
             });
+
+
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar al instructor", error });
         } 

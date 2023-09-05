@@ -1,4 +1,4 @@
-import Prog_formacionModel from "../models/P-F.js"
+import Prog_formacionModel from "../models/ProgramasFormacion.js "
 import bcryptjs from "bcryptjs"
 
 

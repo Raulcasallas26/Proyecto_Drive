@@ -3,17 +3,19 @@ import { Router } from "express";
 import { check } from "express-validator";
 import { validarResultados } from "../Middlewares/validaciones.js";
 
-const router = Router ()
+const router = Router()
 
 router.get("/", httpRoles.getRoles)
 
-router.get("/:id", httpRoles.getRolesId)
+router.get("/:id", httpRoles.getRolId)
 
 router.post("/", [
-    check("denominacion", "La denominacion es un campo requerido").notEmpty().trim().isString(),
-    validarResultados
-  ], httpRoles.postRol)
+  check("denominacion", "La denominacion es un campo requerido").notEmpty().trim().isString(),
+  validarResultados
+], httpRoles.postRol)
 
-  router.put("/:id", httpRoles.putRol)
+router.put("/:id", httpRoles.putRol)
 
-  router.delete("/:id", httpRoles.deleteRol)
+router.delete("/:id", httpRoles.deleteRol)
+
+export default router

@@ -1,12 +1,18 @@
 import express from "express"
 import mongoose from "mongoose"
 
-import formacion from "../routes/P-F.js"
-import login from "../routes/login.js"
-import instructores from "../routes/instructores.js"
+import formacion from "../routes/ProgramasFormacion.js";
+import login from "../routes/login.js";
+import instructores from "../routes/instructores.js";
+import ambiente from "../routes/ambientes_formacion.js";
+import ciudades from "../routes/Ciudades.js";
+import guias from "../routes/GuiasAprendiz.js";
+import instrumentos from "../routes/InstrumentrosEvaluacion.js";
+import material from "../routes/MaterialesApoyo.js";
+import roles from "../routes/Roles_Usuario.js";
 
 import cors from "cors"
-class Server { 
+class Server {  
     constructor() {
         this.app = express()
         this.middlewares()
@@ -16,7 +22,7 @@ class Server {
 
     routes() { 
         this.app.use('/formacion', formacion)
-        this.app.use('/login', login)
+        this.app.use('/login', login) 
         this.app.use('/instructores', instructores)
     }
 
@@ -34,11 +40,7 @@ class Server {
             console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
         })
     }
-    routes(){
-        this.app.use('/login', login)
-        this.app.use('/formacion', formacion)
-        this.app.use('/instructores', instructores)
-    }
+    
 }
 
 export default Server

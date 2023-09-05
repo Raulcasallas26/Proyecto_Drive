@@ -31,26 +31,32 @@
             </q-table>
         </div>
         <q-dialog v-model="alert">
-            <q-card>
+            <q-card id="card">
                 <q-card-section>
                     <div class="text-h6">Registro</div>
                 </q-card-section>
-                <q-card-section class="q-pt-none">
+                <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card">
-                        <q-card-section class="q-pa-md" style="width: 500px">
-                            <div class="q-pa-md" style="max-width: 500px">
+                        <q-card-section class="q-pa-md" >
+                            <div class="q-pa-md" >
                                 <div class="q-gutter-md">
                                     <q-select v-model="rol" :options="options_rol" label="Rol" />
                                 </div>
                             </div>
-                            <div class="q-gutter-md" style="max-width: 500px">
+                            <div class="q-gutter-md"  >
                                 <q-input v-model="nombre" label="Nombre" />
                             </div>
-                            <div class="q-gutter-md" style="max-width: 500px">
-                                <q-input v-model="email" label="E-mail" />
+                            <div class="q-gutter-md" >
+                                <q-input type="email" v-model="email" label="E-mail" />
                             </div>
-                            <div class="q-gutter-md" style="max-width: 500px">
+                            <div class="q-gutter-md" >
                                 <q-input v-model="telefono" label="Telefono" />
+                            </div>
+                            <div class="q-gutter-md" >
+                                <q-input v-model="cedula" label="Cedula" />
+                            </div>
+                            <div class="q-gutter-md" >
+                                <q-input v-model="password" label="Contraseña" />
                             </div>
                         </q-card-section>
                         <q-card-section>
@@ -86,6 +92,8 @@ let nombre = ref("")
 let estado = ref("")
 let email = ref("")
 let telefono = ref("")
+let cedula = ref("")
+let password = ref("")
 const options_rol = ref([
     'Administrador', 'Gestor de Red', 'Instructor o Invitado'
 ])
@@ -108,7 +116,9 @@ async function guardar() {
         rol: rol.value,
         nombres: nombre.value,
         email: email.value,
-        telefono: telefono.value
+        telefono: telefono.value,
+        cedula: cedula.value,
+        password: password.value
     })
     console.log(r);
     loading.value = false
@@ -121,6 +131,8 @@ function limpiarFormulario() {
     nombre.value = ""
     email.value = ""
     telefono.value = ""
+    cedula.value = ""
+    password.value = ""
 }
 
 listarInstructor()
@@ -138,4 +150,9 @@ onMounted(() => {
 })
 
 </script>
-<style scoped></style>
+<style scoped>
+#card{
+    width: 35em;
+    max-width: 100%;
+}
+</style>

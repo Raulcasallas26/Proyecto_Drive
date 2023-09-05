@@ -44,6 +44,14 @@
             <q-item-section> Programas </q-item-section>
           </q-item>
 
+          <q-item clickable v-ripple to="/ambientes">
+            <q-item-section avatar>
+              <q-icon name="class" />
+            </q-item-section>
+
+            <q-item-section> ambientes </q-item-section>
+          </q-item>
+
           <q-separator />
 
           <q-item clickable v-ripple to="/">

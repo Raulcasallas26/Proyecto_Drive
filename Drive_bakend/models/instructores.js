@@ -4,7 +4,7 @@ const instructoresSchema = new mongoose.Schema({
     id: {type: String},
     nombres:{type:String},
     apellidos:{type:String},
-    numeroIdentificacion:{type:String},
+    cedula:{type:String},
     telefono:{type:String},
     email:{type:String},
     password:{type:String},
@@ -12,7 +12,7 @@ const instructoresSchema = new mongoose.Schema({
     curriculum:{type:String},
     estado:{type: Boolean},
     idRolUsuario:{type:String},
-    idRedConocimiento:{type:String},
+    idRedConocimiento:{type:String}
 }) 
 
 export default mongoose.model("instructores", instructoresSchema)
