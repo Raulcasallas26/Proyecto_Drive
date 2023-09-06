@@ -10,6 +10,8 @@ import guias from "../routes/GuiasAprendiz.js";
 import instrumentos from "../routes/InstrumentrosEvaluacion.js";
 import material from "../routes/MaterialesApoyo.js";
 import roles from "../routes/Roles_Usuario.js";  
+import centros from "../routes/Centros_Formacion.js" 
+import redes from "../routes/Redes_Conocimiento.js"
 
 import cors from "cors"
 class Server {   
@@ -29,7 +31,9 @@ class Server {
         this.app.use('/guias', guias);
         this.app.use('/instrumento', instrumentos)
         this.app.use('/material', material);
-        this.app.use('/roles', roles)
+        this.app.use('/roles', roles);
+        this.app.use('/centros',centros);
+        this.app.use('/redes',redes)
     }
 
     conectarDB() {
