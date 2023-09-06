@@ -70,7 +70,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-// import { useProgramasStore } from "../stores/progrmasforma.js";
+import { useProgramasStore } from "../stores/programasforma.js";
 
 const storeprogramas = useProgramasStore();
 let proga = ref([]);
