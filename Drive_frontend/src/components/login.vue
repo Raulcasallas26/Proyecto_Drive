@@ -1,163 +1,13 @@
-<!-- <template>
-    <div>
-        <div class="container">
-            <div v-if="errores.length > 0" style="background-color: red; text-align: center;">
-                <div v-for="i in errores" :key="i">
-                    <span>{{ i.msg }}</span>
-                </div>
-            </div>
-            <div class="avatar">
-                <img src="avatar.png" alt="Avatar" />
-            </div>
-            <h3>Login</h3>
-            <form id="admin-login-form">
-                <p>
-                    <i class="input-icon fas fa-user"></i> Usuario
-                    <input type="text" class="input-with-icon" v-model="cedula" />
-                </p>
-                <p>
-                    <i class="input-icon fas fa-lock"></i> Contraseña
-                    <input type="password" class="input-with-icon" v-model="password" />
-                </p>
-                <p>
-                    <button class="log" @click="iniciarSesion()">Ingresar</button>
-                </p>
-            </form>
-        </div>
-    </div>
-</template>
-
-<script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import axios from "axios";
-import { useLoginStore } from "../stores/login.js"
-
-let useLogin = useLoginStore()
-console.log(useLogin);
-let router = useRouter();
-let ruta = ref("")
-let cedula = ref("");
-let password = ref("");
-let errores = ref([])
-
-function iniciarSesion() {
-    console.log("entro a iniciar sesion");
-    useLogin.validar(cedula.value, password.value).then((res) => {
-        let tok = res.data.tockent;
-        sessionStorage.setItem("token", tok);
-        console.log(response.data);
-
-        if (res.data.status == 200) {
-            console.log("sesion exitosa");
-            router.push("/home");
-        } else if (res.data.status == 500) {
-
-            alerta_v.value = "Error al iniciar sesion"
-            setTimeout(() => {
-                alerta_v.value = ""
-            }, 3000);
-        }
-    })
-
-}
-</script>
-<style scoped>
-.container {
-    width: 380px;
-    height: auto;
-    margin: 20px auto;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f7f7f7;
-    text-align: center;
-}
-
-.avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 2px solid black;
-    overflow: hidden;
-    margin: 0 auto 20px;
-}
-
-.avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-h2 {
-    text-align: center;
-}
-
-input {
-    width: 100%;
-    height: 35px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.log {
-    width: 100%;
-    padding: 10px;
-    background-color: #2b7ce6;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-</style>
-
-
-
- -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <template>
     <q-layout view="lHh lpR lFf">
         <div class="row">
             <div class="col-5" id="imagen">
-                <q-loading :showing="isLoading"></q-loading>
                 <img :src="currentImage" alt="Cargando imagen..." id="img">
             </div>
-
             <div class="col-7">
                 <q-card id="card" flat bordered class="my-card">
                     <q-card-section>
-                        <h5 style="display: flex; justify-content: center;">Iniciar sesion</h5>
+                        <h5 id="h1" style="display: flex; justify-content: center;">Iniciar sesion</h5>
                     </q-card-section>
                     <q-card-section class="q-pa-md">
                         <div role="alert"
@@ -184,15 +34,116 @@ input {
 
                     </q-card-section>
                     <div style="display: flex;  justify-content: center;">
-                        <q-btn v-if="bd === true" style="background-color: green;display: flex; justify-content: center;"
-                            @click="validar()">Iniciar</q-btn>
+                        <q-btn style="background-color: green;display: flex; justify-content: center;"
+                            @click="pruebaLogin()">Iniciar</q-btn>
                     </div>
                     <q-card-section>
-
+                        <div class="cursor-pointer" style="color: blue;" @click="olvideContra()">
+                            {{ label }}
+                            <!-- <q-popup-edit v-model="label" auto-save v-slot="scope">
+                                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+                            </q-popup-edit> -->
+                        </div>
                     </q-card-section>
                 </q-card>
             </div>
         </div>
+        <q-dialog v-model="ingresaCorreo">
+            <q-card id="card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#008000" fill-opacity="0.5"
+                        d="M0,288L12.6,250.7C25.3,213,51,139,76,112C101.1,85,126,107,152,117.3C176.8,128,202,128,227,149.3C252.6,171,278,213,303,224C328.4,235,354,213,379,181.3C404.2,149,429,107,455,96C480,85,505,107,531,106.7C555.8,107,581,85,606,85.3C631.6,85,657,107,682,122.7C707.4,139,733,149,758,176C783.2,203,808,245,834,272C858.9,299,884,309,909,304C934.7,299,960,277,985,261.3C1010.5,245,1036,235,1061,208C1086.3,181,1112,139,1137,138.7C1162.1,139,1187,181,1213,202.7C1237.9,224,1263,224,1288,229.3C1313.7,235,1339,245,1364,229.3C1389.5,213,1415,171,1427,149.3L1440,128L1440,0L1427.4,0C1414.7,0,1389,0,1364,0C1338.9,0,1314,0,1288,0C1263.2,0,1238,0,1213,0C1187.4,0,1162,0,1137,0C1111.6,0,1086,0,1061,0C1035.8,0,1011,0,985,0C960,0,935,0,909,0C884.2,0,859,0,834,0C808.4,0,783,0,758,0C732.6,0,707,0,682,0C656.8,0,632,0,606,0C581.1,0,556,0,531,0C505.3,0,480,0,455,0C429.5,0,404,0,379,0C353.7,0,328,0,303,0C277.9,0,253,0,227,0C202.1,0,177,0,152,0C126.3,0,101,0,76,0C50.5,0,25,0,13,0L0,0Z">
+                    </path>
+                </svg>
+                <q-card-section>
+                    <div class="text-h4">Restablecer contraseña</div>
+                </q-card-section>
+                <q-card-section class="q-pt-none" id="">
+                    <p>Ingrese su direccion de correo electronico para restablecer su contraseña.</p>
+                    <q-card flat bordered class="my-card">
+                        <q-card-section class="q-pa-md">
+                            <div class="q-gutter-md">
+                                <q-input v-model="nombre" label="E-mail" />
+                            </div>
+                        </q-card-section>
+                        <q-card-section>
+                            <div role="alert"
+                                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                                v-if="check !== ''">
+                                <div>
+                                    {{ check }}
+                                </div>
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Cerrar" color="primary" v-close-popup />
+                    <q-btn flat label="Siguiente" @click="comprovar()" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+        <q-dialog v-model="compruevaCorreo">
+            <q-card id="card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#008000" fill-opacity="0.5"
+                        d="M0,288L12.6,250.7C25.3,213,51,139,76,112C101.1,85,126,107,152,117.3C176.8,128,202,128,227,149.3C252.6,171,278,213,303,224C328.4,235,354,213,379,181.3C404.2,149,429,107,455,96C480,85,505,107,531,106.7C555.8,107,581,85,606,85.3C631.6,85,657,107,682,122.7C707.4,139,733,149,758,176C783.2,203,808,245,834,272C858.9,299,884,309,909,304C934.7,299,960,277,985,261.3C1010.5,245,1036,235,1061,208C1086.3,181,1112,139,1137,138.7C1162.1,139,1187,181,1213,202.7C1237.9,224,1263,224,1288,229.3C1313.7,235,1339,245,1364,229.3C1389.5,213,1415,171,1427,149.3L1440,128L1440,0L1427.4,0C1414.7,0,1389,0,1364,0C1338.9,0,1314,0,1288,0C1263.2,0,1238,0,1213,0C1187.4,0,1162,0,1137,0C1111.6,0,1086,0,1061,0C1035.8,0,1011,0,985,0C960,0,935,0,909,0C884.2,0,859,0,834,0C808.4,0,783,0,758,0C732.6,0,707,0,682,0C656.8,0,632,0,606,0C581.1,0,556,0,531,0C505.3,0,480,0,455,0C429.5,0,404,0,379,0C353.7,0,328,0,303,0C277.9,0,253,0,227,0C202.1,0,177,0,152,0C126.3,0,101,0,76,0C50.5,0,25,0,13,0L0,0Z">
+                    </path>
+                </svg>
+                <q-card-section>
+                    <div class="text-h4">Restablecer contraseña</div>
+                </q-card-section>
+                <q-card-section class="q-pt-none">
+                    <q-card flat bordered class="my-card">
+                        <q-card-section class="q-pa-md">
+                            <p>Revice su correo '{{ correo }}', recibirá un correo electronico con instrucciones para
+                                restablecer su contraseña. Si no llega, asegurese de revisar su carpeta Span</p>
+                        </q-card-section>
+                        <q-card-section>
+
+                        </q-card-section>
+                    </q-card>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Iniciar sesion" to="/" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+        <q-dialog v-model="passwordNueva">
+            <q-card id="card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#008000" fill-opacity="0.5"
+                        d="M0,288L12.6,250.7C25.3,213,51,139,76,112C101.1,85,126,107,152,117.3C176.8,128,202,128,227,149.3C252.6,171,278,213,303,224C328.4,235,354,213,379,181.3C404.2,149,429,107,455,96C480,85,505,107,531,106.7C555.8,107,581,85,606,85.3C631.6,85,657,107,682,122.7C707.4,139,733,149,758,176C783.2,203,808,245,834,272C858.9,299,884,309,909,304C934.7,299,960,277,985,261.3C1010.5,245,1036,235,1061,208C1086.3,181,1112,139,1137,138.7C1162.1,139,1187,181,1213,202.7C1237.9,224,1263,224,1288,229.3C1313.7,235,1339,245,1364,229.3C1389.5,213,1415,171,1427,149.3L1440,128L1440,0L1427.4,0C1414.7,0,1389,0,1364,0C1338.9,0,1314,0,1288,0C1263.2,0,1238,0,1213,0C1187.4,0,1162,0,1137,0C1111.6,0,1086,0,1061,0C1035.8,0,1011,0,985,0C960,0,935,0,909,0C884.2,0,859,0,834,0C808.4,0,783,0,758,0C732.6,0,707,0,682,0C656.8,0,632,0,606,0C581.1,0,556,0,531,0C505.3,0,480,0,455,0C429.5,0,404,0,379,0C353.7,0,328,0,303,0C277.9,0,253,0,227,0C202.1,0,177,0,152,0C126.3,0,101,0,76,0C50.5,0,25,0,13,0L0,0Z">
+                    </path>
+                </svg>
+                <q-card-section>
+                    <div class="text-h4">Restablecer contraseña</div>
+                </q-card-section>
+                <q-card-section class="q-pt-none">
+                    <p>Ingrese su nueva contraseña para restablecer el acceso a su cuenta.</p>
+                    <q-card flat bordered class="my-card">
+                        <q-card-section class="q-pa-md">
+                            <div class="q-gutter-md">
+                                <q-input v-model="password" label="Contraseña" />
+                            </div>
+                            <div class="q-gutter-md">
+                                <q-input v-model="password" label="Confirme contraseña" />
+                            </div>
+                        </q-card-section>
+                        <q-card-section>
+
+                        </q-card-section>
+                    </q-card>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Cancelar" color="primary" v-close-popup />
+                    <q-btn flat label="Cambiar contraseña" @click="guardar()" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-layout>
 </template>
 
@@ -202,31 +153,63 @@ import { useLoginStore } from '../stores/login.js';
 import { useRouter } from "vue-router";
 const useLogin = useLoginStore();
 let router = useRouter();
-let isPwd = ref(true)
-let rol = ref("")
-let cedula = ref("")
-let password = ref("")
-let check = ref("")
-let bd = ref(true)
+let ingresaCorreo = ref(false);
+let compruevaCorreo = ref(false);
+let passwordNueva = ref(false);
+let label = ref('Olvidaste la contraseña')
+let isPwd = ref(true);
+let rol = ref("");
+let correo = ref("raul26@gmail.com")
+let text = ref('')
+let prueba = ref("")
+let cedula = ref("");
+let password = ref("");
+let check = ref("");
 const options_rol = ref([
     'Administrador', 'Gestor de Red', 'Instructor o Invitado'
 ])
+function olvideContra() {
+    ingresaCorreo.value = true;
+}
 
-async function validar() {
-    let r = await useLogin.validar(cedula.value, password.value).then((res) =>{
+function comprovar() {
+    compruevaCorreo.value = true
+}
+
+/* async function validar() {
+    console.log("hola estoy en validar");
+    let r = await useLogin.validar(cedula, password).then((res) => {
         console.log(r);
-        if (res.data.status == 200) {
+        if (res.status == 200) {
             console.log("sesion exitosa");
             router.push("/home");
-        } else if (res.data.status == 500) {
-
+        } else if (res.status == 500) {
             check.value = "Error al iniciar sesion"
-            setTimeout(() => {
-                check.value = ""
-            }, 3000);
         }
     })
+} */
+
+async function pruebaLogin() {
+    try {
+    prueba = await useLogin.prueba(cedula.value, password.value)
+    } catch (error) {
+        console.log("Hay un error en la funcion pruebaLogin");
+    }
+    console.log(prueba);
+    ingresar()
 }
+
+function ingresar() {
+    console.log("hola estoy en ingresar");
+    const resp = prueba.status
+    if (resp == 200) {
+            console.log("sesion exitosa");
+            router.push("/home");
+        } else if (resp !== 200) {
+            check.value = "Error al iniciar sesion"
+        }
+}
+
 // function Ingresar() {
 //     console.log("hola");
 //     if (rol.value === "") {
@@ -240,7 +223,6 @@ async function validar() {
 //     } else if (password.value !== "123") {
 //         check.value = "La informacion de los campos es incorrecta"
 //     } else {
-//         bd.value = false
 //         check.value = ""
 //         Swal.fire({
 //             position: "center",
@@ -304,13 +286,6 @@ onMounted(() => {
     border-radius: 10px;
 }
 
-/* #card:hover{
-    border: 10px solid rgba(30, 118, 34, 0.668);
-    border-radius: 1px;
-    border-top-right-radius: 10% 30%;
-} */
-
-
 #img {
     max-width: 100%;
     max-height: 100%;
@@ -323,4 +298,13 @@ onMounted(() => {
     object-position: center;
 
 }
-</style> 
+
+.h1 {
+    color: white;
+    /* A light text makes a nice bright flame source */
+    background: black;
+    /* A dark background gives some contrast */
+    letter-spacing: 3em;
+    /* Big text shows off the effect best */
+    font-weight: bold;
+}</style> 

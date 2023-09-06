@@ -21,9 +21,15 @@ class Server {
     }
 
     routes() { 
-        this.app.use('/formacion', formacion)
-        this.app.use('/login', login) 
-        this.app.use('/instructores', instructores)
+        this.app.use('/formacion', formacion);
+        this.app.use('/login', login) ;
+        this.app.use('/instructores', instructores);
+        this.app.use('/ambiente', ambiente); 
+        this.app.use('/ciudad', ciudades);
+        this.app.use('/guias', guias);
+        this.app.use('/instrumento', instrumentos)
+        this.app.use('/material', material);
+        this.app.use('/roles', roles)
     }
 
     conectarDB() {

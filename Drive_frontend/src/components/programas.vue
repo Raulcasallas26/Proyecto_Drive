@@ -1,262 +1,209 @@
 <template>
   <div class="card-container">
-    <div class="card">
-      <button @click="mostrarFormulario()" class="btng " data-bs-toggle="modal" data-bs-target="#agregarModal" id="agregar">Agregar nuevo</button>
-      <div class="table-container">
-       <table id="tabla2" class="rounded-table">
-        <thead>
-          <tr id="tabla">
-            <th>Ficha</th>
-            <th>nombre programas</th>
-            <th>Acciones</th> 
-          </tr> 
-        </thead> 
-        <tbody>
-          <tr v-for="vehiculo in vehiculos" :key="vehiculo.id">
-            <td>{{ vehiculo.matricula }}</td>
-            <td>{{ vehiculo.propietario }}</td>
-        
-          
-         
-            <td>
-              <button @click="estadovehiculo"  id="btn3">
-                 {{ vehiculo.estado==true?'❌':'✅' }}
-              </button>
-              
-              <button @click="editarVehiculo(vehiculo)" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn1">
-                📝
-              </button>
-              
-            </td>
-          </tr>
-        </tbody>
-       </table>
-      </div>
-      <button class="btng">
-        <router-link to="/home" class="custom-link">volver</router-link>
-      </button>
+    <div>
+      <q-table class="tabla" flat bordered title="Treats" :rows="proga" :columns="columns" row-key="id" :filter="filter"
+        :loading="loading">
+        <template v-slot:top>
+          <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="showModal = true" />
+          <q-space />
+          <q-input borderless dense debounce="300" color="primary" v-model="filter">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </template>
+
+        <template v-slot:body-cell-estado="props">
+          <q-td :props="props">
+            <span class="text-green" v-if="props.row.estado == true">Activo</span>
+            <span class="text-red" v-else>Inactivo</span>
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-opciones="props">
+          <q-td :props="props">
+            <q-btn class="q-mx-sm" color="primary">📝</q-btn>
+            <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false">✅</q-btn>
+            <q-btn class="q-mx-sm" color="red" outline v-else>❌</q-btn>
+          </q-td>
+        </template>
+      </q-table>
+    </div>
+
+    <!-- Modal para agregar programas -->
+    <div>
+      <q-dialog v-model="showModal">
+        <q-card class="custom-modal">
+          <q-card-section>
+            <div class="text">Agregar Programa de Formacion</div>
+            <q-input v-model="denominacion" label="Denominación" />
+            <q-input v-model="codigo" label="Código" />
+            <q-input v-model="version" label="Versión" />
+            <q-input v-model="IdNivelFormacion" label="Nivel de formcaion" />
+            <div>
+              <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona una opción" />
+            </div>
+            <div>
+              <q-select v-model="redDeConocimientoSeleccionada" :options="opcionesRedDeConocimiento"
+                label="Red de Conocimiento" />
+            </div>
+            <!-- inicio -->
+            <q-card-section>
+              <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular" outlined
+                dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
+                <template v-slot:append>
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
+                </template>
+              </q-input>
+            </q-card-section>
+            <!-- fin -->
+          </q-card-section>
+          <q-card-section>
+            <q-btn @click="showModal = false" label="Cancelar" />
+            <q-btn @click="agregarformacion()" color="primary" label="Agregar" />
+          </q-card-section>
+        </q-card>
+      </q-dialog>
     </div>
   </div>
-<!-- <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar vehiculo</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h4>Placa o Matricula</h4>
-    <input type="text" v-model="matricula" placeholder="Placa o Matricula...">
-    <h4>Propietario</h4>
-    <input type="text" v-model="propietario" placeholder="Propietario...">
-    <h4>Soat </h4>
-    <input type="text" v-model="soat" placeholder="Número de certificado...">
-    <h4>Revisión Técnico-Mecánica</h4>
-    <input type="text" v-model="tecnomecanica" placeholder="código alfanumérico único...">
-    <h4>Capacidad</h4>
-    <input type="text" v-model="capasidad" placeholder="Capacidad...">
-    <h4>num vehiculo</h4>
-    <input type="text" v-model="num_vehiculo" placeholder="num vehiculo...">
-    <h4>Conductor</h4>
-    <select v-model="conduc">
-      <option value="" disabled selected>Seleccione...</option>
-      <option :value="c._id" v-for="(c,i) in conductores" :key="i">{{ c.nombre }}</option>
-    </select>
-  
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
-        <button type="button" class="btn btn-primary" @click="enviarDatos"  >agregar</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
 </template>
 
 <script setup>
-import { ref,  onMounted,  } from "vue";; // Asegúrate de proporcionar la ruta correcta
-// import { useVehiculoStore } from "../stores/vehiculos.js"; // Importa tu store de vehículos
+import { ref, onMounted } from "vue";
+// import { useProgramasStore } from "../stores/progrmasforma.js";
 
-const storeVehiculos = useVehiculoStore();
+const storeprogramas = useProgramasStore();
+let proga = ref([]);
 
-const matricula = ref('');
-const propietario = ref('');
-const soat = ref('');
-const tecnomecanica = ref('');
-const capasidad = ref('');
-const num_vehiculo = ref('');
-const conductores = ref([]);
-const conductor = ref([]);
-const conduc = ref('');
-const vehiculos = ref([]);
+const showModal = ref(false);
+const denominacion = ref("");
+const codigo = ref("");
+const version = ref("");
+const estado = ref(false);
 
+let columns = [
+  { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
+  {
+    name: "denominacion",
+    label: "Denominacion",
+    align: "center",
+    field: "denominacion",
+  },
+  { name: "version", label: "Version", align: "center", field: "version" },
+  { name: "estado", label: "Estado", align: "center", field: "estado" },
+  { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
+];
 
+const loading = ref(false);
+const filter = ref("");
 
-const data = {
-    matricula: matricula.value,
-    propietario: propietario.value,
-    soat: soat.value,
-    tecnomecanica: tecnomecanica.value,
-    capacidad: capasidad.value,
-    num_vehiculo: num_vehiculo.value,
-    conductor: conduc.value
-  };
+async function obtenerformacion() {
+  let programas = await storeprogramas.getPrograma();
+  console.log(programas);
+  proga.value = programas.data.formaciones;
+  console.log(programas.data);
+}
+/* async function obtenerformacion() {
+  try {
+    let formaciones = await storeprogramas.getPrograma();
+    console.log("Datos de formaciones:", formaciones);
+    proga.value = formaciones.data; // Asegúrate de que estás asignando los datos correctamente
+  } catch (error) {
+    console.error("Error al cargar datos:", error);
+  }
+} */
 
+async function agregarformacion() {
+  loading.value = true;
+  let r = await storeprogramas.agregarPrograma({
+    denominacion: denominacion.value,
+    codigo: codigo.value,
+    version: version.value
 
-const obtenerVehiculos = async () => {
-  let r = await storeVehiculos.getVehiculos();
+  });
+  console.log(r);
+  loading.value = false;
+  obtenerformacion();
+  limpiarFormulario();
+  showModal.value = false;
+}
+function limpiarFormulario() {
+  nombre.value = "";
+  version.version = "";
+  telefono.value = "";
+}
+const niveldeformacion = ref(null);
+const opciones = [
+  "auxiliar",
+  "operario",
+  "técnico",
+  "profundización técnica",
+  "tecnólogo",
+  "especialización tecnológica",
+];
 
-  vehiculos.value = r.data.vehiculos;
-  console.log(r.data);
+//pedir diseño curricular 
+const archivoOEnlace = ref(""); // Variable para almacenar el nombre del archivo seleccionado
+
+// Función para abrir el selector de archivos
+const abrirSelectorDeArchivos = () => {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.style.display = 'none';
+  fileInput.addEventListener('change', handleFileSelection);
+  document.body.appendChild(fileInput);
+  fileInput.click();
 };
 
+// Función para manejar la selección de archivos
+const handleFileSelection = (event) => {
+  const selectedFile = event.target.files[0];
+  if (selectedFile) {
+    archivoOEnlace.value = selectedFile.name;
+    // Aquí puedes manejar el archivo seleccionado según tus necesidades
+    alert(`Archivo seleccionado: ${selectedFile.name}`);
+  }
+  event.target.remove(); // Elimina el input de tipo file después de su uso
+};
+
+// Función para limpiar el campo
+const limpiarCampo = () => {
+  archivoOEnlace.value = "";
+};
+
+//fin
 onMounted(async () => {
-  await obtenerVehiculos();
+  await obtenerformacion();
+  //obtenerOpcionesDesdeBaseDeDatos();
 });
-
-
 </script>
 
-
-
-
-
-
 <style scoped>
-  .table-container {
-      margin: 2%;
-      
-      width: 97%;
-    }
-.rounded-table { /* Ajusta el margen superior según tus necesidades */
-      border-collapse: separate;
-      border-spacing: 0;
-      border-color: black;
-      width: 100%; 
+.tabla {
+  margin: 1%;
+  border-color: rgba(0, 0, 0, 0.367);
 }
 
-.rounded-table th, .rounded-table td {
-  border: 1px solid #ccc;
+.q-table__body td {
+  font-weight: bold;
 
-  font-size: 20px;
-}
-.rounded-table th {
-  background-color: #b3ffb4; /* Color de fondo para el encabezado */
-}
-.custom-link {
-  text-decoration: none; /* Eliminar subrayado */
-  color: black;
-}
-/* Estilos para los bordes redondeados y color de borde */
-.rounded-table th, .rounded-table td {
-  border: 1.5px solid #b5ffab; /* Establecer un borde para las celdas */
-  border-radius: 10px; /* Bordes redondeados */
+  /* Agrega otros estilos según tus necesidades */
 }
 
-#agregarModal{
-  margin-top: 50px;
-}
-#exampleModal{ 
-  margin-top: 100px;
+.text {
+  font-size: 200%;
 }
 
-
-
-#btn1{
-  background-color: white;
-  
-  width: 60px;
-  height: 40px;
-  color: white;
-  font-size: 20px;
-  margin-top: 20px;
-  font-family: cursive;
-  text-align: center;
-  border-radius: 10px;
-}
-.btng{
- 
-  
-  width: 150px;
-  height: 40px;
-  color: rgb(0, 0, 0);
-  font-size: 20px;
-  margin-top: 20px;
-  font-family: cursive;
-  text-align: center;
-  border-radius: 10px;
-}
-.btng:hover{
-  transform: scale(1.1);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.626);
-}
-#btn1:hover{
-  transform: scale(1.1);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.626);
-}
-#btn2{
-
-  
-  width: 60px;
-  height: 40px;
-  color: white;
-  font-size: 20px;
-  margin-top: 20px;
-  font-family: cursive;
-  text-align: center;
-  border-radius: 10px;
-}
-#btn2:hover{
-  transform: scale(1.1);
-    
-}
-#btn3{
- 
- background-color: white;
-  width: 60px;
-  height: 40px;
-  color: white;
-  font-size: 20px;
-  margin-top: 20px;
-  font-family: cursive;
-  text-align: center;
-  border-radius: 10px;
-}
-#btn3:hover{
-  transform: scale(1.1);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.626);
+.custom-modal {
+  margin-top: -50%;
+  height: 90%;
+  width: 50%;
+  margin: 10%;
+  top: -20%;
 }
 
-
-
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-} 
-  .card {
-    width: 1800px;
-    height: 800px;
-    align-items: center;
-    border-color: rgb(255, 255, 255);
-    text-align: center;
-    font-family: cursive;
-    
-  }
-
-  #text{
-  font-size: 50px;
-  }
-
-#tabla2{
-  background-color: rgba(241, 241, 241, 0.027);
-  border-color: black;
-  border-radius: 20px;
-  width: 100%;
+.input {
+  width: 107%;
+  margin-left: -4%;
 }
-
-
 </style>

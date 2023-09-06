@@ -3,8 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const inicioSesion={
     loginUser:async(req, res) => {
-        const { cedula, password } = req.body; 
-
+        const { cedula, password } = req.body; z
         try{
             const usuario = await Instructores.findOne({cedula})
             if (!usuario) {
