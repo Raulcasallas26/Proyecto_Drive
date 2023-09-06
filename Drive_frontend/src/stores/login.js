@@ -2,28 +2,15 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
-export const useLoginStore = defineStore("login", () => {
-
-/*         const validar = async (cedula, password) => {
-            try {
-                const info = {
-                    cedula,
-                    password
-                }
-                let res = await axios.post(`${urlBackend}/login/U/U`, info)
-                return res
-            } catch (error) {
-                console.log("hay un error en la post de login"); 
-                return error
-            } finally {
-            }
-        } */
-
+export const useLoginStore = defineStore(
+    "login", () => {
+        let loading = ref(false)
         const prueba = async ( cedula , password) =>{
 
             try{
+                loading.value = (true)
                 const info = {
-                    cedula,
+                    cedula, 
                     password
                 }
                 
@@ -31,10 +18,12 @@ export const useLoginStore = defineStore("login", () => {
                 
                 return res
             }catch (error){
+                loading.value = (true)
                 console.log("error en la peticion inicio sesion");
                 console.log(error);
 
             }
+            loading.value = (false)
         }
 
         return {

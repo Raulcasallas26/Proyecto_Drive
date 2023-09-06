@@ -17,11 +17,6 @@
                                 {{ check }}
                             </div>
                         </div>
-                        <div class="q-pa-md">
-                            <div class="q-gutter-md">
-                                <q-select :options="options_rol" v-model="rol" label="Rol" />
-                            </div>
-                        </div>
                         <div class="q-gutter-md">
                             <q-input label="Cedula" v-model="cedula" />
                         </div>
@@ -34,8 +29,10 @@
 
                     </q-card-section>
                     <div style="display: flex;  justify-content: center;">
-                        <q-btn style="background-color: green;display: flex; justify-content: center;"
-                            @click="pruebaLogin()">Iniciar</q-btn>
+                        <q-spinner v-if="loading == true" color="black" size="3em" :thickness="10" />
+                        <q-btn v-else style="background-color: green;display: flex; justify-content: center;"
+                            @click="pruebaLogin()">
+                            Iniciar</q-btn>
                     </div>
                     <q-card-section>
                         <div class="cursor-pointer" style="color: blue;" @click="olvideContra()">
@@ -158,6 +155,7 @@ let compruevaCorreo = ref(false);
 let passwordNueva = ref(false);
 let label = ref('Olvidaste la contraseña')
 let isPwd = ref(true);
+let loading = ref(false)
 let rol = ref("");
 let correo = ref("raul26@gmail.com")
 let text = ref('')
@@ -165,9 +163,7 @@ let prueba = ref("")
 let cedula = ref("");
 let password = ref("");
 let check = ref("");
-const options_rol = ref([
-    'Administrador', 'Gestor de Red', 'Instructor o Invitado'
-])
+
 function olvideContra() {
     ingresaCorreo.value = true;
 }
@@ -191,23 +187,26 @@ function comprovar() {
 
 async function pruebaLogin() {
     try {
-    prueba = await useLogin.prueba(cedula.value, password.value)
+        loading.value = true
+        prueba = await useLogin.prueba(cedula.value, password.value)
+        console.log(prueba);
+        const resp = prueba.status
+        if (resp == 200) {
+            console.log("sesion exitosa");
+            router.push("/home");
+        } else {
+            check.value = "Error al iniciar sesion"
+        }
     } catch (error) {
+        loading.value = true
         console.log("Hay un error en la funcion pruebaLogin");
     }
-    console.log(prueba);
-    ingresar()
+    loading.value = false
 }
 
 function ingresar() {
-    console.log("hola estoy en ingresar");
-    const resp = prueba.status
-    if (resp == 200) {
-            console.log("sesion exitosa");
-            router.push("/home");
-        } else if (resp !== 200) {
-            check.value = "Error al iniciar sesion"
-        }
+
+
 }
 
 // function Ingresar() {
@@ -307,4 +306,5 @@ onMounted(() => {
     letter-spacing: 3em;
     /* Big text shows off the effect best */
     font-weight: bold;
-}</style> 
+}
+</style> 
