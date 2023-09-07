@@ -23,10 +23,8 @@ const httpUsuarios = {
 
     postUsuarios: async ( req, res ) => {
         const { id, nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento} = req.body;
-        
         try {
             const hashedPassword = await bcrypt.hash(password, 10); 
-
             const usuario = new UsuariosModel({
                 id,
                 nombre,
@@ -41,15 +39,11 @@ const httpUsuarios = {
                 idRolUsuario,
                 idRedConocimiento
             });
-    
             const nuevoUsuario = await usuario.save();
-
             res.json({
                 mensaje: "Un usuario insertado!!",
                 nuevoUsuario
             });
-
-
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar al instructor", error });
         } 
@@ -57,26 +51,12 @@ const httpUsuarios = {
 
     putUsuarios: async ( req, res ) => {
         const { id } = req.params;
-        const { usuario, cedula} = req.body;
-
-        try {
-            const usuarioActualizado = await InstrutoresModel.findOneAndUpdate(
-                { id },
-                { $set: { usuario, cedula } },
-                { new: true }
-            );
-
-            if ( usuarioActualizado ) {
-                res.json({
-                    mensaje: "Registro modificado exitosamente",
-                    usuario: usuarioActualizado
-                });
-            } else {
-                res.json({ mensaje: "No se encontro el usuario con la cedula ingresada" })
-            }
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al actualizar la formacion", error })
-        }
+        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento } = req.body;
+        const Usuario = await UsuariosModel.findByIdAndUpdate(id, { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento }, { new: true })
+        res.json({
+            msg: "ok",
+            Usuario
+        })
     },
 
     putUsuariosEstado: async ( req, res ) => {

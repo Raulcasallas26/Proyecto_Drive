@@ -1,13 +1,13 @@
-import httpAmbiente_Formacion from "../controllers/ambientes_formacion.js";
+import httpAmbientesFormacion from "../controllers/AmbientesFormacion.js";
 import { Router } from "express";
 import {check} from "express-validator"
 import {validarResultados} from "../Middlewares/validaciones.js"
 
 const router = Router()
 
-  router.get("/", httpAmbiente_Formacion.getAmbiente_Formacion)
+  router.get("/", httpAmbientesFormacion.getAmbientesFormacion)
    
-  router.get("/:id", httpAmbiente_Formacion.getAmbiente_FormacionId)
+  router.get("/:id", httpAmbientesFormacion.getAmbientesFormacionId)
   
   router.post("/", [
     check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
@@ -17,8 +17,8 @@ const router = Router()
     check("documentos","los documentos son obligatorios").notEmpty().trim().isString(),
     check("idCentroDeFormacion","el centro de formacion es obligatorio").notEmpty().trim().isString(),
     validarResultados    
-  ], httpAmbiente_Formacion.postAmbiente_Formacion)
+  ], httpAmbientesFormacion.postAmbientesFormacion)
   
-  router.put("/:id",httpAmbiente_Formacion.putAmbiente_Formacion)
+  router.put("/:id",httpAmbientesFormacion.putAmbientesFormacion)
   
   export default router

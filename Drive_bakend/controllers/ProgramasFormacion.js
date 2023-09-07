@@ -1,30 +1,30 @@
-import Prog_formacionModel from "../models/ProgramasFormacion.js "
+import ProgramasFormacionModel from "../models/ProgramasFormacion.js "
 import bcryptjs from "bcryptjs"
 
 
-const httpFormacion = {
-    getFormaciones: async (req, res) => {
+const httpProgramasFormacion = {
+    getProgramasFormacion: async (req, res) => {
         try {
-            const formaciones = await Prog_formacionModel.find({});
-            res.json({ formaciones });
+            const ProgramasFormacion = await ProgramasFormacionModel.find({});
+            res.json({ ProgramasFormacion });
         } catch ( error ) {
             res.status(500).json({ mensaje: "Error al obtener las formaciones", error })
         }
     },
 
-    getFormacionId: async (req, res) => {
+    getProgramasFormacionId: async (req, res) => {
         const { id } = req.params;
         try {
-            const formacion = await Prog_formacionModel.findOne({ id });
-            res.json({ formacion })
+            const ProgramasFormacion = await ProgramasFormacionModel.findOne({ id });
+            res.json({ ProgramasFormacion })
         } catch (error) {
             res.status(500).json({ mensaje: "Error al obtener la formacion", error })
         }
     },
 
-    postFormacion: async ( req, res ) => {
+    postProgramasFormacion: async ( req, res ) => {
         const { id, denominacion, codigo, version, estado } = req.body;
-        const formacion = new Prog_formacionModel({
+        const ProgramasFormacion = new ProgramasFormacionModel({
             id,
             denominacion,
             codigo,
@@ -33,32 +33,32 @@ const httpFormacion = {
         });
 
         try {
-            const nuevaFormacion = await formacion.save();
+            const nuevaProgramasFormacion = await ProgramasFormacion.save();
 
             res.json({
                 mensaje: "Una formacion insertada!!",
-                formacion: nuevaFormacion
+                nuevaProgramasFormacion
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar la formacion", error });
         }
     },
 
-    putFormacion: async ( req, res ) => {
+    putProgramasFormacion: async ( req, res ) => {
         const { id } = req.params;
         const { denominacion, codigo } = req.body;
 
         try {
-            const formacionActualizada = await Prog_formacionModel.findOneAndUpdate(
+            const ProgramasFormacionActualizada = await ProgramasFormacionModel.findOneAndUpdate(
                 { id },
                 { $set: { denominacion, codigo } },
                 { new: true }
             );
 
-            if ( formacionActualizada ) {
+            if ( ProgramasFormacionActualizada ) {
                 res.json({
                     mensaje: "Registro modificado exitosamente",
-                    formacion: formacionActualizada
+                    ProgramasFormacion: ProgramasFormacionActualizada
                 });
             } else {
                 res.json({ mensaje: "No se encontro la formacion con el id proporcionado" })
@@ -68,26 +68,26 @@ const httpFormacion = {
         }
     },
 
-    putFormacionEstado: async ( req, res ) => {
+    putProgramasFormacionEstado: async ( req, res ) => {
         const { id } = req.params;
 
         try {
             
-            const formacion = await Prog_formacionModel.findOne({id});
+            const ProgramasFormacion = await ProgramasFormacionModel.findOne({id});
 
-            if ( !formacion ) {
+            if ( !ProgramasFormacion ) {
                 return res.status(400).json({ mensaje: "Formacion no encontrada" });
             }
 
-            formacion.estado = !formacion.estado
+            ProgramasFormacion.estado = !ProgramasFormacion.estado
 
-            await formacion.save();
+            await ProgramasFormacion.save();
 
-            const estadoMensaje = formacion.estado ? "Activo" : "Inactivo";
+            const estadoMensaje = ProgramasFormacion.estado ? "Activo" : "Inactivo";
 
             res.json({
                 mensaje: `Estado de la formacion modificada a  ${ estadoMensaje }`,
-                formacion: formacion
+                ProgramasFormacion
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error l cambiar el estado de la formacion", error })
@@ -95,4 +95,4 @@ const httpFormacion = {
     }
 }
 
-export default httpFormacion
+export default httpProgramasFormacion

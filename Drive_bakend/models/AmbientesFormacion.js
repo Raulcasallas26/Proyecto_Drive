@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Ambiente_FormacionSchema = new mongoose.Schema({
+const AmbientesFormacionSchema = new mongoose.Schema({
     id: {type: String},
     codigo:{type:String},
     nombre:{type:String},
@@ -10,4 +10,4 @@ const Ambiente_FormacionSchema = new mongoose.Schema({
     idCentroDeFormacion:{type:String},
 }) 
 
-export default mongoose.model("Ambiente_Formacion", Ambiente_FormacionSchema)
+export default mongoose.model("AmbientesFormacion", AmbientesFormacionSchema)

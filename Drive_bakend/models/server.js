@@ -1,17 +1,17 @@
 import express from "express"
 import mongoose from "mongoose"
 
-import formacion from "../routes/ProgramasFormacion.js";
+import ProgramasFormacion from "../routes/ProgramasFormacion.js";
 import login from "../routes/login.js";
 import usuarios from "../routes/Usuarios.js";
-import ambiente from "../routes/ambientes_formacion.js";
+import AmbientesFormacion from "../routes/AmbientesFormacion.js";
 import ciudades from "../routes/Ciudades.js";
-import guias from "../routes/GuiasAprendiz.js";
-import instrumentos from "../routes/InstrumentrosEvaluacion.js";
-import material from "../routes/MaterialesApoyo.js";
-import roles from "../routes/Roles_Usuario.js";  
-import centros from "../routes/Centros_Formacion.js" 
-import redes from "../routes/Redes_Conocimiento.js"
+import GuiasAprendiz from "../routes/GuiasAprendiz.js";
+import InstrumentrosEvaluacion from "../routes/InstrumentrosEvaluacion.js";
+import MaterialesApoyo from "../routes/MaterialesApoyo.js";
+import RolesUsuarios from "../routes/RolesUsuarios.js";  
+import CentrosFormacion from "../routes/CentrosFormacion.js" 
+import RedesConocimiento from "../routes/RedesConocimiento.js"
 
 import cors from "cors"
 class Server {   
@@ -23,17 +23,17 @@ class Server {
     }
 
     routes() { 
-        this.app.use('/formacion', formacion);
+        this.app.use('/ProgramasFormacion', ProgramasFormacion);
         this.app.use('/login', login) ;
         this.app.use('/usuarios',usuarios );
-        this.app.use('/ambiente', ambiente); 
+        this.app.use('/AmbientesFormacion', AmbientesFormacion); 
         this.app.use('/ciudad', ciudades);
-        this.app.use('/guias', guias);
-        this.app.use('/instrumento', instrumentos)
-        this.app.use('/material', material);
-        this.app.use('/roles', roles);
-        this.app.use('/centros',centros);
-        this.app.use('/redes',redes)
+        this.app.use('/GuiasAprendiz', GuiasAprendiz);
+        this.app.use('/InstrumentosEvaluacion', InstrumentrosEvaluacion)
+        this.app.use('/MaterialesApoyo', MaterialesApoyo);
+        this.app.use('/RolesUsuarios', RolesUsuarios);
+        this.app.use('/CentrosFormmacion',CentrosFormacion);
+        this.app.use('/RedesConocimiento',RedesConocimiento)
     }
 
     conectarDB() {

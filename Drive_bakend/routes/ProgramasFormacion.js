@@ -1,22 +1,22 @@
-import httpFormacion from "../controllers/ProgramasFormacion.js";
+import httpProgramasFormacion from "../controllers/ProgramasFormacion.js";
 import { Router } from "express";
 import {check} from "express-validator"
 import {validarResultados} from "../Middlewares/validaciones.js"
 
 const router = Router()
 
-  router.get("/", httpFormacion.getFormaciones)
+  router.get("/", httpProgramasFormacion.getProgramasFormacion)
   
-  router.get("/:id", httpFormacion.getFormacionId)
+  router.get("/:id", httpProgramasFormacion.getProgramasFormacionId)
   
   router.post("/", [
     check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
     check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
     validarResultados
-  ], httpFormacion.postFormacion)
+  ], httpProgramasFormacion.getProgramasFormacion)
   
-  router.put("/:cedula", httpFormacion.putFormacion)
+  router.put("/:cedula", httpProgramasFormacion.putProgramasFormacion)
   
-  router.put("/estado/:cedula",httpFormacion.putFormacionEstado)
+  router.put("/estado/:cedula",httpProgramasFormacion.putProgramasFormacionEstado)
   
   export default router

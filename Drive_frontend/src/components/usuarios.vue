@@ -24,7 +24,8 @@
                 </template>
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
-                        <q-btn class="q-mx-sm" color="primary">📝</q-btn>
+                        <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
+                        <q-btn v-else class="q-mx-sm" color="primary" @click="edito(props)" >📝</q-btn>
                         <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false">✅</q-btn>
                         <q-btn class="q-mx-sm" color="red" outline v-else>❌</q-btn>
                     </q-td>
@@ -40,11 +41,6 @@
                 <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
-                            <div class="q-pa-md">
-                                <div class="q-gutter-md">
-                                    <q-select v-model="rol" :options="options_rol" label="Rol" />
-                                </div>
-                            </div>
                             <div class="q-gutter-md">
                                 <q-input v-model="nombre" label="Nombre" />
                             </div>
@@ -57,7 +53,7 @@
                             <div class="q-gutter-md">
                                 <q-input v-model="cedula" label="Cedula" />
                             </div>
-                            <div class="q-gutter-md">
+                            <div class="q-gutter-md" v-if="bd === false" >
                                 <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
                                     label="Ingresar password">
                                     <template v-slot:append>
@@ -80,8 +76,9 @@
                 </q-card-section>
 
                 <q-card-actions align="right">
-                    <q-btn flat label="Cerrar" color="primary" v-close-popup />
-                    <q-btn flat label="Guardar" @click="guardar()" color="primary" v-close-popup />
+                    <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+                    <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" v-close-popup />
+                    <q-btn flat label="Editar Usuario" v-else @click="editarUser()" color="primary" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -93,19 +90,20 @@ import { ref, onMounted } from 'vue'
 import { useUsuariosStore } from "../stores/usuarios.js"
 const useUsuario = useUsuariosStore();
 let alert = ref(false)
+let bd = ref(false)
 let check = ref("")
 let isPwd = ref(true);
 let user = ref([])
-let rol = ref("")
 let nombre = ref("")
 let estado = ref("")
 let email = ref("")
 let telefono = ref("")
 let cedula = ref("")
 let password = ref("")
-const options_rol = ref([
-    'Administrador', 'Gestor de Red', 'Instructor o Invitado'
-])
+let loading = ref(false)
+let indice = ref(null)
+let r = ref("")
+
 let columns = [
     { name: 'nombre', align: 'center', label: 'Usuario', field: "nombre" },
     { name: 'email', label: 'E-mail', align: 'center', field: "email" },
@@ -113,16 +111,15 @@ let columns = [
     { name: 'estado', label: 'Estado', align: 'center', field: "estado" },
     { name: 'opciones', label: 'Opciones', align: 'center', field: "opciones" },
 ]
-const originalRows = [
-]
-const loading = ref(false)
+const originalRows = []
 const filter = ref('')
 const rowCount = ref(10)
 const rows = ref([...originalRows])
+console.log(indice.value);
 async function guardar() {
     loading.value = true
+    limpiarFormulario()
     let r = await useUsuario.addUsuarios({
-        rol: rol.value,
         nombre: nombre.value,
         email: email.value,
         telefono: telefono.value,
@@ -130,13 +127,42 @@ async function guardar() {
         password: password.value
     })
     console.log(r);
+    console.log("se guardo un nuevo usuario");
     loading.value = false
     listarUsuarios()
     limpiarFormulario()
 }
 
+async function editarUser() {
+    loading.value = true
+    console.log("hola estoy editando");
+    let r = await useUsuario.editUsuarios(indice.value, {
+        nombre: nombre.value,
+        email: email.value,
+        telefono: telefono.value,
+        cedula: cedula.value
+    })
+    console.log(r);
+    bd.value = false
+    loading.value = false
+    console.log("limpiando datos");
+    listarUsuarios()
+    limpiarFormulario()
+}
+
+function edito(props) {
+    bd.value = true
+    r.value = props.row
+    alert.value = true
+    indice.value = r.value._id
+    nombre.value = r.value.nombre
+    email.value = r.value.email
+    telefono.value = r.value.telefono
+    cedula.value = r.value.cedula
+}
+
 function limpiarFormulario() {
-    rol.value = ""
+    console.log("limpiar datos");
     nombre.value = ""
     email.value = ""
     telefono.value = ""
@@ -147,7 +173,6 @@ function limpiarFormulario() {
 listarUsuarios()
 async function listarUsuarios() {
     let usuarios = await useUsuario.getUsuarios()
-    console.log("hola");
     console.log(usuarios);
     user.value = usuarios.data.Usuarios
 }

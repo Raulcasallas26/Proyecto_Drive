@@ -2,7 +2,7 @@
     <q-layout view="lHh lpR lFf">
         <div class="row">
             <div class="col-5" id="imagen">
-                <img :src="currentImage" alt="Cargando imagen..." id="img">
+                <img :src="currentImage" style="width: 1000px;" class="bg" alt="Cargando imagen..." id="img">
             </div>
             <div class="col-7">
                 <q-card id="card" flat bordered class="my-card">
@@ -255,7 +255,7 @@ let timer;
 onMounted(() => {
     setTimeout(() => {
         changeImage();
-        timer = setInterval(changeImage, 10000); 
+        timer = setInterval(changeImage, 10000);
     }, 0);
 
     return () => {
@@ -273,6 +273,7 @@ onMounted(() => {
     border: 1px solid #ccc;
     overflow: hidden;
     background-color: black;
+    position: relative;
 }
 
 #card {
@@ -296,7 +297,6 @@ onMounted(() => {
     border: 0.5px solid #999;
     object-fit: cover;
     object-position: center;
-
 }
 
 .h1 {
@@ -307,5 +307,4 @@ onMounted(() => {
     letter-spacing: 3em;
     /* Big text shows off the effect best */
     font-weight: bold;
-}
-</style> 
+}</style> 

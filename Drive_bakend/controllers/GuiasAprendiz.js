@@ -48,7 +48,7 @@ const httpGuiasAprendiz = {
     putGuiasAprendiz: async (req, res) => {
         const { id } = req.params;
         const { codigo, nombre, fase, documento, idInstrumentosEvaluacion, idMaterialApoyo } = req.body;
-        const GuiasAprendiz = await GuiasAprendiznModel.findByIdAndUpdate(id, { codigo, nombre, fase, documento, idInstrumentosEvaluacion, idMaterialApoyo }, { new: true })
+        const GuiasAprendiz = await GuiasAprendizModel.findByIdAndUpdate(id, { codigo, nombre, fase, documento, idInstrumentosEvaluacion, idMaterialApoyo }, { new: true })
         res.json({
             msg: "ok",
             GuiasAprendiz
