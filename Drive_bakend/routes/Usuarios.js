@@ -1,13 +1,13 @@
-import httpInstructores from "../controllers/instructores.js";
+import httpUsuarios from "../controllers/Usuarios.js";
 import { Router } from "express";
 import {check} from "express-validator"
 import {validarResultados} from "../Middlewares/validaciones.js"
 
 const router = Router()
 
-  router.get("/", httpInstructores.getInstructores)
+  router.get("/", httpUsuarios.getUsuarios)
   
-  // router.get("/:id", httpInstructores.getInstructoresId)
+  // router.get("/:id", httpUsuarios.getUsuariosId)
   
   router.post("/", [
   //   check("nombres", "El nombre es obligatorio").notEmpty().trim().isString(),
@@ -21,10 +21,10 @@ const router = Router()
     // check("idRolUsuario","el rol de usuario es obligatorio").notEmpty().trim().isString(),
     // check("idRedConocimiento","la red de conocimiento es obligatoria").notEmpty().trim().isString(),
     // validarResultados    
-  ], httpInstructores.postInstructores)
+  ], httpUsuarios.postUsuarios)
   
-  router.put("/:cedula", httpInstructores.putInstructores)
+  router.put("/:cedula", httpUsuarios.putUsuarios)
   
-  router.put("/estado/:cedula",httpInstructores.putInstructoresEstado)
+  router.put("/estado/:cedula",httpUsuarios.putUsuariosEstado)
   
   export default router

@@ -1,17 +1,17 @@
-import InstrutoresModel from "../models/instructores.js"
+import UsuariosModel from "../models/Usuarios.js"
 import bcrypt from "bcrypt"
 
-const httpInstructores = { 
-    getInstructores: async (req, res) => {
+const httpUsuarios = { 
+    getUsuarios: async (req, res) => {
         try {
-            const instructores = await InstrutoresModel.find({});
-            res.json({ instructores });
+            const Usuarios = await UsuariosModel.find();
+            res.status(200).json({ Usuarios });
         } catch ( error ) {
-            res.status(500).json({ mensaje: "Error al obtener los Instructores", error })
+            res.status(500).json({ mensaje: "Error al obtener los Usuarios", error })
         }
     },
 
-    // getInstructoresId: async (req, res) => {
+    // getUsuariosId: async (req, res) => {
     //     const { id } = req.params;
     //     try {
     //         const instructor = await InstrutoresModel.findOne({ id });
@@ -21,15 +21,15 @@ const httpInstructores = {
     //     }
     // },
 
-    postInstructores: async ( req, res ) => {
-        const { id, nombres, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento} = req.body;
+    postUsuarios: async ( req, res ) => {
+        const { id, nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento} = req.body;
         
         try {
             const hashedPassword = await bcrypt.hash(password, 10); 
 
-            const instructor = new InstrutoresModel({
+            const usuario = new UsuariosModel({
                 id,
-                nombres,
+                nombre,
                 apellidos,
                 cedula,
                 telefono,
@@ -42,11 +42,11 @@ const httpInstructores = {
                 idRedConocimiento
             });
     
-            const nuevoInstructor = await instructor.save();
+            const nuevoUsuario = await usuario.save();
 
             res.json({
-                mensaje: "Un instructor insertado!!",
-                nuevoInstructor
+                mensaje: "Un usuario insertado!!",
+                nuevoUsuario
             });
 
 
@@ -55,55 +55,55 @@ const httpInstructores = {
         } 
     },
 
-    putInstructores: async ( req, res ) => {
+    putUsuarios: async ( req, res ) => {
         const { id } = req.params;
-        const { instructor, cedula} = req.body;
+        const { usuario, cedula} = req.body;
 
         try {
-            const instructorActualizado = await InstrutoresModel.findOneAndUpdate(
+            const usuarioActualizado = await InstrutoresModel.findOneAndUpdate(
                 { id },
-                { $set: { instructor, cedula } },
+                { $set: { usuario, cedula } },
                 { new: true }
             );
 
-            if ( instructorActualizado ) {
+            if ( usuarioActualizado ) {
                 res.json({
                     mensaje: "Registro modificado exitosamente",
-                    instructor: instructorActualizado
+                    usuario: usuarioActualizado
                 });
             } else {
-                res.json({ mensaje: "No se encontro el instructor con la cedula ingresada" })
+                res.json({ mensaje: "No se encontro el usuario con la cedula ingresada" })
             }
         } catch (error) {
             res.status(500).json({ mensaje: "Error al actualizar la formacion", error })
         }
     },
 
-    putInstructoresEstado: async ( req, res ) => {
+    putUsuariosEstado: async ( req, res ) => {
         const { id } = req.params;
 
         try {
             
-            const instructor = await InstrutoresModel.findOne({id});
+            const usuario = await InstrutoresModel.findOne({id});
 
-            if ( !instructor ) {
+            if ( !usuario ) {
                 return res.status(400).json({ mensaje: "Formacion no encontrada" });
             }
 
-            instructor.estado = !instructor.estado
+            usuario.estado = !usuario.estado
 
-            await instructor.save();
+            await usuario.save();
 
-            const estadoMensaje = instructor.estado ? "Activo" : "Inactivo";
+            const estadoMensaje = usuario.estado ? "Activo" : "Inactivo";
 
             res.json({
                 mensaje: `Estado de la formacion modificada a  ${ estadoMensaje }`,
-                instructor: instructor
+                usuario: usuario
             });
         } catch (error) {
-            res.status(500).json({ mensaje: "Error al cambiar la informacion del instructor", error })
+            res.status(500).json({ mensaje: "Error al cambiar la informacion del usuario", error })
         }
     }
 }
 
-export default httpInstructores
+export default httpUsuarios

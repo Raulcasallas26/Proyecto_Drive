@@ -1,8 +1,10 @@
 <template>
     <div class="q-pa-md">
         <div>
-            <q-table flat bordered title="Treats" :rows="instru" :columns="columns" row-key="id" :filter="filter"
-                :loading="loading" table-header-class="">
+            <q-table flat bordered title="Treats" :rows="user" :columns="columns" row-key="id" :filter="filter"
+                :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
+                :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
+                @virtual-scroll="onScroll">
                 <template v-slot:top>
                     <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="agregar()" />
                     <q-btn v-if="rows.length !== 0" class="q-ml-sm" color="primary" :disable="loading" label="Remove row"
@@ -37,26 +39,32 @@
                 </q-card-section>
                 <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card">
-                        <q-card-section class="q-pa-md" >
-                            <div class="q-pa-md" >
+                        <q-card-section class="q-pa-md">
+                            <div class="q-pa-md">
                                 <div class="q-gutter-md">
                                     <q-select v-model="rol" :options="options_rol" label="Rol" />
                                 </div>
                             </div>
-                            <div class="q-gutter-md"  >
+                            <div class="q-gutter-md">
                                 <q-input v-model="nombre" label="Nombre" />
                             </div>
-                            <div class="q-gutter-md" >
+                            <div class="q-gutter-md">
                                 <q-input type="email" v-model="email" label="E-mail" />
                             </div>
-                            <div class="q-gutter-md" >
+                            <div class="q-gutter-md">
                                 <q-input v-model="telefono" label="Telefono" />
                             </div>
-                            <div class="q-gutter-md" >
+                            <div class="q-gutter-md">
                                 <q-input v-model="cedula" label="Cedula" />
                             </div>
-                            <div class="q-gutter-md" >
-                                <q-input v-model="password" label="Contraseña" />
+                            <div class="q-gutter-md">
+                                <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
+                                    label="Ingresar password">
+                                    <template v-slot:append>
+                                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                                            @click="isPwd = !isPwd" />
+                                    </template>
+                                </q-input>
                             </div>
                         </q-card-section>
                         <q-card-section>
@@ -82,11 +90,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useInstructoresStore } from "../stores/instructores.js"
-const useInstructor = useInstructoresStore();
+import { useUsuariosStore } from "../stores/usuarios.js"
+const useUsuario = useUsuariosStore();
 let alert = ref(false)
 let check = ref("")
-let instru = ref([])
+let isPwd = ref(true);
+let user = ref([])
 let rol = ref("")
 let nombre = ref("")
 let estado = ref("")
@@ -98,7 +107,7 @@ const options_rol = ref([
     'Administrador', 'Gestor de Red', 'Instructor o Invitado'
 ])
 let columns = [
-    { name: 'nombres', align: 'center', label: 'Instructor', field: "nombres" },
+    { name: 'nombre', align: 'center', label: 'Usuario', field: "nombre" },
     { name: 'email', label: 'E-mail', align: 'center', field: "email" },
     { name: 'telefono', label: 'Telefono', align: 'center', field: "telefono" },
     { name: 'estado', label: 'Estado', align: 'center', field: "estado" },
@@ -112,9 +121,9 @@ const rowCount = ref(10)
 const rows = ref([...originalRows])
 async function guardar() {
     loading.value = true
-    let r = await useInstructor.addInstructores({
+    let r = await useUsuario.addUsuarios({
         rol: rol.value,
-        nombres: nombre.value,
+        nombre: nombre.value,
         email: email.value,
         telefono: telefono.value,
         cedula: cedula.value,
@@ -122,7 +131,7 @@ async function guardar() {
     })
     console.log(r);
     loading.value = false
-    listarInstructor()
+    listarUsuarios()
     limpiarFormulario()
 }
 
@@ -135,23 +144,24 @@ function limpiarFormulario() {
     password.value = ""
 }
 
-listarInstructor()
-async function listarInstructor() {
-    let instructor = await useInstructor.getInstructores()
-    console.log(instructor);
-    instru.value = instructor.data.instructores
+listarUsuarios()
+async function listarUsuarios() {
+    let usuarios = await useUsuario.getUsuarios()
+    console.log("hola");
+    console.log(usuarios);
+    user.value = usuarios.data.Usuarios
 }
 
 function agregar() {
     alert.value = true
 }
 onMounted(() => {
-    listarInstructor()
+    listarUsuarios()
 })
 
 </script>
 <style scoped>
-#card{
+#card {
     width: 35em;
     max-width: 100%;
 }

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const instructoresSchema = new mongoose.Schema({
+const UsuariosSchema = new mongoose.Schema({
     id: {type: String},
-    nombres:{type:String},
+    nombre:{type:String},
     apellidos:{type:String},
     cedula:{type:String},
     telefono:{type:String},
@@ -15,4 +15,4 @@ const instructoresSchema = new mongoose.Schema({
     idRedConocimiento:{type:String}
 }) 
 
-export default mongoose.model("instructores", instructoresSchema)
+export default mongoose.model("Usuario", UsuariosSchema)

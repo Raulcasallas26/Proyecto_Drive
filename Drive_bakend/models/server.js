@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 
 import formacion from "../routes/ProgramasFormacion.js";
 import login from "../routes/login.js";
-import instructores from "../routes/instructores.js";
+import usuarios from "../routes/Usuarios.js";
 import ambiente from "../routes/ambientes_formacion.js";
 import ciudades from "../routes/Ciudades.js";
 import guias from "../routes/GuiasAprendiz.js";
@@ -25,7 +25,7 @@ class Server {
     routes() { 
         this.app.use('/formacion', formacion);
         this.app.use('/login', login) ;
-        this.app.use('/instructores', instructores);
+        this.app.use('/usuarios',usuarios );
         this.app.use('/ambiente', ambiente); 
         this.app.use('/ciudad', ciudades);
         this.app.use('/guias', guias);

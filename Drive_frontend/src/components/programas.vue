@@ -2,7 +2,8 @@
   <div class="card-container">
     <div>
       <q-table class="tabla" flat bordered title="Treats" :rows="proga" :columns="columns" row-key="id" :filter="filter"
-        :loading="loading">
+        :loading="loading" virtual-scroll :virtual-scroll-item-size="20" :virtual-scroll-sticky-size-start="20"
+        :pagination="pagination" :rows-per-page-options="[0]" @virtual-scroll="onScroll">
         <template v-slot:top>
           <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="showModal = true" />
           <q-space />
@@ -83,12 +84,7 @@ const estado = ref(false);
 
 let columns = [
   { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-  {
-    name: "denominacion",
-    label: "Denominacion",
-    align: "center",
-    field: "denominacion",
-  },
+  { name: "denominacion", label: "Denominacion", align: "center",field: "denominacion"},
   { name: "version", label: "Version", align: "center", field: "version" },
   { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center", field: "opciones" },

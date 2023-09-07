@@ -20,13 +20,15 @@
                         <div class="q-gutter-md">
                             <q-input label="Cedula" v-model="cedula" />
                         </div>
-                        <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'" label="Ingresar password">
-                            <template v-slot:append>
-                                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                    @click="isPwd = !isPwd" />
-                            </template>
-                        </q-input>
-
+                        <div class="q-gutter-md">
+                            <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
+                                label="Ingresar password">
+                                <template v-slot:append>
+                                    <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                                        @click="isPwd = !isPwd" />
+                                </template>
+                            </q-input>
+                        </div>
                     </q-card-section>
                     <div style="display: flex;  justify-content: center;">
                         <q-spinner v-if="loading == true" color="black" size="3em" :thickness="10" />
@@ -251,14 +253,13 @@ const changeImage = () => {
 let timer;
 
 onMounted(() => {
-    // Retrasamos el inicio del reloj (timer) para dar tiempo a que las imágenes se carguen
     setTimeout(() => {
-        changeImage(); // Cambia la imagen inicial
-        timer = setInterval(changeImage, 10000); // Cambia de imagen cada 10 segundos
-    }, 2000); // Retraso de 2 segundos para permitir la carga de la primera imagen
+        changeImage();
+        timer = setInterval(changeImage, 10000); 
+    }, 0);
 
     return () => {
-        clearInterval(timer); // Limpiamos el timer cuando el componente se desmonta
+        clearInterval(timer);
     };
 });
 

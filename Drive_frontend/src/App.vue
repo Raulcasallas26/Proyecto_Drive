@@ -8,9 +8,12 @@
           <q-toolbar-title>
           </q-toolbar-title>
           <button v-if="!isInLoginComponent" class="btng">
-          <router-link to="/" class="custom-link">
-            <img src="https://cdn-icons-png.flaticon.com/512/152/152534.png" alt="" id="logout">
-          </router-link>
+            <q-item v-ripple to="/">
+            <q-item-section avatar>
+              <q-icon name="login" />
+            </q-item-section>
+            <q-item-section></q-item-section>
+          </q-item>
         </button>
         </q-toolbar>
       </q-header>
@@ -28,12 +31,12 @@
             <q-item-section>Inicio </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/instructores">
+          <q-item clickable v-ripple to="/usuarios">
             <q-item-section avatar>
               <q-icon name="people" />
             </q-item-section>
 
-            <q-item-section> Instructores </q-item-section>
+            <q-item-section> Usuarios</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple to="/programas">
@@ -46,7 +49,7 @@
 
           <q-item clickable v-ripple to="/ambientes">
             <q-item-section avatar>
-              <q-icon name="class" />
+              <q-icon name="dashboard" />
             </q-item-section>
 
             <q-item-section> ambientes </q-item-section>
@@ -172,7 +175,6 @@ const toggleLeftDrawer = () => {
   width: 4%;
   height: 2%;
   filter: invert();
-  
 }
 
 .btng:hover {

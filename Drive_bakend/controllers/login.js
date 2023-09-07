@@ -1,4 +1,4 @@
-import Instructores from "../models/instructores.js";
+import Instructores from "../models/Usuarios.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const inicioSesion={
