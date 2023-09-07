@@ -118,7 +118,6 @@ const rows = ref([...originalRows])
 console.log(indice.value);
 async function guardar() {
     loading.value = true
-    limpiarFormulario()
     let r = await useUsuario.addUsuarios({
         nombre: nombre.value,
         email: email.value,
@@ -182,6 +181,7 @@ function agregar() {
 }
 onMounted(() => {
     listarUsuarios()
+    limpiarFormulario()
 })
 
 </script>

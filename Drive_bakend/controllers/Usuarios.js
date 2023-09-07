@@ -26,7 +26,6 @@ const httpUsuarios = {
         try {
             const hashedPassword = await bcrypt.hash(password, 10); 
             const usuario = new UsuariosModel({
-                id,
                 nombre, 
                 apellidos,
                 cedula,
@@ -39,10 +38,10 @@ const httpUsuarios = {
                 idRolUsuario,
                 idRedConocimiento
             });
-            const nuevoUsuario = await usuario.save();
+            await usuario.save();
             res.json({
                 mensaje: "Un usuario insertado!!",
-                nuevoUsuario
+                usuario
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar al instructor", error });

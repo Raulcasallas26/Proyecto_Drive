@@ -6,6 +6,7 @@ export const useUsuariosStore = defineStore(
         const addUsuarios = async (info) => {
             try {
                 let res = await axios.post(`${urlBackend}/usuarios`, info)
+                console.log(res);
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
