@@ -27,7 +27,7 @@ const httpUsuarios = {
             const hashedPassword = await bcrypt.hash(password, 10); 
             const usuario = new UsuariosModel({
                 id,
-                nombre,
+                nombre, 
                 apellidos,
                 cedula,
                 telefono,
@@ -51,11 +51,11 @@ const httpUsuarios = {
 
     putUsuarios: async ( req, res ) => {
         const { id } = req.params;
-        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento } = req.body;
-        const Usuario = await UsuariosModel.findByIdAndUpdate(id, { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento }, { new: true })
+        const { codigo, nombre, fase, documento, idInstrumentosEvaluacion, idMaterialApoyo } = req.body;
+        const GuiasAprendiz = await GuiasAprendizModel.findByIdAndUpdate(id, { codigo, nombre, fase, documento, idInstrumentosEvaluacion, idMaterialApoyo }, { new: true })
         res.json({
             msg: "ok",
-            Usuario
+            GuiasAprendiz
         })
     },
 

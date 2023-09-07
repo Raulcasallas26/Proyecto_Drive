@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
-import { ref } from "vue"
 export const useUsuariosStore = defineStore(
     "instructor", () => {
         const addUsuarios = async (info) => {

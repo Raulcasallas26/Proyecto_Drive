@@ -1,19 +1,20 @@
 import { defineStore } from "pinia";
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
-export const useProgramasStore = defineStore("programas", ()=>{
-
-    const getPrograma = async ()=>{ 
+export const useProgramasStore = defineStore(
+  "programas", ()=>{
+    const getPrograma = async (req, res)=>{ 
         try {
-            return axios.get(`${urlBackend}/formacion`)
+            let res = await axios.get(`${urlBackend}/ProgramasFormacion`)
+            return res
         } catch (error) {
-            throw new Error("No se pudieron obtener los Programas");
+            res.status(500).json({mjs:"Error al obtener los programas", error})
         } 
     }  
     const agregarPrograma = async (nuevoPrograma) => {
         try {
-          const response = await axios.post(`${urlBackend}/formacion`, nuevoPrograma);
-          return response.data; // Devuelve los datos del nuevo programa agregado si es necesario
+          const response = await axios.post(`${urlBackend}/ProgramasFormacion`, nuevoPrograma);
+          return response; // Devuelve los datos del nuevo programa agregado si es necesario
         } catch (error) {
           throw new Error("No se pudo agregar el programa");
         }

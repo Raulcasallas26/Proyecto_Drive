@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { urlBackend } from '../routes/direccion.js';
-export const useAmbienteStore = defineStore("ambiente", ()=>{
-
-
+export const useAmbienteStore = defineStore(
+  "ambiente", ()=>{
   const getAmbiente = async () => { 
     try {
-      return axios.get(`${urlBackend}/ambiente`)
+      let res = await axios.get(`${urlBackend}/AmbientesFormacion`) 
+      return res
   } catch (error) {
       throw new Error("No se pudieron obtener los ambiente");
   } 
@@ -14,8 +14,8 @@ export const useAmbienteStore = defineStore("ambiente", ()=>{
  
   const agregarAmbiente = async (nuevoAmbiente) => {
     try {
-      const response = await axios.post(`${urlBackend}/ambiente`, nuevoAmbiente);
-      return response.data; // Devuelve los datos del nuevo ambiente agregado si es necesario
+      const response = await axios.post(`${urlBackend}/AmbientesFormacion`, nuevoAmbiente);
+      return response; // Devuelve los datos del nuevo ambiente agregado si es necesario
     } catch (error) {
       throw new Error("No se pudo agregar el ambiente");
     }

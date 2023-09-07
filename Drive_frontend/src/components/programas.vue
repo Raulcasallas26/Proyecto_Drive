@@ -97,7 +97,6 @@ async function obtenerformacion() {
   let programas = await storeprogramas.getPrograma();
   console.log(programas);
   proga.value = programas.data.formaciones;
-  console.log(programas.data);
 }
 /* async function obtenerformacion() {
   try {
