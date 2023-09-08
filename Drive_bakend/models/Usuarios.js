@@ -10,7 +10,7 @@ const UsuariosSchema = new mongoose.Schema({
     password:{type:String},
     perfilProfesional:{type:String},
     curriculum:{type:String},
-    estado:{type: Boolean},
+    estado:{type: Boolean, default: true},
     idRolUsuario:{type:String},
     idRedConocimiento:{type:String}
 }) 
