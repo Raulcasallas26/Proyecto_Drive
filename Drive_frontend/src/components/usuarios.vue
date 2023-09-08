@@ -158,7 +158,7 @@ async function activar(props) {
         r.value.estado = true
         console.log(r.value.estado,"resultado del else condicion");
     }
-    let est = await useUsuario.activarUser(r.value._id)
+    let est = await useUsuario.activarUsuarios(r.value._id)
     console.log(est);
 }
 
