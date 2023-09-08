@@ -26,8 +26,8 @@
                     <q-td :props="props">
                         <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
                         <q-btn v-else class="q-mx-sm" color="primary" @click="edito(props)" >📝</q-btn>
-                        <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false">✅</q-btn>
-                        <q-btn class="q-mx-sm" color="red" outline v-else>❌</q-btn>
+                        <q-btn class="q-mx-sm" color="green" outline @click="activar(props)" v-if="props.row.estado == false">✅</q-btn>
+                        <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
                     </q-td>
                 </template>
 
@@ -147,6 +147,19 @@ async function editarUser() {
     console.log("limpiando datos");
     listarUsuarios()
     limpiarFormulario()
+}
+
+async function activar(props) {
+    r.value = props.row
+    if (r.value.estado === true) {
+        r.value.estado = false
+        console.log(r.value.estado,"resultado del if condicion");
+    } else {
+        r.value.estado = true
+        console.log(r.value.estado,"resultado del else condicion");
+    }
+    let est = await useUsuario.activarUser(r.value._id)
+    console.log(est);
 }
 
 function edito(props) {

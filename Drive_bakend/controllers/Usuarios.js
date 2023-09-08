@@ -58,31 +58,22 @@ const httpUsuarios = {
         })
     },
 
-    putUsuariosEstado: async ( req, res ) => {
-        const { id } = req.params;
-
-        try {
-            
-            const usuario = await InstrutoresModel.findOne({id});
-
-            if ( !usuario ) {
-                return res.status(400).json({ mensaje: "Formacion no encontrada" });
+    putUsuariosEstado: async (req, res) => {
+            const { id } = req.params  
+            const usu = await UsuariosModel.findById(id)
+            let usuario = null
+            if (usu.estado) {
+                usuario = await UsuariosModel.findByIdAndUpdate(id, { estado: false })
+            } else {
+                usuario = await UsuariosModel.findByIdAndUpdate(id, { estado: true })
             }
-
-            usuario.estado = !usuario.estado
-
-            await usuario.save();
-
-            const estadoMensaje = usuario.estado ? "Activo" : "Inactivo";
-
+            const usuarioAutenticado = req.usuario
             res.json({
-                mensaje: `Estado de la formacion modificada a  ${ estadoMensaje }`,
-                usuario: usuario
-            });
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al cambiar la informacion del usuario", error })
-        }
-    }
+                msj: "fue cambiado el estado",
+                usuario,
+                usuarioAutenticado
+            }) 
+        },
 }
 
 export default httpUsuarios
