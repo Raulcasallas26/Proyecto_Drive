@@ -2,11 +2,11 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
-export const useUsuariosStore = defineStore(
-    "Usuarios", () => {
-        const addUsuarios = async (info) => {
+export const useRolesUsuariosStore = defineStore(
+    "RolesUsuarios", () => {
+        const addRolesUsuarios = async (info) => {
             try {
-                let res = await axios.post(`${urlBackend}/usuarios`, info)
+                let res = await axios.post(`${urlBackend}/RolesUsuarios`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
@@ -14,27 +14,27 @@ export const useUsuariosStore = defineStore(
             }
         }
 
-        const getUsuarios = async () => {
+        const getRolesUsuarios = async () => {
             try {
-                let res = await axios.get(`${urlBackend}/usuarios`)
-                return res 
+                let res = await axios.get(`${urlBackend}/RolesUsuarios`)
+                return res
             } catch (error) {
                 console.log("hay un error en el get");
                 return error
             }
         }
-        const editUsuarios = async (id, info) => {
+        const editRolesUsuarios = async (id, info) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuarios/${id}`, info)
+                let res = await axios.put(`${urlBackend}/RolesUsuarios/${id}`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
                 return error
             }
         }
-        const activarUsuarios = async (id) => {
+        const activarRolesUsuarios = async (id) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuarios/estado/${id}`)
+                let res = await axios.put(`${urlBackend}/RolesUsuarios/estado/${id}`)
                 return res.data
             } catch (error) {
                 console.log("hay un error en activarUser");
@@ -42,7 +42,7 @@ export const useUsuariosStore = defineStore(
             }
         }
         return {
-            addUsuarios, getUsuarios, editUsuarios, activarUsuarios, 
+            addRolesUsuarios, getRolesUsuarios, editRolesUsuarios, activarRolesUsuarios, 
         }
     }
 )

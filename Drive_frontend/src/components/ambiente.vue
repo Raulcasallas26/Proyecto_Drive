@@ -11,7 +11,7 @@
       <div v-for="(ambiente, index) in ambientess" :key="index">
         <!-- Tu card aquí, puedes usar el ejemplo anterior como base -->
         <div class="card">
-          
+
           <div class="top-half">
             <div class="info">
               <p><strong>Código:</strong> {{ ambiente.codigo }}</p>
@@ -27,7 +27,7 @@
               <button class="editar">
                 <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Arrow" class="arrow-icon" />
               </button>
-              
+
             </div>
           </div>
 
@@ -61,64 +61,48 @@
             <q-input v-model="Tipo" label="Tipo" />
             <q-input v-model="Descripcion" label="Descripcion" />
             <div>
-              <q-select
-                v-model="IdCentroFormacion"
-                :options="opciones"
-                label="Selecciona una Id de Centro de Formacion"
-              />
+              <q-select v-model="IdCentroFormacion" :options="opciones"
+                label="Selecciona una Id de Centro de Formacion" />
             </div>
             <!-- inicio -->
             <q-card-section>
-      <q-input
-       class="input"
-        v-model="archivoOEnlace"
-        label="Documentos"
-        outlined
-        dense
-        clearable
-        prepend-icon="attach_file"
-        @clear="limpiarCampo"
-      >
-        <template v-slot:append>
-          <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-        </template>
-      </q-input>
-    </q-card-section>
-      <!-- fin -->
+              <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
+                prepend-icon="attach_file" @clear="limpiarCampo">
+                <template v-slot:append>
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
+                </template>
+              </q-input>
+            </q-card-section>
+            <!-- fin -->
           </q-card-section>
           <q-card-section>
             <q-btn @click="showModal = false" label="Cancelar" />
-            <q-btn
-              @click="agregarAmabiente()"
-              color="primary"
-              label="Agregar"
-            />
+            <q-btn @click="agregarAmabiente()" color="primary" label="Agregar" />
           </q-card-section>
         </q-card>
       </q-dialog>
     </div>
   </div>
-  
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useAmbienteStore } from "../stores/ambiente.js";
-const StoreAmbiente = useAmbienteStore();
+import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
+const StoreAmbiente = useAmbientesFormacionStore();
 let ambientess = ref([]);
 let showModal = ref(false);
-let codigo =ref("");
-let Nombre =ref("");
-let Tipo =ref("");
-let Descripcion =ref("");
+let codigo = ref("");
+let Nombre = ref("");
+let Tipo = ref("");
+let Descripcion = ref("");
 const loading = ref(false);
 
 
 
 
 onMounted(async () => {
-  let Formacion = await StoreAmbiente.getAmbiente();
-  ambientess.value = Formacion.data.Ambiente_Formacion;
+  let Formacion = await StoreAmbiente.getAmbientesFormacion();
+  ambientess.value = Formacion.data.AmbientesFormacion;
 });
 
 const cardStates = ref({});
@@ -157,8 +141,8 @@ async function agregarAmabiente() {
     nombre: Nombre.value,
     codigo: codigo.value,
     tipo: Tipo.value,
-    descripcion:Descripcion.value
-    
+    descripcion: Descripcion.value
+
   });
 }
 </script>
@@ -170,33 +154,40 @@ async function agregarAmabiente() {
   align-items: center;
   justify-content: center;
 }
+
 .text {
   font-size: 500%;
   color: green;
   margin-top: 2%;
-  
+
 }
+
 .text2 {
   font-size: 400%;
   color: green;
   margin-top: 2%;
-  
+
 }
-.agregar{
- background-color: green;
+
+.agregar {
+  background-color: green;
   width: 8%;
   height: 20%;
- border-radius: 8px;
+  border-radius: 8px;
   margin-left: 90%;
   color: white;
   font-size: 150%;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .agregar:hover {
-  transform: scale(1.05); /* Aumenta el tamaño en un 5% */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Agrega una sombra suave */
+  transform: scale(1.05);
+  /* Aumenta el tamaño en un 5% */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  /* Agrega una sombra suave */
 }
+
 .card {
   border: 1px solid #ccc;
   padding: 16px;
@@ -220,7 +211,7 @@ async function agregarAmabiente() {
 
 
 
-.editar{
+.editar {
   margin-left: -45%;
   margin-top: 80%;
   width: 30%;
@@ -228,6 +219,7 @@ async function agregarAmabiente() {
   background-color: rgba(255, 0, 0, 0);
   border: none;
 }
+
 .rotate-button {
   background-color: rgba(0, 0, 0, 0);
   border: none;
@@ -244,10 +236,12 @@ async function agregarAmabiente() {
   width: 25px;
   height: 30px;
   /* rotate: 90deg; */
-  transition: transform 0.5s ease; /* Duración y tipo de transición */
+  transition: transform 0.5s ease;
+  /* Duración y tipo de transición */
 }
 
 .rotate {
-  transform: rotate(180deg); /* Gira 180 grados al hacer clic */
+  transform: rotate(180deg);
+  /* Gira 180 grados al hacer clic */
 }
 </style>

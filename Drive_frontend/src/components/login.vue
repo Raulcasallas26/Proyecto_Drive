@@ -1,50 +1,53 @@
 <template>
     <q-layout view="lHh lpR lFf">
-        <div class="row">
+        <div class="row" style="position: relative;">
             <div class="col-5" id="imagen">
                 <img :src="currentImage" style="width: 1000px;" class="bg" alt="Cargando imagen..." id="img">
             </div>
-            <div class="col-7">
-                <q-card id="card" flat bordered class="my-card">
-                    <q-card-section>
-                        <h5 id="h1" style="display: flex; justify-content: center;">Iniciar sesion</h5>
-                    </q-card-section>
-                    <q-card-section class="q-pa-md">
-                        <div role="alert"
-                            style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
-                            v-if="check !== ''">
-                            <div>
-                                {{ check }}
+
+            <div class="col-7" style="position: relative;">
+                <div id="cart">
+                    <q-card id="card" flat bordered class="my-card">
+                        <q-card-section>
+                            <h5 id="h1" style="display: flex; justify-content: center;">Iniciar sesion</h5>
+                        </q-card-section>
+                        <q-card-section class="q-pa-md">
+                            <div role="alert"
+                                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                                v-if="check !== ''">
+                                <div>
+                                    {{ check }}
+                                </div>
                             </div>
+                            <div class="q-gutter-md">
+                                <q-input label="Cedula" v-model="cedula" />
+                            </div>
+                            <div class="q-gutter-md">
+                                <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
+                                    label="Ingresar password">
+                                    <template v-slot:append>
+                                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                                            @click="isPwd = !isPwd" />
+                                    </template>
+                                </q-input>
+                            </div>
+                        </q-card-section>
+                        <div style="display: flex;  justify-content: center;">
+                            <q-spinner v-if="loading == true" color="black" size="3em" :thickness="10" />
+                            <q-btn v-else style="background-color: green;display: flex; justify-content: center;"
+                                @click="pruebaLogin()">
+                                Iniciar</q-btn>
                         </div>
-                        <div class="q-gutter-md">
-                            <q-input label="Cedula" v-model="cedula" />
-                        </div>
-                        <div class="q-gutter-md">
-                            <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
-                                label="Ingresar password">
-                                <template v-slot:append>
-                                    <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                        @click="isPwd = !isPwd" />
-                                </template>
-                            </q-input>
-                        </div>
-                    </q-card-section>
-                    <div style="display: flex;  justify-content: center;">
-                        <q-spinner v-if="loading == true" color="black" size="3em" :thickness="10" />
-                        <q-btn v-else style="background-color: green;display: flex; justify-content: center;"
-                            @click="pruebaLogin()">
-                            Iniciar</q-btn>
-                    </div>
-                    <q-card-section>
-                        <div class="cursor-pointer" style="color: blue;" @click="olvideContra()">
-                            {{ label }}
-                            <!-- <q-popup-edit v-model="label" auto-save v-slot="scope">
+                        <q-card-section>
+                            <div class="cursor-pointer" style="color: blue;" @click="olvideContra()">
+                                {{ label }}
+                                <!-- <q-popup-edit v-model="label" auto-save v-slot="scope">
                                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
                             </q-popup-edit> -->
-                        </div>
-                    </q-card-section>
-                </q-card>
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                </div>
             </div>
         </div>
         <q-dialog v-model="ingresaCorreo">
@@ -158,10 +161,9 @@ let passwordNueva = ref(false);
 let label = ref('Olvidaste la contraseña')
 let isPwd = ref(true);
 let loading = ref(false)
-let rol = ref("");
 let correo = ref("raul26@gmail.com")
 let text = ref('')
-let prueba = ref("")
+let r = ref("")
 let cedula = ref("");
 let password = ref("");
 let check = ref("");
@@ -190,9 +192,9 @@ function comprovar() {
 async function pruebaLogin() {
     try {
         loading.value = true
-        prueba = await useLogin.prueba(cedula.value, password.value)
-        console.log(prueba);
-        const resp = prueba.status
+        r = await useLogin.validar(cedula.value, password.value)
+        console.log(r);
+        const resp = r.status
         if (resp == 200) {
             console.log("sesion exitosa");
             router.push("/home");
@@ -276,15 +278,26 @@ onMounted(() => {
     position: relative;
 }
 
-#card {
-    margin-left: 20%;
-    margin-right: 20%;
+/* #card {
+    margin-left: 30%;
+    margin-right: 30%;
     margin-top: 10%;
     display: block;
     align-items: center;
     justify-content: center;
     border: 3px solid rgba(29, 88, 32, 0.35);
     border-radius: 10px;
+} */
+
+#cart {
+    width: 25rem;
+    height: 30rem;
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #img {
@@ -307,4 +320,5 @@ onMounted(() => {
     letter-spacing: 3em;
     /* Big text shows off the effect best */
     font-weight: bold;
-}</style> 
+}
+</style> 

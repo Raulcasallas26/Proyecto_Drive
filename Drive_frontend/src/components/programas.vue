@@ -2,8 +2,9 @@
   <div class="card-container">
     <div>
       <q-table class="tabla" flat bordered title="Treats" :rows="proga" :columns="columns" row-key="id" :filter="filter"
-        :loading="loading" virtual-scroll :virtual-scroll-item-size="20" :virtual-scroll-sticky-size-start="20"
-        :pagination="pagination" :rows-per-page-options="[0]" @virtual-scroll="onScroll">
+        :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
+                :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
+                @virtual-scroll="onScroll">>
         <template v-slot:top>
           <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="showModal = true" />
           <q-space />
@@ -71,9 +72,9 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useProgramasStore } from "../stores/programasforma.js";
+import { useProgramasFormacionStore } from "../stores/programasformacion.js";
 
-const storeprogramas = useProgramasStore();
+const storeprogramas = useProgramasFormacionStore();
 let proga = ref([]);
 
 const showModal = ref(false);
@@ -84,7 +85,12 @@ const estado = ref(false);
 
 let columns = [
   { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-  { name: "denominacion", label: "Denominacion", align: "center",field: "denominacion"},
+  {
+    name: "denominacion",
+    label: "Denominacion",
+    align: "center",
+    field: "denominacion",
+  },
   { name: "version", label: "Version", align: "center", field: "version" },
   { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
@@ -94,19 +100,11 @@ const loading = ref(false);
 const filter = ref("");
 
 async function obtenerformacion() {
-  let programas = await storeprogramas.getPrograma();
+  let programas = await storeprogramas.getProgramasFormacion();
   console.log(programas);
-  proga.value = programas.data.formaciones;
+  proga.value = programas.data.ProgramasFormacion;
+  console.log(programas.data);
 }
-/* async function obtenerformacion() {
-  try {
-    let formaciones = await storeprogramas.getPrograma();
-    console.log("Datos de formaciones:", formaciones);
-    proga.value = formaciones.data; // Asegúrate de que estás asignando los datos correctamente
-  } catch (error) {
-    console.error("Error al cargar datos:", error);
-  }
-} */
 
 async function agregarformacion() {
   loading.value = true;
@@ -136,7 +134,23 @@ const opciones = [
   "tecnólogo",
   "especialización tecnológica",
 ];
+//pedir red de conocimiento
+/* const redDeConocimientoSeleccionada = ref(null);
+const opcionesRedDeConocimiento = ref([]);
 
+// Simula una solicitud a la base de datos para obtener las opciones
+const obtenerOpcionesDesdeBaseDeDatos = async () => {
+  try {
+    // Realiza la solicitud a la API o base de datos para obtener las opciones
+    // Reemplaza esta lógica con tu solicitud real
+    const response = await tuFuncionParaObtenerOpcionesDesdeLaBaseDeDatos();
+
+    // Asigna las opciones obtenidas a opcionesRedDeConocimiento
+    opcionesRedDeConocimiento.value = response.data.opciones; // Asegúrate de ajustar esto según la estructura de tu respuesta
+  } catch (error) {
+    console.error("Error al obtener las opciones:", error);
+  }
+}; */
 //pedir diseño curricular 
 const archivoOEnlace = ref(""); // Variable para almacenar el nombre del archivo seleccionado
 

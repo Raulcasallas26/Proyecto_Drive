@@ -2,11 +2,11 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
-export const useUsuariosStore = defineStore(
-    "Usuarios", () => {
-        const addUsuarios = async (info) => {
+export const useInstrumentosEvaluacionStore = defineStore(
+    "InstrumentosEvaluacion", () => {
+        const addInstrumentosEvaluacion = async (info) => {
             try {
-                let res = await axios.post(`${urlBackend}/usuarios`, info)
+                let res = await axios.post(`${urlBackend}/InstrumentosEvaluacion`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
@@ -14,27 +14,27 @@ export const useUsuariosStore = defineStore(
             }
         }
 
-        const getUsuarios = async () => {
+        const getInstrumentosEvalacion = async () => {
             try {
-                let res = await axios.get(`${urlBackend}/usuarios`)
-                return res 
+                let res = await axios.get(`${urlBackend}/InstrumentosEvaluacion`)
+                return res
             } catch (error) {
                 console.log("hay un error en el get");
                 return error
             }
         }
-        const editUsuarios = async (id, info) => {
+        const editInstrumentosEvaluacion = async (id, info) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuarios/${id}`, info)
+                let res = await axios.put(`${urlBackend}/InstrumentosEvaluacion/${id}`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
                 return error
             }
         }
-        const activarUsuarios = async (id) => {
+        const activarInstrumentosEvaluacion = async (id) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuarios/estado/${id}`)
+                let res = await axios.put(`${urlBackend}/InstrumentosEvaluacion/estado/${id}`)
                 return res.data
             } catch (error) {
                 console.log("hay un error en activarUser");
@@ -42,7 +42,7 @@ export const useUsuariosStore = defineStore(
             }
         }
         return {
-            addUsuarios, getUsuarios, editUsuarios, activarUsuarios, 
+            addInstrumentosEvaluacion, getInstrumentosEvalacion, editInstrumentosEvaluacion, activarInstrumentosEvaluacion, 
         }
     }
 )
