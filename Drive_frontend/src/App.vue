@@ -52,7 +52,15 @@
               <q-icon name="dashboard" />
             </q-item-section>
 
-            <q-item-section> ambientes </q-item-section>
+            <q-item-section> Ambientes </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/instrumentosEvaluacion">
+            <q-item-section avatar>
+              <q-icon name="quiz" />
+            </q-item-section>
+
+            <q-item-section> Instrumentos de Evaluacion </q-item-section>
           </q-item>
 
           <q-separator />

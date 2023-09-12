@@ -1,13 +1,12 @@
 <template>
     <div class="q-pa-md">
         <div>
-            <q-table flat bordered title="Usuarios" :rows="user" :columns="columns" row-key="id" :filter="filter"
-                :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
-                :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
-                @virtual-scroll="onScroll">
+            <q-table flat bordered grid title="Instrumentos de evaluacion" :rows="instrumento" :columns="columns"
+                row-key="name" :filter="filter" hide-header :loading="loading" virtual-scroll :virtual-scroll-item-size="20"
+                :virtual-scroll-sticky-size-start="20"  :rows-per-page-options="[0]">
                 <template v-slot:top>
                     <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="agregar()" />
-                    <div style="margin-left: 5%;" class="text-h4">Usuarios</div>
+                    <div style="margin-left: 5%;" class="text-h4">Instrumentos de evaluacion</div>
                     <q-space />
                     <q-input borderless dense debounce="300"
                         style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;" color="primary"
@@ -32,10 +31,9 @@
                         <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
                     </q-td>
                 </template>
-
-            </q-table>
+            </q-table>            
         </div>
-        <q-dialog v-model="alert">
+        <q-dialog v-model="nuevo">
             <q-card id="card">
                 <q-card-section>
                     <div class="text-h6">Registro</div>
@@ -46,24 +44,16 @@
                             <div class="q-gutter-md">
                                 <q-input v-model="nombre" label="Nombre" />
                             </div>
-                            <div class="q-gutter-md">
-                                <q-input type="email" v-model="email" label="E-mail" />
-                            </div>
-                            <div class="q-gutter-md">
-                                <q-input v-model="telefono" label="Telefono" />
-                            </div>
-                            <div class="q-gutter-md">
-                                <q-input v-model="cedula" label="Cedula" />
-                            </div>
-                            <div class="q-gutter-md" v-if="bd === false">
-                                <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
-                                    label="Ingresar password">
+                            <q-card-section>
+                                <q-input class="input" v-model="archivoOEnlace"
+                                    label="Documentos" outlined dense clearable prepend-icon="attach_file"
+                                    @clear="limpiarCampo">
                                     <template v-slot:append>
-                                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                            @click="isPwd = !isPwd" />
+                                        <q-icon name="attach_file" style="cursor: pointer"
+                                            @click="abrirSelectorDeArchivos" />
                                     </template>
                                 </q-input>
-                            </div>
+                            </q-card-section>
                         </q-card-section>
                         <q-card-section>
                             <div role="alert"
@@ -89,45 +79,36 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useUsuariosStore } from "../stores/usuarios.js"
-const useUsuario = useUsuariosStore();
-let alert = ref(false)
+import { useInstrumentosEvaluacionStore } from "../stores/InstrumentosEvaluacion.js"
+const useInstumentos = useInstrumentosEvaluacionStore();
+let nuevo = ref(false)
 let bd = ref(false)
 let check = ref("")
 let isPwd = ref(true);
-let user = ref([])
+let instrumento = ref([])
 let nombre = ref("")
-let estado = ref("")
-let email = ref("")
-let telefono = ref("")
-let cedula = ref("")
-let password = ref("")
+let docuemento = ref("")
 let loading = ref(false)
-let indice = ref(null)
+let indice = ref("")
 let r = ref("")
 
 let columns = [
     { name: 'nombre', align: 'center', label: 'Usuario', field: "nombre" },
-    { name: 'email', label: 'E-mail', align: 'center', field: "email" },
-    { name: 'telefono', label: 'Telefono', align: 'center', field: "telefono" },
+    { name: 'docuento', label: 'Docuentos', align: 'center', field: "documento" },
     { name: 'estado', label: 'Estado', align: 'center', field: "estado" },
     { name: 'opciones', label: 'Opciones', align: 'center', field: "opciones" },
 ]
 const filter = ref('')
-console.log(indice.value);
 async function guardar() {
     loading.value = true
-    let r = await useUsuario.addUsuarios({
+    let r = await useInstumentos.addInstrumentosEvaluacion({
         nombre: nombre.value,
-        email: email.value,
-        telefono: telefono.value,
-        cedula: cedula.value,
-        password: password.value
+        docuemento: docuemento.value
     })
     console.log(r);
     console.log("se guardo un nuevo usuario");
     loading.value = false
-    listarUsuarios()
+    listarinstrumentos()
     limpiarFormulario()
 }
 
@@ -136,15 +117,12 @@ async function editarUser() {
     console.log("hola estoy editando");
     let r = await useUsuario.editUsuarios(indice.value, {
         nombre: nombre.value,
-        email: email.value,
-        telefono: telefono.value,
-        cedula: cedula.value
     })
     console.log(r);
     bd.value = false
     loading.value = false
     console.log("limpiando datos");
-    listarUsuarios()
+    listarinstrumentos()
     limpiarFormulario()
 }
 
@@ -160,39 +138,77 @@ async function activar(props) {
     let est = await useUsuario.activarUsuarios(r.value._id)
     console.log(est);
 }
+const cardStates = ref({});
+const isRotated = ref({});
+const toggleDetails = (index) => {
+    // Cambia el estado de la card en el índice específico
+    cardStates.value[index] = !cardStates.value[index];
+    isRotated.value[index] = !isRotated.value[index];
+};
+
+const abrirSelectorDeArchivos = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.style.display = "none";
+    fileInput.addEventListener("change", handleFileSelection);
+    document.body.appendChild(fileInput);
+    fileInput.click();
+};
+
+const handleFileSelection = (event) => {
+    const selectedFile = event.target.files[0];
+    const selectedFileName = selectedFile ? selectedFile.name : "";
+
+    // Asignar el nombre del archivo al campo archivoOEnlace
+    archivoOEnlace.value = selectedFileName;
+
+    // Buscar la opción que corresponde al nombre del archivo
+    const selectedOption = opciones.find((option) =>
+        option.includes(selectedFileName)
+    );
+
+    if (selectedOption) {
+        // Enviar el texto correspondiente a la opción seleccionada
+        const textoDeOpcion = selectedOption;
+        // Aquí puedes hacer lo que necesites con textoDeOpcion
+        alert(`Texto de la opción seleccionada: ${textoDeOpcion}`);
+    } else {
+        // Manejar el caso en que no se encuentre una opción correspondiente
+        alert(
+            "No se encontró una opción correspondiente al archivo seleccionado."
+        );
+    }
+
+    event.target.remove(); // Elimina el input de tipo file después de su uso
+};
+
 
 function edito(props) {
     bd.value = true
     r.value = props.row
-    alert.value = true
+    nuevo.value = true
     indice.value = r.value._id
     nombre.value = r.value.nombre
-    email.value = r.value.email
-    telefono.value = r.value.telefono
-    cedula.value = r.value.cedula
 }
 
 function limpiarFormulario() {
     console.log("limpiar datos");
     nombre.value = ""
-    email.value = ""
-    telefono.value = ""
-    cedula.value = ""
-    password.value = ""
+    docuemento.value = ""
 }
 
-listarUsuarios()
-async function listarUsuarios() {
-    let usuarios = await useUsuario.getUsuarios()
-    console.log(usuarios);
-    user.value = usuarios.data.Usuarios
+listarinstrumentos()
+async function listarinstrumentos() {
+    let instrumentos = await useInstumentos.getInstrumentosEvalacion()
+    console.log(instrumentos);
+    instrumento.value = instrumentos.data.InstrumentosEvaluacion
 }
 
 function agregar() {
-    alert.value = true
+    nuevo.value = true
 }
 onMounted(() => {
-    listarUsuarios()
+    listarinstrumentos()
     limpiarFormulario()
 })
 
@@ -201,4 +217,5 @@ onMounted(() => {
 #card {
     width: 35em;
     max-width: 100%;
-}</style>
+}
+</style>

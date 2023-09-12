@@ -5,6 +5,7 @@ import { ref } from "vue"
 export const useInstrumentosEvaluacionStore = defineStore(
     "InstrumentosEvaluacion", () => {
         const addInstrumentosEvaluacion = async (info) => {
+            console.log("hola estoy en addIntrumentos");
             try {
                 let res = await axios.post(`${urlBackend}/InstrumentosEvaluacion`, info)
                 return res

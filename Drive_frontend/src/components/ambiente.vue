@@ -2,16 +2,14 @@
   <div class="card-container">
     <div class="body">
       <div class="text">Ambientes de Formación</div>
-      <button class="agregar" @click="showModal = true">
+      <button class="agregar" @click="showModalAgregar = true">
         Agregar
       </button>
     </div>
     <div>
       <!-- Itera a través de los ambientes y muestra cada uno en un card -->
       <div v-for="(ambiente, index) in ambientess" :key="index">
-        <!-- Tu card aquí, puedes usar el ejemplo anterior como base -->
         <div class="card">
-
           <div class="top-half">
             <div class="info">
               <p><strong>Código:</strong> {{ ambiente.codigo }}</p>
@@ -24,10 +22,9 @@
                   <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
                 </div>
               </button>
-              <button class="editar">
-                <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Arrow" class="arrow-icon" />
+              <button class="editar" @click="abrirModalEdicion(index)">
+                <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Editar" class="arrow-icon" />
               </button>
-
             </div>
           </div>
 
@@ -50,13 +47,14 @@
         </div>
       </div>
     </div>
-    <!-- Modal para agregar programas -->
+
+    <!-- Modal para agregar ambientes -->
     <div>
-      <q-dialog v-model="showModal">
+      <q-dialog v-model="showModalAgregar">
         <q-card class="custom-modal">
           <q-card-section>
             <div class="text2">Agregar Ambiente</div>
-            <q-input v-model="Codigo" label="Codigo" />
+            <q-input v-model="codigo" label="Codigo" />
             <q-input v-model="Nombre" label="Nombre" />
             <q-input v-model="Tipo" label="Tipo" />
             <q-input v-model="Descripcion" label="Descripcion" />
@@ -76,8 +74,41 @@
             <!-- fin -->
           </q-card-section>
           <q-card-section>
-            <q-btn @click="showModal = false" label="Cancelar" />
-            <q-btn @click="agregarAmabiente()" color="primary" label="Agregar" />
+            <q-btn @click="showModalAgregar = false" label="Cancelar" />
+            <q-btn @click="agregarAmbiente()" color="primary" label="Agregar" />
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+    </div>
+
+    <!-- Modal para editar ambientes -->
+    <div>
+      <q-dialog v-model="showModalEdicion">
+        <q-card class="custom-modal">
+          <q-card-section>
+            <div class="text2">Editar Ambiente</div>
+            <q-input v-model="codigo" label="Codigo" />
+            <q-input v-model="Nombre" label="Nombre" />
+            <q-input v-model="Tipo" label="Tipo" />
+            <q-input v-model="Descripcion" label="Descripcion" />
+            <div>
+              <q-select v-model="IdCentroFormacion" :options="opciones"
+                label="Selecciona una Id de Centro de Formacion" />
+            </div>
+            <!-- inicio -->
+            <q-card-section>
+              <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
+                prepend-icon="attach_file" @clear="limpiarCampo">
+                <template v-slot:append>
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
+                </template>
+              </q-input>
+            </q-card-section>
+            <!-- fin -->
+          </q-card-section>
+          <q-card-section>
+            <q-btn @click="showModalEdicion = false" label="Cancelar" />
+            <q-btn @click="guardarCambios" color="primary" label="Guardar Cambios" />
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -88,22 +119,38 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
+
 const StoreAmbiente = useAmbientesFormacionStore();
 let ambientess = ref([]);
-let showModal = ref(false);
+let showModalAgregar = ref(false);
+let showModalEdicion = ref(false); // Variable para controlar el modal de edición
 let codigo = ref("");
 let Nombre = ref("");
 let Tipo = ref("");
 let Descripcion = ref("");
+let IdCentroFormacion = ref("");
+const archivoOEnlace = ref("");
 const loading = ref(false);
 
+async function agregarAmbiente() {
+  loading.value = true;
+  let r = await StoreAmbiente.addAmbientesFormacion({
+    nombre: Nombre.value,
+    codigo: codigo.value,
+    tipo: Tipo.value,
+    descripcion: Descripcion.value,
+    idCentroDeFormacion: IdCentroFormacion.value,
+    documentos: archivoOEnlace.value,
+  });
+  getAmbientesformacion();
+  /* console.log(Nombre.value, codigo.value, Tipo.value, Descripcion.value); */
+}
 
 
-
-onMounted(async () => {
+async function getAmbientesformacion() {
   let Formacion = await StoreAmbiente.getAmbientesFormacion();
   ambientess.value = Formacion.data.AmbientesFormacion;
-});
+}
 
 const cardStates = ref({});
 const isRotated = ref({});
@@ -112,15 +159,17 @@ const toggleDetails = (index) => {
   cardStates.value[index] = !cardStates.value[index];
   isRotated.value[index] = !isRotated.value[index];
 };
+
 const opciones = [
   "001 Centro Agroturistico sede san gil",
-  "002 Centro Agroturistico sede socorro"
+  "002 Centro Agroturistico sede socorro",
 ];
+
 const abrirSelectorDeArchivos = () => {
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.style.display = 'none';
-  fileInput.addEventListener('change', handleFileSelection);
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.style.display = "none";
+  fileInput.addEventListener("change", handleFileSelection);
   document.body.appendChild(fileInput);
   fileInput.click();
 };
@@ -128,23 +177,82 @@ const abrirSelectorDeArchivos = () => {
 // Función para manejar la selección de archivos
 const handleFileSelection = (event) => {
   const selectedFile = event.target.files[0];
-  if (selectedFile) {
-    archivoOEnlace.value = selectedFile.name;
-    // Aquí puedes manejar el archivo seleccionado según tus necesidades
-    alert(`Archivo seleccionado: ${selectedFile.name}`);
+  const selectedFileName = selectedFile ? selectedFile.name : "";
+
+  // Asignar el nombre del archivo al campo archivoOEnlace
+  archivoOEnlace.value = selectedFileName;
+
+  // Buscar la opción que corresponde al nombre del archivo
+  const selectedOption = opciones.find((option) =>
+    option.includes(selectedFileName)
+  );
+
+  if (selectedOption) {
+    // Enviar el texto correspondiente a la opción seleccionada
+    const textoDeOpcion = selectedOption;
+    // Aquí puedes hacer lo que necesites con textoDeOpcion
+    alert(`Texto de la opción seleccionada: ${textoDeOpcion}`);
+  } else {
+    // Manejar el caso en que no se encuentre una opción correspondiente
+    alert(
+      "No se encontró una opción correspondiente al archivo seleccionado."
+    );
   }
+
   event.target.remove(); // Elimina el input de tipo file después de su uso
 };
-async function agregarAmabiente() {
-  loading.value = true;
-  let r = await StoreAmbiente.agregarAmbiente({
-    nombre: Nombre.value,
-    codigo: codigo.value,
-    tipo: Tipo.value,
-    descripcion: Descripcion.value
 
-  });
-}
+
+
+let idAmbienteEditando = ref(null);
+
+// Función para abrir el modal de edición con los datos del ambiente seleccionado
+const abrirModalEdicion = (index) => {
+  idAmbienteEditando.value = index;
+  const ambienteSeleccionado = ambientess.value[index];
+  codigo.value = ambienteSeleccionado.codigo;
+  Nombre.value = ambienteSeleccionado.nombre;
+  Tipo.value = ambienteSeleccionado.tipo;
+  Descripcion.value = ambienteSeleccionado.descripcion;
+  IdCentroFormacion.value = ambienteSeleccionado.idCentroDeFormacion;
+  archivoOEnlace.value = ambienteSeleccionado.documentos;
+  showModalEdicion.value = true;
+};
+
+const guardarCambios = async () => {
+  if (idAmbienteEditando.value !== null) {
+    const index = idAmbienteEditando.value;
+    const ambienteEditado = {
+      codigo: codigo.value,
+      nombre: Nombre.value,
+      tipo: Tipo.value,
+      descripcion: Descripcion.value,
+      idCentroDeFormacion: IdCentroFormacion.value,
+      documentos: archivoOEnlace.value,
+    };
+
+    // Llamar al método de la store para editar el ambiente en la base de datos
+    const response = await StoreAmbiente.editAmbientesFormacion(
+      ambientess.value[index]._id,
+      ambienteEditado
+    );
+
+    if (response.status === 200) {
+
+      ambientess.value[index] = ambienteEditado;
+      showModalEdicion.value = false;
+      idAmbienteEditando.value = null;
+    } else {
+
+      console.error('Error al guardar los cambios en el servidor');
+    }
+  }
+};
+
+onMounted(async () => {
+  await getAmbientesformacion();
+});
+//editAmbientesFormacion   StoreAmbiente
 </script>
 
 <style scoped>

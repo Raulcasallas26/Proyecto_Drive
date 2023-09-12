@@ -50,8 +50,8 @@ const httpUsuarios = {
 
     putUsuarios: async (req, res) => {
         const { id } = req.params;
-        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento} = req.body;
-        const usuario = await UsuariosModel.findByIdAndUpdate(id, {nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento}, { new: true })
+        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, idRolUsuario, idRedConocimiento} = req.body;
+        const usuario = await UsuariosModel.findByIdAndUpdate(id, {nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, idRolUsuario, idRedConocimiento}, { new: true })
         res.json({
             msg: "ok",
             usuario

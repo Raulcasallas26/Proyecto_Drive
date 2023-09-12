@@ -23,11 +23,11 @@ const httpInstrumentosEvaluacion = {
     },
 
     postInstrumentosEvaluacion: async (req, res) => {
-        const { id, nombre, documento } = req.body;
+        const { nombre, documento, estado } = req.body;
         const InstrumentosEvaluacion = new InstrumentoEvaluacionModel({
-          id,
-          nombre,
-          documento
+            nombre,
+            documento,
+            estado
         });
 
         try {

@@ -33,7 +33,7 @@
                             </div>
                         </q-card-section>
                         <div style="display: flex;  justify-content: center;">
-                            <q-spinner v-if="loading == true" color="black" size="3em" :thickness="10" />
+                            <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
                             <q-btn v-else style="background-color: green;display: flex; justify-content: center;"
                                 @click="pruebaLogin()">
                                 Iniciar</q-btn>

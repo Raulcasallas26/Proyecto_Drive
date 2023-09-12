@@ -4,7 +4,7 @@ const httpCentrosFormacion = {
     getCentrosFormacion: async ( req, res ) => {
         try {
             const CentrosFormacion = await CentrosFormacionModel.find({});
-            res.json({ centros });
+            res.json({ CentrosFormacion });
         } catch (error) {
             res.status( 500 ).json({ mensaje: "Error al obtener los centros de formacion", error });
         }
