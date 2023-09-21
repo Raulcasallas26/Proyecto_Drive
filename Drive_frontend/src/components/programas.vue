@@ -3,10 +3,11 @@
     <div>
       <q-table class="tabla" flat bordered title="Treats" :rows="proga" :columns="columns" row-key="id" :filter="filter"
         :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
-                :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
-                @virtual-scroll="onScroll">>
+        :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
+        @virtual-scroll="onScroll">>
         <template v-slot:top>
           <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="showModal = true" />
+          <div style="margin-left: 5%;" class="text-h4">Programas</div>
           <q-space />
           <q-input borderless dense debounce="300" color="primary" v-model="filter">
             <template v-slot:append>
