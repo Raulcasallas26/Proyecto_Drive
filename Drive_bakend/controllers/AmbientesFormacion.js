@@ -49,7 +49,7 @@ const httpAmbientesFormacion = {
     putAmbientesFormacion: async (req, res) => {
         const { id } = req.params;
         const { codigo, nombre, tipo, descripcion, documentos, idCentroDeFormacion } = req.body;
-        const Ambiente_Formacion = await Ambiente_FormacionModel.findByIdAndUpdate(id, { codigo, nombre, tipo, descripcion, documentos, idCentroDeFormacion }, { new: true })
+        const AmbientesFormacion = await AmbientesFormacionModel.findByIdAndUpdate(id, { codigo, nombre, tipo, descripcion, documentos, idCentroDeFormacion }, { new: true })
         res.json({
             msg: "ok",
             AmbientesFormacion

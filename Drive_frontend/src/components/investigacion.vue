@@ -1,24 +1,26 @@
 <template>
     <div class="card-container">
-        <div class="body">
+        <div class="body" style="position: relative;">
             <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="agregar()" />
-            <div style="margin-left: 5%;" class="text-h4">Instrumentos de Evaluacion</div>
-            <q-space />
-            <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
-                color="primary" v-model="filter">
-                <template v-slot:append>
-                    <q-icon name="search" />
-                </template>
-            </q-input>
+                    <div style="margin-left: 5%;" class="text-h4">Investigación</div>
+                    <q-space />
+                    <q-input borderless dense debounce="300"
+                        style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;" color="primary"
+                        v-model="filter">
+                        <template v-slot:append>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input>
         </div>
         <div>
-            <div v-for="(instru, index) in Instrumen" :key="index">
+            <!-- Itera a través de los ambientes y muestra cada uno en un card -->
+            <div v-for="(ambiente, index) in ambientess" :key="index">
                 <div class="card">
                     <div class="top-half">
                         <div class="info">
-                            <p><strong>Código:</strong> {{ instru.codigo }}</p>
-                            <p><strong>Nombre:</strong> {{ instru.nombre }}</p>
-                            <p><strong>Tipo:</strong> {{ instru.tipo }}</p>
+                            <p><strong>Código:</strong> CODIGO <!-- {{ ambiente.codigo }} --></p>
+                            <p><strong>Nombre:</strong> NOMBRE <!-- {{ ambiente.nombre }} --></p>
+                            <p><strong>Tipo:</strong> TIPO <!-- {{ ambiente.tipo }} --></p>
                         </div>
                         <div class="buttons">
                             <button @click="toggleDetails(index)" class="rotate-button">
@@ -39,12 +41,12 @@
                             <div class="bottom-half">
                                 <div class="info">
                                     <p>
-                                        <strong>Descripción:</strong> {{ ambiente.descripcion }}
+                                        <strong>Descripción:</strong> descripcion <!-- {{ ambiente.descripcion }} -->
                                     </p>
-                                    <p><strong>Documentos:</strong> {{ ambiente.documentos }}</p>
+                                    <p><strong>Documentos:</strong> Documentos <!-- {{ ambiente.documentos }} --></p>
                                     <p>
-                                        <strong>ID Centro de Formación:</strong>
-                                        {{ ambiente.idCentroDeFormacion }}
+                                        <strong>ID Centro de Formación:</strong> id IdCentroFormacion
+                                        <!-- {{ ambiente.idCentroDeFormacion }} -->
                                     </p>
                                 </div>
                             </div>
@@ -124,10 +126,10 @@
   
 <script setup>
 import { ref, onMounted } from "vue";
-import { useInstrumentosEvaluacionStore } from "../stores/InstrumentosEvaluacion";
+import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
 
-const StoreInstrumentos = useInstrumentosEvaluacionStore();
-let Instrumen = ref([]);
+const StoreAmbiente = useAmbientesFormacionStore();
+let ambientess = ref([]);
 let showModalAgregar = ref(false);
 let showModalEdicion = ref(false); // Variable para controlar el modal de edición
 let codigo = ref("");
@@ -140,7 +142,7 @@ const loading = ref(false);
 
 async function agregarAmbiente() {
     loading.value = true;
-    let r = await StoreInstrumentos.addAmbientesFormacion({
+    let r = await StoreAmbiente.addAmbientesFormacion({
         nombre: Nombre.value,
         codigo: codigo.value,
         tipo: Tipo.value,
@@ -154,8 +156,8 @@ async function agregarAmbiente() {
 
 
 async function getAmbientesformacion() {
-    let Instrumento = await StoreInstrumentos.getInstrumentosEvalacion();
-    Instrumen.value = Instrumento.data.AmbientesFormacion;
+    let Formacion = await StoreAmbiente.getAmbientesFormacion();
+    ambientess.value = Formacion.data.AmbientesFormacion;
 }
 
 const cardStates = ref({});
@@ -260,15 +262,13 @@ onMounted(async () => {
 });
 //editAmbientesFormacion   StoreAmbiente
 </script>
-
+  
 <style scoped>
 .body {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    position: relative;
-    margin: 1rem;
 }
 
 .text {
@@ -285,20 +285,13 @@ onMounted(async () => {
 
 }
 
-.agrego {
-    display: inline-block;
-    margin: 0 10px;
-    margin-right: 20%;
-}
 
-.agregar {
-    background-color: green;
-    cursor: pointer;
-    margin-right: 20%;
-}
 
 .agregar:hover {
     transform: scale(1.05);
+    /* Aumenta el tamaño en un 5% */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    /* Agrega una sombra suave */
 }
 
 .card {

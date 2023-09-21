@@ -1,23 +1,22 @@
 <template>
   <q-layout view="hHh LpR lff">
     <q-header elevated class="text-white" id="header">
-        <q-toolbar>
-          <q-avatar>
-            <img src="../src/img/logo_sena.png" alt="">
-          </q-avatar>
-          <q-toolbar-title>
-          </q-toolbar-title>
-          <button v-if="!isInLoginComponent" class="btng">
-            <q-item v-ripple to="/">
+      <q-toolbar>
+        <q-avatar>
+          <img src="../src/img/logo_sena.png" alt="">
+        </q-avatar>
+        <q-toolbar-title>
+        </q-toolbar-title>
+        <button v-if="!isInLoginComponent" class="btng">
+          <q-item v-ripple to="/">
             <q-item-section avatar>
               <q-icon name="login" />
             </q-item-section>
             <q-item-section></q-item-section>
           </q-item>
         </button>
-        </q-toolbar>
-      </q-header>
-
+      </q-toolbar>
+    </q-header>
     <q-drawer v-if="!isInLoginComponent" v-model="drawer" style="background-color: green" show-if-above :mini="miniState"
       @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :width="200" :breakpoint="500" bordered
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
@@ -27,7 +26,6 @@
             <q-item-section avatar>
               <q-icon name="home" />
             </q-item-section>
-
             <q-item-section>Inicio </q-item-section>
           </q-item>
 
@@ -35,7 +33,6 @@
             <q-item-section avatar>
               <q-icon name="people" />
             </q-item-section>
-
             <q-item-section> Usuarios</q-item-section>
           </q-item>
 
@@ -43,7 +40,6 @@
             <q-item-section avatar>
               <q-icon name="book" />
             </q-item-section>
-
             <q-item-section> Programas </q-item-section>
           </q-item>
 
@@ -51,42 +47,66 @@
             <q-item-section avatar>
               <q-icon name="dashboard" />
             </q-item-section>
-
             <q-item-section> Ambientes </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/investigacion">
+            <q-item-section avatar>
+              <q-icon name="search" />
+            </q-item-section>
+            <q-item-section> Investigacion </q-item-section>
           </q-item>
 
           <q-item clickable v-ripple to="/instrumentosEvaluacion">
             <q-item-section avatar>
               <q-icon name="quiz" />
             </q-item-section>
-
             <q-item-section> Instrumentos de Evaluacion </q-item-section>
           </q-item>
 
-          <q-separator />
+          <q-item clickable v-ripple to="/materialesApoyo">
+            <q-item-section avatar>
+              <q-icon name="support" />
+            </q-item-section>
+            <q-item-section> Materiales de Apoyo </q-item-section>
+          </q-item>
 
+          <q-item clickable v-ripple to="/redConocimento">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
+            </q-item-section>
+            <q-item-section> Red de Conocimiento </q-item-section>
+          </q-item>
+        
+
+          <q-item clickable v-ripple to="/proyectos">
+            <q-item-section avatar>
+              <q-icon name="schema" />
+            </q-item-section>
+            <q-item-section> proyectos </q-item-section>
+          </q-item>
+
+          <q-separator />
           <q-item clickable v-ripple to="/">
             <q-item-section avatar>
               <q-icon name="login" />
             </q-item-section>
             <q-item-section> Salir </q-item-section>
           </q-item>
+
         </q-list>
       </q-scroll-area>
     </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
-
   </q-layout>
 </template>
-
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
-let drawer= ref(false)
-let miniState= ref(true)
+let drawer = ref(false)
+let miniState = ref(true)
 const leftDrawerOpen = ref(false);
 const route = useRoute(); // Obtén la información de la ruta actual
 
@@ -192,4 +212,5 @@ const toggleLeftDrawer = () => {
 
 #logout {
   width: 70%;
-}</style>
+}
+</style>
