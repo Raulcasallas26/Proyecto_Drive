@@ -3,22 +3,22 @@ import ProgramasFormacionModel from "../models/ProgramasFormacion.js "
 const httpProgramasFormacion = {
     getProgramasFormacion: async (req, res) => {
         try {
-            const ProgramasFormacion = await ProgramasFormacionModel.find({});
+            const ProgramasFormacion = await ProgramasFormacionModel.find();
             res.json({ ProgramasFormacion });
         } catch ( error ) {
             res.status(500).json({ mensaje: "Error al obtener las formaciones", error })
         }
     },
 
-    getProgramasFormacionId: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const ProgramasFormacion = await ProgramasFormacionModel.findOne({ id });
-            res.json({ ProgramasFormacion })
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al obtener la formacion", error })
-        }
-    },
+    // getProgramasFormacionId: async (req, res) => {
+    //     const { id } = req.params;
+    //     try {
+    //         const ProgramasFormacion = await ProgramasFormacionModel.findOne({ id });
+    //         res.json({ ProgramasFormacion })
+    //     } catch (error) {
+    //         res.status(500).json({ mensaje: "Error al obtener la formacion", error })
+    //     }
+    // },
 
     postProgramasFormacion: async ( req, res ) => {
         const { denominacion, codigo, version, estado } = req.body;
@@ -40,55 +40,32 @@ const httpProgramasFormacion = {
         }
     },
 
-    putProgramasFormacion: async ( req, res ) => {
+    putProgramasFormacion: async (req, res) => {
         const { id } = req.params;
-        const { denominacion, codigo } = req.body;
-
-        try {
-            const ProgramasFormacionActualizada = await ProgramasFormacionModel.findOneAndUpdate(
-                { id },
-                { $set: { denominacion, codigo } },
-                { new: true }
-            );
-
-            if ( ProgramasFormacionActualizada ) {
-                res.json({
-                    mensaje: "Registro modificado exitosamente",
-                    ProgramasFormacion: ProgramasFormacionActualizada
-                });
-            } else {
-                res.json({ mensaje: "No se encontro la formacion con el id proporcionado" })
-            }
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al actualizar la formacion", error })
-        }
+        const { denominacion, codigo, version, estado} = req.body;
+        const programas = await ProgramasFormacionModel.findByIdAndUpdate(id, {denominacion, codigo, version, estado}, { new: true })
+        res.json({
+            msg: "ok",
+            programas
+        })
     },
 
-    putProgramasFormacionEstado: async ( req, res ) => {
-        const { id } = req.params;
-
-        try {
-            
-            const ProgramasFormacion = await ProgramasFormacionModel.findOne({id});
-
-            if ( !ProgramasFormacion ) {
-                return res.status(400).json({ mensaje: "Formacion no encontrada" });
-            }
-
-            ProgramasFormacion.estado = !ProgramasFormacion.estado
-
-            await ProgramasFormacion.save();
-
-            const estadoMensaje = ProgramasFormacion.estado ? "Activo" : "Inactivo";
-
-            res.json({
-                mensaje: `Estado de la formacion modificada a  ${ estadoMensaje }`,
-                ProgramasFormacion
-            });
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error l cambiar el estado de la formacion", error })
+    putProgramaEstado: async (req, res) => {
+        const { id } = req.params  
+        const formacion = await ProgramasFormacionModel.findById(id)
+        let programa = null
+        if (formacion.estado) {
+            programa = await ProgramasFormacionModel.findByIdAndUpdate(id, { estado: false })
+        } else {
+            programa = await ProgramasFormacionModel.findByIdAndUpdate(id, { estado: true })
         }
-    }
+        const programaAutenticado = req.programa
+        res.json({
+            msj: "fue cambiado el estado",
+            programa,
+            programaAutenticado
+        }) 
+    },
 }
 
 export default httpProgramasFormacion

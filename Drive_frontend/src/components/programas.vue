@@ -6,10 +6,12 @@
         :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
         @virtual-scroll="onScroll">>
         <template v-slot:top>
-          <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="alert = true" />
+          <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
+            @click="alert = true" />
           <div style="margin-left: 5%;" class="text-h4">Programas</div>
           <q-space />
-          <q-input borderless dense debounce="300" color="primary" v-model="filter">
+          <q-input borderless dense debounce="300" color="primary" v-model="filter"
+            style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;">
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -25,35 +27,33 @@
 
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
-            <q-btn class="q-mx-sm" color="primary" @click="edito()">📝</q-btn>
-            <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false">✅</q-btn>
-            <q-btn class="q-mx-sm" color="red" outline v-else>❌</q-btn>
+            <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
+            <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito(props)">📝</q-btn>
+            <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false" @click="activar(props)">✅</q-btn>
+            <q-btn class="q-mx-sm" color="red" outline v-else @click="activar(props)">❌</q-btn>
           </q-td>
         </template>
       </q-table>
     </div>
 
     <q-dialog v-model="alert">
-      <q-card id="card">
+      <q-card id="card" style="width: 35%;">
         <q-card-section>
-          <div class="text-h6">Registro</div>
+          <div class="text-h4">Registro</div>
         </q-card-section>
         <q-card-section class="q-pt-none" id="card">
           <q-card flat bordered class="my-card">
             <q-card-section class="q-pa-md">
               <div class="q-gutter-md">
-                <q-input v-model="denominacion" label="Denominación" />
+                <q-input v-model="codigo" label="Código" />
               </div>
               <div class="q-gutter-md">
-                <q-input v-model="codigo" label="Código" />
+                <q-input v-model="denominacion" label="Denominación" />
               </div>
               <div class="q-gutter-md">
                 <q-input v-model="version" label="Versión" />
               </div>
               <div class="q-gutter-md">
-                <q-input v-model="IdNivelFormacion" label="Nivel de formcaion" />
-              </div>
-              <div class="q-gutter-md" v-if="bd === false">
                 <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona una opción" />
               </div>
               <div>
@@ -61,7 +61,7 @@
                   label="Red de Conocimiento" />
               </div>
               <q-card-section>
-                <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular" outlined
+                <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular"
                   dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
                   <template v-slot:append>
                     <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
@@ -82,7 +82,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+          <q-btn flat label="Cerrar" @click="limpiarFormulario(), cerrar()" color="primary" v-close-popup />
           <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" v-close-popup />
           <q-btn flat label="Editar Usuario" v-else @click="editarPrograma()" color="primary" v-close-popup />
         </q-card-actions>
@@ -104,7 +104,7 @@ let alert = ref(false);
 let denominacion = ref("");
 let codigo = ref("");
 let version = ref("");
-let estado = ref(false);
+let indice = ref(null)
 let opciones = [
   "auxiliar",
   "operario",
@@ -116,7 +116,7 @@ let opciones = [
 
 let columns = [
   { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-  { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion",},
+  { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion", },
   { name: "version", label: "Version", align: "center", field: "version" },
   { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
@@ -131,31 +131,62 @@ async function obtenerformacion() {
 }
 
 async function guardar() {
-    loading.value = true
-    let res = await useProgramas.addProgramasFormacion({
-        denominacion:denominacion.value,
-        codigo:codigo.value,
-        version:version.value
-    })
-    console.log(res);
-    console.log("se guardo un nuevo programa");
-    loading.value = false
-    obtenerformacion()
-    limpiarFormulario()
+  loading.value = true
+  let res = await useProgramas.addProgramasFormacion({
+    denominacion: denominacion.value,
+    codigo: codigo.value,
+    version: version.value
+  })
+  console.log(res);
+  console.log("se guardo un nuevo programa");
+  loading.value = false
+  obtenerformacion()
+  limpiarFormulario()
+}
+
+async function activar(props) {
+  r.value = props.row
+    if (r.value.estado === true) {
+        r.value.estado = false
+        console.log(r.value.estado, "resultado del if condicion");
+    } else {
+        r.value.estado = true
+        console.log(r.value.estado, "resultado del else condicion");
+    }
+    let est = await useProgramas.activarProgramasFormacion(r.value._id)
+    console.log(est);
+}
+
+async function editarPrograma() {
+  loading.value = true
+  console.log(indice.value);
+  let res = await useProgramas.editProgramasFormacion(indice.value, {
+    denominacion: denominacion.value,
+    codigo: codigo.value,
+    version: version.value,
+  })
+  console.log(indice.value);
+  console.log(res);
+  bd.value = false
+  loading.value = false
+  obtenerformacion()
+  limpiarFormulario()
 }
 
 function edito(props) {
-    bd.value = true
-    r.value = props.row
-    alert.value = true
-    denominacion.value = r.value.denominacon
-    codigo.value = r.value.codigo
-    version.value = r.value.version
+  alert.value = true
+  bd.value = true
+  r.value = props.row
+  indice.value = r.value._id
+  console.log(indice.value);
+  denominacion.value = r.value.denominacion
+  codigo.value = r.value.codigo
+  version.value = r.value.version
 }
 
 function limpiarFormulario() {
   denominacion.value = "";
-  codigo.version = "";
+  codigo.value = "";
   version.value = "";
   opciones.value = ""
 }
@@ -180,6 +211,11 @@ const handleFileSelection = (event) => {
   }
   event.target.remove(); // Elimina el input de tipo file después de su uso
 };
+
+function cerrar() {
+  bd.value = false
+  alert.value = false
+}
 
 // Función para limpiar el campo
 const limpiarCampo = () => {

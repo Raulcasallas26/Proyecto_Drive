@@ -65,7 +65,7 @@
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
                             <div class="q-gutter-md">
-                                <q-input v-model="nombre" label="E-mail" />
+                                <q-input v-model="correo" label="E-mail" />
                             </div>
                         </q-card-section>
                         <q-card-section>
@@ -161,7 +161,7 @@ let passwordNueva = ref(false);
 let label = ref('Olvidaste la contraseña')
 let isPwd = ref(true);
 let loading = ref(false)
-let correo = ref("raul26@gmail.com")
+let correo = ref("example00@gmail.com")
 let text = ref('')
 let r = ref("")
 let cedula = ref("");
@@ -191,14 +191,14 @@ function validar() {
         Swal.fire({
             title: 'Validando informacion',
             html: 'Timpo restante <b></b> milliseconds.',
-            timer: 1000,
+            timer: 1,
             timerProgressBar: true,
             didOpen: () => {
                 Swal.showLoading()
                 const b = Swal.getHtmlContainer().querySelector('b')
                 timerInterval = setInterval(() => {
                     b.textContent = Swal.getTimerLeft()
-                }, 100)
+                }, 1)
             },
             willClose: () => {
                 clearInterval(timerInterval)
@@ -255,12 +255,6 @@ async function Login() {
     loading.value = false
     return true
 }
-
-function ingresar() {
-
-
-}
-
 
 const images = [
     'https://fulbright.edu.co/wp-content/uploads/2021/09/BARE-5.jpeg',

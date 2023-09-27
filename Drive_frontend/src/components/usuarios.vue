@@ -1,17 +1,17 @@
 <template>
     <div class="q-pa-md">
         <div>
-            <q-table flat bordered title="Usuarios" :rows="user" :columns="columns" row-key="id" :filter="filter"
-                :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
-                :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
+            <q-table flat bordered title="Treats" :rows="user" :columns="columns" row-key="id" :filter="filter"
+                :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="10"
+                :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
                 @virtual-scroll="onScroll">
                 <template v-slot:top>
-                    <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
+                    <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
+                        @click="alert = true" />
                     <div style="margin-left: 5%;" class="text-h4">Usuarios</div>
                     <q-space />
-                    <q-input borderless dense debounce="300"
-                        style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;" color="primary"
-                        v-model="filter">
+                    <q-input borderless dense debounce="300" color="primary" v-model="filter"
+                        style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;">
                         <template v-slot:append>
                             <q-icon name="search" />
                         </template>
@@ -26,7 +26,7 @@
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
                         <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
-                        <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito(props)">📝</q-btn>
+                        <q-btn v-else class="q-mx-sm" color="primary" @click="edito(props)">📝</q-btn>
                         <q-btn class="q-mx-sm" color="green" outline @click="activar(props)"
                             v-if="props.row.estado == false">✅</q-btn>
                         <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
@@ -38,7 +38,7 @@
         <q-dialog v-model="alert">
             <q-card id="card">
                 <q-card-section>
-                    <div class="text-h6">Registro</div>
+                    <div class="text-h4">Registro</div>
                 </q-card-section>
                 <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card">
@@ -113,14 +113,11 @@ let columns = [
     { name: 'estado', label: 'Estado', align: 'center', field: "estado" },
     { name: 'opciones', label: 'Opciones', align: 'center', field: "opciones" },
 ]
+const originalRows = []
 const filter = ref('')
-
-async function listarUsuarios() {
-    let usuarios = await useUsuario.getUsuarios()
-    console.log(usuarios);
-    user.value = usuarios.data.Usuarios
-}
-
+const rowCount = ref(10)
+const rows = ref([...originalRows])
+console.log(indice.value);
 async function guardar() {
     loading.value = true
     let r = await useUsuario.addUsuarios({
@@ -188,6 +185,11 @@ function limpiarFormulario() {
 }
 
 listarUsuarios()
+async function listarUsuarios() {
+    let usuarios = await useUsuario.getUsuarios()
+    console.log(usuarios);
+    user.value = usuarios.data.Usuarios
+}
 
 function agregar() {
     alert.value = true
@@ -202,4 +204,5 @@ onMounted(() => {
 #card {
     width: 35em;
     max-width: 100%;
-}</style>
+}
+</style>

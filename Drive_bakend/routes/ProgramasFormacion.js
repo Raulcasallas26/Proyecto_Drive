@@ -7,7 +7,7 @@ const router = Router()
 
   router.get("/", httpProgramasFormacion.getProgramasFormacion)
   
-  router.get("/:id", httpProgramasFormacion.getProgramasFormacionId)
+  // router.get("/:id", httpProgramasFormacion.getProgramasFormacionId)
   
   router.post("/", [
     check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
@@ -15,8 +15,8 @@ const router = Router()
     validarResultados
   ], httpProgramasFormacion.postProgramasFormacion)
   
-  router.put("/:cedula", httpProgramasFormacion.putProgramasFormacion)
+  router.put("/:id", httpProgramasFormacion.putProgramasFormacion)
   
-  router.put("/estado/:cedula",httpProgramasFormacion.putProgramasFormacionEstado)
+  router.put("/estado/:id",httpProgramasFormacion.putProgramaEstado)
   
   export default router

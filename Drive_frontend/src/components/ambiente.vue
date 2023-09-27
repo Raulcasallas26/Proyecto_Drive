@@ -1,10 +1,15 @@
 <template>
   <div class="card-container">
-    <div class="body">
-      <div class="text">Ambientes de Formación</div>
-      <button class="agregar" @click="showModalAgregar = true">
-        Agregar
-      </button>
+    <div class="body" style="position: relative;">
+      <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="showModalAgregar = true" />
+      <div style="margin-left: 5%;" class="text-h4">Ambientes de formacion</div>
+      <q-space />
+      <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
+        color="primary" v-model="filter">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     </div>
     <div>
       <!-- Itera a través de los ambientes y muestra cada uno en un card -->
@@ -257,6 +262,7 @@ onMounted(async () => {
 
 <style scoped>
 .body {
+  margin: 1%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

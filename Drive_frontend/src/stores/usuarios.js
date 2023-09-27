@@ -6,7 +6,7 @@ export const useUsuariosStore = defineStore(
     "Usuarios", () => {
         const addUsuarios = async (info) => {
             try {
-                let res = await axios.post(`${urlBackend}/usuarios`, info)
+                let res = await axios.post(`${urlBackend}/Usuarios`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
@@ -16,8 +16,8 @@ export const useUsuariosStore = defineStore(
 
         const getUsuarios = async () => {
             try {
-                let res = await axios.get(`${urlBackend}/usuarios`)
-                return res 
+                let res = await axios.get(`${urlBackend}/Usuarios`)
+                return res
             } catch (error) {
                 console.log("hay un error en el get");
                 return error
@@ -25,7 +25,7 @@ export const useUsuariosStore = defineStore(
         }
         const editUsuarios = async (id, info) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuarios/${id}`, info)
+                let res = await axios.put(`${urlBackend}/Usuarios/${id}`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
@@ -34,7 +34,7 @@ export const useUsuariosStore = defineStore(
         }
         const activarUsuarios = async (id) => {
             try {
-                let res = await axios.put(`${urlBackend}/usuarios/estado/${id}`)
+                let res = await axios.put(`${urlBackend}/Usuarios/estado/${id}`)
                 return res.data
             } catch (error) {
                 console.log("hay un error en activarUser");

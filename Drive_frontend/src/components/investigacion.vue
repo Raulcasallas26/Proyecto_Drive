@@ -265,6 +265,7 @@ onMounted(async () => {
   
 <style scoped>
 .body {
+    margin: 1%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
