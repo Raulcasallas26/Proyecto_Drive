@@ -19,6 +19,7 @@ export const useLoginStore = defineStore(
                 loading.value = (true)
                 console.log("error en la peticion inicio sesion");
                 console.log(error);
+                return res
             }
             loading.value = (false)
         }

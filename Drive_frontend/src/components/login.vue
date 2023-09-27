@@ -20,11 +20,10 @@
                                 </div>
                             </div>
                             <div class="q-gutter-md">
-                                <q-input label="Cedula" v-model="cedula" />
+                                <q-input v-model="cedula" type="text" label="Cedula" />
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
-                                    label="Ingresar password">
+                                <q-input v-model="password" :type="isPwd ? 'password' : 'text'" label="Ingresar password">
                                     <template v-slot:append>
                                         <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                                             @click="isPwd = !isPwd" />
@@ -34,8 +33,9 @@
                         </q-card-section>
                         <div style="display: flex;  justify-content: center;">
                             <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
-                            <q-btn v-else style="background-color: green;display: flex; justify-content: center;"
-                                @click="pruebaLogin()">
+                            <q-btn v-else
+                                style="background-color: green;display: flex; justify-content: center; color: white;"
+                                @click="validar()">
                                 Iniciar</q-btn>
                         </div>
                         <q-card-section>
@@ -167,6 +167,9 @@ let r = ref("")
 let cedula = ref("");
 let password = ref("");
 let check = ref("");
+let resp = ref("");
+let verdadero = ref("");
+let falso = ref("");
 
 function olvideContra() {
     ingresaCorreo.value = true;
@@ -176,36 +179,81 @@ function comprovar() {
     compruevaCorreo.value = true
 }
 
-/* async function validar() {
-    console.log("hola estoy en validar");
-    let r = await useLogin.validar(cedula, password).then((res) => {
-        console.log(r);
-        if (res.status == 200) {
-            console.log("sesion exitosa");
-            router.push("/home");
-        } else if (res.status == 500) {
-            check.value = "Error al iniciar sesion"
-        }
-    })
-} */
+function validar() {
+    console.log("estoy en validar");
+    if (cedula.value.trim() == "") {
+        check.value = "Inserta tus datos en los campos"
+    } else if (password.value.trim() == "") {
+        check.value = "Inserta tus datos en los campos"
+    } else {
+        check.value = ""
+        let timerInterval
+        Swal.fire({
+            title: 'Validando informacion',
+            html: 'Timpo restante <b></b> milliseconds.',
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                if (Login() == true && resp == 200) {
+                    verdadero.value
+                } else if (resp !== 200) {
+                    console.log(resp);
+                    falso.value
+                }
+            }
+        })
+    }
+}
 
-async function pruebaLogin() {
+async function Login() {
     try {
         loading.value = true
         r = await useLogin.validar(cedula.value, password.value)
+        console.log("objeto general");
         console.log(r);
-        const resp = r.status
+        resp = r.status
+        console.log("estado");
+        console.log(resp);
         if (resp == 200) {
             console.log("sesion exitosa");
             router.push("/home");
-        } else {
+            verdadero.value = Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Bienvenido',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        } else{
+            console.log("esty en la parte negativa");
             check.value = "Error al iniciar sesion"
+
         }
     } catch (error) {
         loading.value = true
+        console.log("estoy en el catch");
         console.log("Hay un error en la funcion pruebaLogin");
+        falso.value = Swal.fire({
+            icon: 'error',
+            title: 'Oopsss..',
+            text: 'Los datos son incorrectos intente nuevamente',
+            // footer: `<div class="cursor-pointer" style="color: blue;" @click="olvideContra()"> Olvide mi contraseña </div>`
+        })
     }
     loading.value = false
+    return true
 }
 
 function ingresar() {
@@ -213,29 +261,6 @@ function ingresar() {
 
 }
 
-// function Ingresar() {
-//     console.log("hola");
-//     if (rol.value === "") {
-//         check.value = "Debes seleccionar tu rol"
-//     } else if (cedula.value.trim() === "") {
-//         check.value = "Debes ingresar tus datos"
-//     } else if (password.value.trim() === "") {
-//         check.value = "debes ingresar tus datos"
-//     } else if (cedula.value !== "123456") {
-//         check.value = "La informacion de los campos es incorrecta"
-//     } else if (password.value !== "123") {
-//         check.value = "La informacion de los campos es incorrecta"
-//     } else {
-//         check.value = ""
-//         Swal.fire({
-//             position: "center",
-//             icon: "success",
-//             title: "Bienvenido",
-//             showConfirmButton: false,
-//             timer: 3000,
-//         });
-//     }
-// }
 
 const images = [
     'https://fulbright.edu.co/wp-content/uploads/2021/09/BARE-5.jpeg',

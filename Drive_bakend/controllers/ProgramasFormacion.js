@@ -1,6 +1,4 @@
 import ProgramasFormacionModel from "../models/ProgramasFormacion.js "
-import bcryptjs from "bcryptjs"
-
 
 const httpProgramasFormacion = {
     getProgramasFormacion: async (req, res) => {
@@ -23,21 +21,19 @@ const httpProgramasFormacion = {
     },
 
     postProgramasFormacion: async ( req, res ) => {
-        const { id, denominacion, codigo, version, estado } = req.body;
-        const ProgramasFormacion = new ProgramasFormacionModel({
-            id,
-            denominacion,
-            codigo,
-            version,
-            estado
-        });
-
+        const { denominacion, codigo, version, estado } = req.body;
         try {
-            const nuevaProgramasFormacion = await ProgramasFormacion.save();
+            const ProgramasFormacion = new ProgramasFormacionModel({
+                denominacion,
+                codigo,
+                version,
+                estado
+            });
+            await ProgramasFormacion.save();
 
             res.json({
                 mensaje: "Una formacion insertada!!",
-                nuevaProgramasFormacion
+                ProgramasFormacion
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar la formacion", error });

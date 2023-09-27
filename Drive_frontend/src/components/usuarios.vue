@@ -6,7 +6,7 @@
                 :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
                 @virtual-scroll="onScroll">
                 <template v-slot:top>
-                    <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="agregar()" />
+                    <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
                     <div style="margin-left: 5%;" class="text-h4">Usuarios</div>
                     <q-space />
                     <q-input borderless dense debounce="300"
@@ -114,7 +114,13 @@ let columns = [
     { name: 'opciones', label: 'Opciones', align: 'center', field: "opciones" },
 ]
 const filter = ref('')
-console.log(indice.value);
+
+async function listarUsuarios() {
+    let usuarios = await useUsuario.getUsuarios()
+    console.log(usuarios);
+    user.value = usuarios.data.Usuarios
+}
+
 async function guardar() {
     loading.value = true
     let r = await useUsuario.addUsuarios({
@@ -182,11 +188,6 @@ function limpiarFormulario() {
 }
 
 listarUsuarios()
-async function listarUsuarios() {
-    let usuarios = await useUsuario.getUsuarios()
-    console.log(usuarios);
-    user.value = usuarios.data.Usuarios
-}
 
 function agregar() {
     alert.value = true

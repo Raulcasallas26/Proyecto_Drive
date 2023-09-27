@@ -13,7 +13,7 @@ const router = Router()
     check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
     check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
     validarResultados
-  ], httpProgramasFormacion.getProgramasFormacion)
+  ], httpProgramasFormacion.postProgramasFormacion)
   
   router.put("/:cedula", httpProgramasFormacion.putProgramasFormacion)
   

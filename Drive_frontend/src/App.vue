@@ -3,7 +3,7 @@
     <q-header elevated class="text-white" id="header">
       <q-toolbar>
         <q-avatar>
-          <img src="../src/img/logo_sena.png" alt="">
+          <img src="../src/img/logo_sena.png" style="filter: invert(1);" alt="">
         </q-avatar>
         <q-toolbar-title>
         </q-toolbar-title>
@@ -18,7 +18,7 @@
       </q-toolbar>
     </q-header>
     <q-drawer v-if="!isInLoginComponent" v-model="drawer" style="background-color: green" show-if-above :mini="miniState"
-      @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :width="200" :breakpoint="500" bordered
+      @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100" :breakpoint="500" bordered
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }" style="background-color: white">
         <q-list padding>

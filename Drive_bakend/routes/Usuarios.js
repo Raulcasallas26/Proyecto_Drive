@@ -10,17 +10,17 @@ router.get("/", httpUsuarios.getUsuarios)
 // router.get("/:id", httpUsuarios.getUsuariosId)
 
 router.post("/", [
-  //   check("nombres", "El nombre es obligatorio").notEmpty().trim().isString(),
-  //   check("apellidos","el apellido es obligatorio",).notEmpty().trim().isString(),
-  //   check("numeroIdentificacion","el numero de identificacion es obligatorio").notEmpty().trim().isString(),
-  //   check("telefono","el telefono es obligatorio").notEmpty().trim().isString(),
-  //   check("email","el correo es obligatorio").notEmpty().trim().isString(),
-  //   check("password","la contraseña es obligatoria").notEmpty().trim().isString(),
-  //   check("perfilProfesional","el perfil profecional es obligatorio").notEmpty().trim().isString(),
-  //   check("curriculum","el curriculum es obligatorio").notEmpty().trim().isString(),
-  // check("idRolUsuario","el rol de usuario es obligatorio").notEmpty().trim().isString(),
-  // check("idRedConocimiento","la red de conocimiento es obligatoria").notEmpty().trim().isString(),
-  // validarResultados    
+  check("nombres", "El nombre es obligatorio").notEmpty().trim().isString(),
+  check("apellidos", "el apellido es obligatorio",).notEmpty().trim().isString(),
+  check("numeroIdentificacion", "el numero de identificacion es obligatorio").notEmpty().trim().isString(),
+  check("telefono", "el telefono es obligatorio").notEmpty().trim().isString(),
+  check("email", "el correo es obligatorio").notEmpty().trim().isString(),
+  check("password", "la contraseña es obligatoria").notEmpty().trim().isString(),
+  check("perfilProfesional", "el perfil profecional es obligatorio").notEmpty().trim().isString(),
+  check("curriculum", "el curriculum es obligatorio").notEmpty().trim().isString(),
+  check("idRolUsuario", "el rol de usuario es obligatorio").notEmpty().trim().isString(),
+  check("idRedConocimiento", "la red de conocimiento es obligatoria").notEmpty().trim().isString(),
+  validarResultados
 ], httpUsuarios.postUsuarios)
 
 router.put("/:id", httpUsuarios.putUsuarios)

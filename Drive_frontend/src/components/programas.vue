@@ -6,7 +6,7 @@
         :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
         @virtual-scroll="onScroll">>
         <template v-slot:top>
-          <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="showModal = true" />
+          <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="alert = true" />
           <div style="margin-left: 5%;" class="text-h4">Programas</div>
           <q-space />
           <q-input borderless dense debounce="300" color="primary" v-model="filter">
@@ -25,7 +25,7 @@
 
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
-            <q-btn class="q-mx-sm" color="primary">📝</q-btn>
+            <q-btn class="q-mx-sm" color="primary" @click="edito()">📝</q-btn>
             <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false">✅</q-btn>
             <q-btn class="q-mx-sm" color="red" outline v-else>❌</q-btn>
           </q-td>
@@ -33,41 +33,61 @@
       </q-table>
     </div>
 
-    <!-- Modal para agregar programas -->
-    <div>
-      <q-dialog v-model="showModal">
-        <q-card class="custom-modal">
-          <q-card-section>
-            <div class="text">Agregar Programa de Formacion</div>
-            <q-input v-model="denominacion" label="Denominación" />
-            <q-input v-model="codigo" label="Código" />
-            <q-input v-model="version" label="Versión" />
-            <q-input v-model="IdNivelFormacion" label="Nivel de formcaion" />
-            <div>
-              <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona una opción" />
-            </div>
-            <div>
-              <q-select v-model="redDeConocimientoSeleccionada" :options="opcionesRedDeConocimiento"
-                label="Red de Conocimiento" />
-            </div>
-            <!-- inicio -->
-            <q-card-section>
-              <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular" outlined
-                dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
-                <template v-slot:append>
-                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                </template>
-              </q-input>
+    <q-dialog v-model="alert">
+      <q-card id="card">
+        <q-card-section>
+          <div class="text-h6">Registro</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none" id="card">
+          <q-card flat bordered class="my-card">
+            <q-card-section class="q-pa-md">
+              <div class="q-gutter-md">
+                <q-input v-model="denominacion" label="Denominación" />
+              </div>
+              <div class="q-gutter-md">
+                <q-input v-model="codigo" label="Código" />
+              </div>
+              <div class="q-gutter-md">
+                <q-input v-model="version" label="Versión" />
+              </div>
+              <div class="q-gutter-md">
+                <q-input v-model="IdNivelFormacion" label="Nivel de formcaion" />
+              </div>
+              <div class="q-gutter-md" v-if="bd === false">
+                <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona una opción" />
+              </div>
+              <div>
+                <q-select v-model="redDeConocimientoSeleccionada" :options="opcionesRedDeConocimiento"
+                  label="Red de Conocimiento" />
+              </div>
+              <q-card-section>
+                <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular" outlined
+                  dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
+                  <template v-slot:append>
+                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
+                  </template>
+                </q-input>
+              </q-card-section>
             </q-card-section>
-            <!-- fin -->
-          </q-card-section>
-          <q-card-section>
-            <q-btn @click="showModal = false" label="Cancelar" />
-            <q-btn @click="agregarformacion()" color="primary" label="Agregar" />
-          </q-card-section>
-        </q-card>
-      </q-dialog>
-    </div>
+            <q-card-section>
+              <div role="alert"
+                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                v-if="check !== ''">
+                <div>
+                  {{ check }}
+                </div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+          <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" v-close-popup />
+          <q-btn flat label="Editar Usuario" v-else @click="editarPrograma()" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -75,59 +95,17 @@
 import { ref, onMounted } from "vue";
 import { useProgramasFormacionStore } from "../stores/programasformacion.js";
 
-const storeprogramas = useProgramasFormacionStore();
+const useProgramas = useProgramasFormacionStore();
 let proga = ref([]);
-
-const showModal = ref(false);
-const denominacion = ref("");
-const codigo = ref("");
-const version = ref("");
-const estado = ref(false);
-
-let columns = [
-  { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-  {
-    name: "denominacion",
-    label: "Denominacion",
-    align: "center",
-    field: "denominacion",
-  },
-  { name: "version", label: "Version", align: "center", field: "version" },
-  { name: "estado", label: "Estado", align: "center", field: "estado" },
-  { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
-];
-
-const loading = ref(false);
-const filter = ref("");
-
-async function obtenerformacion() {
-  let programas = await storeprogramas.getProgramasFormacion();
-  console.log(programas);
-  proga.value = programas.data.ProgramasFormacion;
-  console.log(programas.data);
-}
-
-async function agregarformacion() {
-  loading.value = true;
-  let r = await storeprogramas.agregarPrograma({
-    denominacion: denominacion.value,
-    codigo: codigo.value,
-    version: version.value
-
-  });
-  console.log(r);
-  loading.value = false;
-  obtenerformacion();
-  limpiarFormulario();
-  showModal.value = false;
-}
-function limpiarFormulario() {
-  nombre.value = "";
-  version.version = "";
-  telefono.value = "";
-}
-const niveldeformacion = ref(null);
-const opciones = [
+let check = ref("");
+let bd = ref(false);
+let r = ref("")
+let alert = ref(false);
+let denominacion = ref("");
+let codigo = ref("");
+let version = ref("");
+let estado = ref(false);
+let opciones = [
   "auxiliar",
   "operario",
   "técnico",
@@ -135,27 +113,56 @@ const opciones = [
   "tecnólogo",
   "especialización tecnológica",
 ];
-//pedir red de conocimiento
-/* const redDeConocimientoSeleccionada = ref(null);
-const opcionesRedDeConocimiento = ref([]);
 
-// Simula una solicitud a la base de datos para obtener las opciones
-const obtenerOpcionesDesdeBaseDeDatos = async () => {
-  try {
-    // Realiza la solicitud a la API o base de datos para obtener las opciones
-    // Reemplaza esta lógica con tu solicitud real
-    const response = await tuFuncionParaObtenerOpcionesDesdeLaBaseDeDatos();
+let columns = [
+  { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
+  { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion",},
+  { name: "version", label: "Version", align: "center", field: "version" },
+  { name: "estado", label: "Estado", align: "center", field: "estado" },
+  { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
+];
+const filter = ref("");
+const loading = ref(false);
 
-    // Asigna las opciones obtenidas a opcionesRedDeConocimiento
-    opcionesRedDeConocimiento.value = response.data.opciones; // Asegúrate de ajustar esto según la estructura de tu respuesta
-  } catch (error) {
-    console.error("Error al obtener las opciones:", error);
-  }
-}; */
-//pedir diseño curricular 
+async function obtenerformacion() {
+  let programas = await useProgramas.getProgramasFormacion();
+  console.log(programas);
+  proga.value = programas.data.ProgramasFormacion;
+}
+
+async function guardar() {
+    loading.value = true
+    let res = await useProgramas.addProgramasFormacion({
+        denominacion:denominacion.value,
+        codigo:codigo.value,
+        version:version.value
+    })
+    console.log(res);
+    console.log("se guardo un nuevo programa");
+    loading.value = false
+    obtenerformacion()
+    limpiarFormulario()
+}
+
+function edito(props) {
+    bd.value = true
+    r.value = props.row
+    alert.value = true
+    denominacion.value = r.value.denominacon
+    codigo.value = r.value.codigo
+    version.value = r.value.version
+}
+
+function limpiarFormulario() {
+  denominacion.value = "";
+  codigo.version = "";
+  version.value = "";
+  opciones.value = ""
+}
+const niveldeformacion = ref(null);
+
 const archivoOEnlace = ref(""); // Variable para almacenar el nombre del archivo seleccionado
 
-// Función para abrir el selector de archivos
 const abrirSelectorDeArchivos = () => {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -165,12 +172,10 @@ const abrirSelectorDeArchivos = () => {
   fileInput.click();
 };
 
-// Función para manejar la selección de archivos
 const handleFileSelection = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
     archivoOEnlace.value = selectedFile.name;
-    // Aquí puedes manejar el archivo seleccionado según tus necesidades
     alert(`Archivo seleccionado: ${selectedFile.name}`);
   }
   event.target.remove(); // Elimina el input de tipo file después de su uso
@@ -182,8 +187,8 @@ const limpiarCampo = () => {
 };
 
 //fin
-onMounted(async () => {
-  await obtenerformacion();
+onMounted(() => {
+  obtenerformacion();
   //obtenerOpcionesDesdeBaseDeDatos();
 });
 </script>
