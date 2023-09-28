@@ -3,7 +3,7 @@
     <div>
       <q-table class="tabla" flat bordered title="Treats" :rows="proga" :columns="columns" row-key="id" :filter="filter"
         :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
-        :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[0]"
+        :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[15]"
         @virtual-scroll="onScroll">>
         <template v-slot:top>
           <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"

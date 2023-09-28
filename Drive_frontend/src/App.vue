@@ -18,8 +18,8 @@
       </q-toolbar>
     </q-header>
     <q-drawer v-if="!isInLoginComponent" v-model="drawer" style="background-color: green" show-if-above :mini="miniState"
-      @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100" :breakpoint="500" bordered
-      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+      @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100" :breakpoint="500"
+      bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }" style="background-color: white">
         <q-list padding>
           <q-item clickable v-ripple id="btn" to="/home">
@@ -66,10 +66,10 @@
 
           <q-item clickable v-ripple to="/materialesApoyo">
             <q-item-section avatar>
-              <q-icon name="support" />
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/1556/1556328.png" />
             </q-item-section>
-            <q-item-section> Materiales de Apoyo </q-item-section>
-          </q-item>
+            <q-item-section>Materiales</q-item-section>
+            </q-item>
 
           <q-item clickable v-ripple to="/redConocimento">
             <q-item-section avatar>
@@ -77,7 +77,7 @@
             </q-item-section>
             <q-item-section> Red de Conocimiento </q-item-section>
           </q-item>
-        
+
 
           <q-item clickable v-ripple to="/proyectos">
             <q-item-section avatar>

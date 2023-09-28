@@ -26,7 +26,7 @@
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
                         <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
-                        <q-btn v-else class="q-mx-sm" color="primary" @click="edito(props)">📝</q-btn>
+                        <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito(props)">📝</q-btn>
                         <q-btn class="q-mx-sm" color="green" outline @click="activar(props)"
                             v-if="props.row.estado == false">✅</q-btn>
                         <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
@@ -47,16 +47,20 @@
                                 <q-input v-model="nombre" label="Nombre" />
                             </div>
                             <div class="q-gutter-md">
-                                <q-input type="email" v-model="email" label="E-mail" />
+                                <q-input v-model="email" type="email" suffix="Example@soy.sena.edu.co" label="E-mail">
+                                    <template v-slot:append>
+                                        <q-icon name="mail" />
+                                    </template>
+                                </q-input>
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model="telefono" label="Telefono" />
+                                <q-input v-model.number="telefono" type="number" label="Telefono" />
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model="cedula" label="Cedula" />
+                                <q-input v-model.number="cedula" type="number" label="Cedula" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === false">
-                                <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'"
+                                <q-input v-model="password" :type="isPwd ? 'password' : 'text'"
                                     label="Ingresar password">
                                     <template v-slot:append>
                                         <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"

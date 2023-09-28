@@ -8,6 +8,7 @@ const AmbientesFormacionSchema = new mongoose.Schema({
     descripcion:{type:String},
     documentos:{type:String},
     idCentroDeFormacion:{type:String},
+    estado:{type: Boolean, default: true},
 }) 
 
 export default mongoose.model("AmbientesFormacion", AmbientesFormacionSchema)

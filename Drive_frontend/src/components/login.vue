@@ -20,10 +20,12 @@
                                 </div>
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model="cedula" type="text" label="Cedula" />
+                                <q-input v-model="cedula" type="text" label="Cedula"
+                                    :rules="[val => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model="password" :type="isPwd ? 'password' : 'text'" label="Ingresar password">
+                                <q-input v-model="password" :type="isPwd ? 'password' : 'text'"
+                                    :rules="[val => !!val || 'Campo requerido']" label="Ingresar password">
                                     <template v-slot:append>
                                         <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                                             @click="isPwd = !isPwd" />
@@ -65,7 +67,11 @@
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
                             <div class="q-gutter-md">
-                                <q-input v-model="correo" label="E-mail" />
+                                <q-input v-model="email" type="email" suffix="Example@soy.sena.edu.co" label="E-mail">
+                                    <template v-slot:append>
+                                        <q-icon name="mail" />
+                                    </template>
+                                </q-input>
                             </div>
                         </q-card-section>
                         <q-card-section>
@@ -187,33 +193,14 @@ function validar() {
         check.value = "Inserta tus datos en los campos"
     } else {
         check.value = ""
-        let timerInterval
-        Swal.fire({
-            title: 'Validando informacion',
-            html: 'Timpo restante <b></b> milliseconds.',
-            timer: 1,
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading()
-                const b = Swal.getHtmlContainer().querySelector('b')
-                timerInterval = setInterval(() => {
-                    b.textContent = Swal.getTimerLeft()
-                }, 1)
-            },
-            willClose: () => {
-                clearInterval(timerInterval)
-            }
-        }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-                if (Login() == true && resp == 200) {
-                    verdadero.value
-                } else if (resp !== 200) {
-                    console.log(resp);
-                    falso.value
-                }
-            }
-        })
+        /* Read more about handling dismissals below */
+
+        if (Login() == true && resp == 200) {
+            verdadero.value
+        } else if (resp !== 200) {
+            console.log(resp);
+            falso.value
+        }
     }
 }
 
@@ -236,7 +223,7 @@ async function Login() {
                 showConfirmButton: false,
                 timer: 2000
             })
-        } else{
+        } else {
             console.log("esty en la parte negativa");
             check.value = "Error al iniciar sesion"
 

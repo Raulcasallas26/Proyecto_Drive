@@ -23,11 +23,13 @@ const httpMaterialesApoyo = {
     },
 
     postMaterialesApoyo: async (req, res) => {
-        const { id, nombre, documento } = req.body;
+        const { id, nombre, documento, descripccion, documentos } = req.body;
         const MaterialesApoyo = new MaterialesApoyoModel({
           id,
           nombre,
-          documento
+          documento,
+          descripccion,
+          documentos
         });
 
         try {
@@ -44,8 +46,8 @@ const httpMaterialesApoyo = {
 
     putMaterialesApoyo: async (req, res) => {
         const { id } = req.params;
-        const { nombre, documento } = req.body;
-        const MaterialesApoyo = await MaterialesApoyoModel.findByIdAndUpdate(id, { nombre, documento }, { new: true })
+        const { nombre, documento, descripccion, documentos } = req.body;
+        const MaterialesApoyo = await MaterialesApoyoModel.findByIdAndUpdate(id, { nombre, documento, descripccion, documentos }, { new: true })
         res.json({
             msg: "ok",
             MaterialesApoyo

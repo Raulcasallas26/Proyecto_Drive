@@ -21,4 +21,5 @@ const router = Router()
   
   router.put("/:id",httpAmbientesFormacion.putAmbientesFormacion)
   
+  router.put("/estado/:id",httpAmbientesFormacion.putAmbientesFormacionEstado)
   export default router

@@ -1,8 +1,8 @@
 <template>
     <div class="card-container">
-        <div class="body">
-            <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="agregar()" />
-            <div style="margin-left: 5%;" class="text-h4">Instrumentos de Evaluacion</div>
+        <div class="body" style="position: relative;">
+            <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="showModalAgregar = true" />
+            <div style="margin-left: 5%;" class="text-h4">Materiales de apoyo</div>
             <q-space />
             <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
                 color="primary" v-model="filter">
@@ -17,9 +17,9 @@
                 <div class="card">
                     <div class="top-half">
                         <div class="info">
-                            <p><strong>Código:</strong> {{ ambiente.codigo }}</p>
+                            <p><strong>Código:</strong> {{ ambiente.id }}</p>
                             <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
-                            <p><strong>Tipo:</strong> {{ ambiente.tipo }}</p>
+                            <p><strong>Tipo:</strong> {{ ambiente.documento }}</p>
                         </div>
                         <div class="buttons">
                             <button @click="toggleDetails(index)" class="rotate-button">
@@ -33,6 +33,8 @@
                                     class="arrow-icon" />
                             </button>
                         </div>
+
+
                     </div>
 
                     <q-slide-transition appear>
@@ -40,13 +42,9 @@
                             <div class="bottom-half">
                                 <div class="info">
                                     <p>
-                                        <strong>Descripción:</strong> {{ ambiente.descripcion }}
+                                        <strong>Descripción:</strong> {{ ambiente.descripccion }}
                                     </p>
                                     <p><strong>Documentos:</strong> {{ ambiente.documentos }}</p>
-                                    <p>
-                                        <strong>ID Centro de Formación:</strong>
-                                        {{ ambiente.idCentroDeFormacion }}
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -54,22 +52,18 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal para agregar ambientes -->
         <div>
             <q-dialog v-model="showModalAgregar">
                 <q-card class="custom-modal">
                     <q-card-section>
-                        <div class="text2">Agregar Ambiente</div>
+                        <div class="text2">Agregar Materiales</div>
                         <q-input v-model="codigo" label="Codigo" />
                         <q-input v-model="Nombre" label="Nombre" />
                         <q-input v-model="Tipo" label="Tipo" />
+
                         <q-input v-model="Descripcion" label="Descripcion" />
-                        <div>
-                            <q-select v-model="IdCentroFormacion" :options="opciones"
-                                label="Selecciona una Id de Centro de Formacion" />
-                        </div>
-                        <!-- inicio -->
+
                         <q-card-section>
                             <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
                                 prepend-icon="attach_file" @clear="limpiarCampo">
@@ -83,6 +77,9 @@
                     <q-card-section>
                         <q-btn @click="showModalAgregar = false" label="Cancelar" />
                         <q-btn @click="agregarAmbiente()" color="primary" label="Agregar" />
+
+                        <div v-if="validationErrors.codigo" class="error-message">{{ validationErrors.codigo }}</div>
+
                     </q-card-section>
                 </q-card>
             </q-dialog>
@@ -93,15 +90,12 @@
             <q-dialog v-model="showModalEdicion">
                 <q-card class="custom-modal">
                     <q-card-section>
-                        <div class="text2">Editar Ambiente</div>
+                        <div class="text2">Editar Materiales</div>
                         <q-input v-model="codigo" label="Codigo" />
                         <q-input v-model="Nombre" label="Nombre" />
                         <q-input v-model="Tipo" label="Tipo" />
                         <q-input v-model="Descripcion" label="Descripcion" />
-                        <div>
-                            <q-select v-model="IdCentroFormacion" :options="opciones"
-                                label="Selecciona una Id de Centro de Formacion" />
-                        </div>
+
                         <!-- inicio -->
                         <q-card-section>
                             <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
@@ -120,19 +114,36 @@
                 </q-card>
             </q-dialog>
         </div>
+        <!-- Modal para eliminar ambientes -->
+        <div>
+            <q-dialog v-model="showModalEliminacion">
+                <q-card class="custom-modal">
+                    <q-card-section>
+                        <div class="text2">Eliminar Ambiente</div>
+                        <p>¿Estás seguro de que deseas eliminar este ambiente?</p>
+                    </q-card-section>
+                    <q-card-section>
+                        <q-btn @click="showModalEliminacion = false" label="Cancelar" />
+                        <q-btn @click="confirmarEliminacion" color="negative" label="Eliminar" />
+                    </q-card-section>
+                </q-card>
+            </q-dialog>
+        </div>
     </div>
 </template>
   
 <script setup>
 import { ref, onMounted } from "vue";
-import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
+import { useMaterialesApoyoStore } from "../stores/MaterialesApoyo.js";
 
-const StoreAmbiente = useAmbientesFormacionStore();
+const Storemateriales = useMaterialesApoyoStore();
 let ambientess = ref([]);
 let showModalAgregar = ref(false);
 let showModalEdicion = ref(false); // Variable para controlar el modal de edición
 let codigo = ref("");
 let Nombre = ref("");
+let errorMessage = ref("")
+const validationErrors = ref({});
 let Tipo = ref("");
 let Descripcion = ref("");
 let IdCentroFormacion = ref("");
@@ -141,24 +152,38 @@ const loading = ref(false);
 
 async function agregarAmbiente() {
     loading.value = true;
-    let r = await StoreAmbiente.addAmbientesFormacion({
-        nombre: Nombre.value,
-        codigo: codigo.value,
-        tipo: Tipo.value,
-        descripcion: Descripcion.value,
-        idCentroDeFormacion: IdCentroFormacion.value,
-        documentos: archivoOEnlace.value,
-    });
-    getAmbientesformacion();
-    /* console.log(Nombre.value, codigo.value, Tipo.value, Descripcion.value); */
+    try {
+        const r = await Storemateriales.addMaterialesApoyo({
+            id: codigo.value,
+            nombre: Nombre.value,
+            documento: Tipo.value,
+            descripccion: Descripcion.value,
+            documentos: archivoOEnlace.value,
+        });
+
+        if (r.status === 200) {
+            getMaterialesApoyo();
+            showModalAgregar = false;
+        } else {
+            // Manejo de errores del servidor
+            const data = await r.json(); // Si el servidor devuelve un mensaje de error JSON
+            errorMessage.value = data.message; // Establece el mensaje de error
+        }
+    } catch (error) {
+        // Manejo de errores de red o cualquier otro error
+        console.error('Error en la solicitud:', error);
+        errorMessage.value = 'Hubo un error en la solicitud: ' + error.message;
+    } finally {
+        loading.value = false;
+    }
 }
 
 
-async function getAmbientesformacion() {
-    let Formacion = await StoreAmbiente.getAmbientesFormacion();
-    ambientess.value = Formacion.data.AmbientesFormacion;
+async function getMaterialesApoyo() {
+    let Formacion = await Storemateriales.getMaterialesApoyo();
+    ambientess.value = Formacion.data.MaterialesApoyo;
 }
-
+/*    <p><strong>Código:</strong> {{ ambiente.codigo }}</p> */
 const cardStates = ref({});
 const isRotated = ref({});
 const toggleDetails = (index) => {
@@ -176,37 +201,31 @@ const abrirSelectorDeArchivos = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.style.display = "none";
-    fileInput.addEventListener("change", handleFileSelection);
+    fileInput.addEventListener("change", (event) => {
+        const selectedFile = event.target.files[0];
+        const selectedFileName = selectedFile ? selectedFile.name : "";
+
+        // Asignar el nombre del archivo al campo archivoOEnlace
+        archivoOEnlace.value = selectedFileName;
+        const fileExtension = selectedFileName.split('.').pop();
+        Tipo.value = fileExtension;
+        // Buscar la opción que corresponde al nombre del archivo
+        const selectedOption = opciones.find((option) =>
+            option.includes(selectedFileName)
+        );
+
+        if (selectedOption) {
+            // Establecer el valor de "Tipo" basado en el textoDeOpcion
+            Tipo.value = selectedOption;
+        } else {
+            // Manejar el caso en que no se encuentre una opción correspondiente
+            alert("No se encontró una opción correspondiente al archivo seleccionado.");
+        }
+
+        event.target.remove(); // Elimina el input de tipo file después de su uso
+    });
     document.body.appendChild(fileInput);
     fileInput.click();
-};
-
-// Función para manejar la selección de archivos
-const handleFileSelection = (event) => {
-    const selectedFile = event.target.files[0];
-    const selectedFileName = selectedFile ? selectedFile.name : "";
-
-    // Asignar el nombre del archivo al campo archivoOEnlace
-    archivoOEnlace.value = selectedFileName;
-
-    // Buscar la opción que corresponde al nombre del archivo
-    const selectedOption = opciones.find((option) =>
-        option.includes(selectedFileName)
-    );
-
-    if (selectedOption) {
-        // Enviar el texto correspondiente a la opción seleccionada
-        const textoDeOpcion = selectedOption;
-        // Aquí puedes hacer lo que necesites con textoDeOpcion
-        alert(`Texto de la opción seleccionada: ${textoDeOpcion}`);
-    } else {
-        // Manejar el caso en que no se encuentre una opción correspondiente
-        alert(
-            "No se encontró una opción correspondiente al archivo seleccionado."
-        );
-    }
-
-    event.target.remove(); // Elimina el input de tipo file después de su uso
 };
 
 
@@ -217,73 +236,105 @@ let idAmbienteEditando = ref(null);
 const abrirModalEdicion = (index) => {
     idAmbienteEditando.value = index;
     const ambienteSeleccionado = ambientess.value[index];
-    codigo.value = ambienteSeleccionado.codigo;
+    codigo.value = ambienteSeleccionado.id;
     Nombre.value = ambienteSeleccionado.nombre;
-    Tipo.value = ambienteSeleccionado.tipo;
-    Descripcion.value = ambienteSeleccionado.descripcion;
-    IdCentroFormacion.value = ambienteSeleccionado.idCentroDeFormacion;
+    Tipo.value = ambienteSeleccionado.documento;
+    Descripcion.value = ambienteSeleccionado.descripccion;
+
     archivoOEnlace.value = ambienteSeleccionado.documentos;
     showModalEdicion.value = true;
+
 };
 
 const guardarCambios = async () => {
     if (idAmbienteEditando.value !== null) {
         const index = idAmbienteEditando.value;
         const ambienteEditado = {
-            codigo: codigo.value,
+            id: codigo.value,
             nombre: Nombre.value,
-            tipo: Tipo.value,
-            descripcion: Descripcion.value,
-            idCentroDeFormacion: IdCentroFormacion.value,
+            documento: Tipo.value,
+            descripccion: Descripcion.value,
             documentos: archivoOEnlace.value,
         };
 
         // Llamar al método de la store para editar el ambiente en la base de datos
-        const response = await StoreAmbiente.editAmbientesFormacion(
+        const response = await Storemateriales.editMaterialesApoyo(
             ambientess.value[index]._id,
             ambienteEditado
         );
 
         if (response.status === 200) {
-
             ambientess.value[index] = ambienteEditado;
             showModalEdicion.value = false;
             idAmbienteEditando.value = null;
+            limpiarFormulario()
         } else {
-
-            console.error('Error al guardar los cambios en el servidor');
+            console.error("Error al guardar los cambios en el servidor");
         }
     }
 };
+const showModalEliminacion = ref(false); // Variable para controlar el modal de eliminación
+const idAmbienteEliminando = ref(null);
+const abrirModalEliminacion = (id) => {
+    idAmbienteEliminando.value = id; // Establece el ID del ambiente que se va a eliminar
+    showModalEliminacion.value = true; // Abre el modal de eliminación
+};
 
+const confirmarEliminacion = async () => {
+    if (idAmbienteEliminando.value !== null) {
+        // Llama a la función eliminarAmbiente en la tienda para eliminar el ambiente
+        const response = await StoreAmbiente.eliminarAmbiente(
+            idAmbienteEliminando.value
+        );
+
+        if (response.status === 200) {
+            // Eliminación exitosa, cierra el modal de eliminación y actualiza la lista de ambientes
+            showModalEliminacion.value = false;
+            idAmbienteEliminando.value = null;
+            await getAmbientesformacion(); // Actualiza la lista de ambientes después de la eliminación
+        } else {
+            // Maneja errores en la eliminación
+            console.error("Error al eliminar el ambiente");
+        }
+    }
+};
+function limpiarFormulario() {
+
+    codigo.value = "";
+    Nombre.value = "";
+    Tipo.value = "";
+    archivoOEnlace.value = "";
+    IdCentroFormacion.value = "";
+    Descripcion.value = "";
+}
+function limpiarMensajeError() {
+    errorMessage.value = null;
+}
 onMounted(async () => {
-    await getAmbientesformacion();
+    await getMaterialesApoyo();
 });
 //editAmbientesFormacion   StoreAmbiente
 </script>
-  
+
 <style scoped>
 .body {
+    margin: 1%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    position: relative;
-    margin: 1rem;
 }
 
 .text {
     font-size: 500%;
     color: green;
     margin-top: 2%;
-
 }
 
 .text2 {
     font-size: 400%;
     color: green;
     margin-top: 2%;
-
 }
 
 .agregar {
@@ -291,7 +342,7 @@ onMounted(async () => {
     width: 8%;
     height: 20%;
     border-radius: 8px;
-    margin-left: 90%;
+    margin-right: -20%;
     color: white;
     font-size: 150%;
     cursor: pointer;
@@ -325,8 +376,6 @@ onMounted(async () => {
 .bottom-half {
     margin-top: 16px;
 }
-
-
 
 .editar {
     margin-left: -45%;

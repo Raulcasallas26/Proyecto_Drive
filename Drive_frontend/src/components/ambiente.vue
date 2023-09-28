@@ -15,11 +15,14 @@
       <!-- Itera a través de los ambientes y muestra cada uno en un card -->
       <div v-for="(ambiente, index) in ambientess" :key="index">
         <div class="card">
-          <div class="top-half">
-            <div class="info">
+          <div class="top-half" >
+            <div class="info" @click="toggleDetails(index)">
               <p><strong>Código:</strong> {{ ambiente.codigo }}</p>
               <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
               <p><strong>Tipo:</strong> {{ ambiente.tipo }}</p>
+              <strong>Estado: </strong>
+              <span class="text-green" v-if="ambiente.estado === true"> Activo</span>
+              <span class="text-orange" v-else> Ocuapado</span>
             </div>
             <div class="buttons">
               <button @click="toggleDetails(index)" class="rotate-button">
@@ -31,6 +34,11 @@
                 <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Editar" class="arrow-icon" />
               </button>
             </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end;">
+            <q-btn id="boton-estado" class="q-pa-r" color="green" outline @click="activar(ambiente)"
+              v-if="ambiente.estado === false">✅Activar </q-btn>
+            <q-btn class="q-pa-r" color="orange" outline @click="activar(ambiente)" v-else>⚠ Ocupar</q-btn>
           </div>
 
           <q-slide-transition appear>
@@ -46,6 +54,15 @@
                     {{ ambiente.idCentroDeFormacion }}
                   </p>
                 </div>
+                <div class="buttons">
+                  <button class="rotate-button">
+                    <div class="arrow-icon" :class="{ rotate: isRotated[index] }" @click="toggleDetails(index)">
+                      <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
+                    </div>
+                  </button>
+
+                </div>
+
               </div>
             </div>
           </q-slide-transition>
@@ -125,7 +142,7 @@
 import { ref, onMounted } from "vue";
 import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
 
-const StoreAmbiente = useAmbientesFormacionStore();
+const useambiente = useAmbientesFormacionStore();
 let ambientess = ref([]);
 let showModalAgregar = ref(false);
 let showModalEdicion = ref(false); // Variable para controlar el modal de edición
@@ -139,7 +156,7 @@ const loading = ref(false);
 
 async function agregarAmbiente() {
   loading.value = true;
-  let r = await StoreAmbiente.addAmbientesFormacion({
+  let r = await useambiente.addAmbientesFormacion({
     nombre: Nombre.value,
     codigo: codigo.value,
     tipo: Tipo.value,
@@ -151,9 +168,24 @@ async function agregarAmbiente() {
   /* console.log(Nombre.value, codigo.value, Tipo.value, Descripcion.value); */
 }
 
+async function activar(ambiente) {
+  console.log("hola");
+  console.log(ambiente.estado);
+  let r = ambiente
+  if (r.estado === true) {
+    r.estado = false
+    console.log(r.estado, "resultado del if");
+  } else {
+    r.estado = true
+    console.log(r.estado, "resultado del else");
+  }
+  let est = await useambiente.activarAmbientesFormacion(r._id)
+  console.log(est);
+}
+
 
 async function getAmbientesformacion() {
-  let Formacion = await StoreAmbiente.getAmbientesFormacion();
+  let Formacion = await useambiente.getAmbientesFormacion();
   ambientess.value = Formacion.data.AmbientesFormacion;
 }
 
@@ -237,7 +269,7 @@ const guardarCambios = async () => {
     };
 
     // Llamar al método de la store para editar el ambiente en la base de datos
-    const response = await StoreAmbiente.editAmbientesFormacion(
+    const response = await useambiente.editAmbientesFormacion(
       ambientess.value[index]._id,
       ambienteEditado
     );
@@ -257,7 +289,7 @@ const guardarCambios = async () => {
 onMounted(async () => {
   await getAmbientesformacion();
 });
-//editAmbientesFormacion   StoreAmbiente
+//editAmbientesFormacion   useambiente
 </script>
 
 <style scoped>

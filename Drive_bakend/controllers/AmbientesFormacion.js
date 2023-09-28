@@ -57,30 +57,21 @@ const httpAmbientesFormacion = {
     },
 
     putAmbientesFormacionEstado: async (req, res) => {
-        const { id } = req.params;
-
-        try {
-
-            const AmbientesFormacion = await AmbientesFormacionModel.findOne({ id });
-
-            if (!AmbientesFormacion) {
-                return res.status(400).json({ mensaje: "Ambiente no encontrado" });
-            }
-
-            AmbientesFormacion.estado = !AmbientesFormacion.estado
-
-            await AmbientesFormacion.save();
-
-            const estadoMensaje = AmbientesFormacion.estado ? "Activo" : "Inactivo";
-
-            res.json({
-                mensaje: `Estado de la formacion modificada a  ${estadoMensaje}`,
-                AmbientesFormacion: AmbientesFormacion
-            });
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al cambiar la informacion del ambiente", error })
+        const { id } = req.params  
+        const formacion = await AmbientesFormacionModel.findById(id)
+        let Amnbiente = null
+        if (formacion.estado) {
+            Amnbiente = await AmbientesFormacionModel.findByIdAndUpdate(id, { estado: false })
+        } else {
+            Amnbiente = await AmbientesFormacionModel.findByIdAndUpdate(id, { estado: true })
         }
-    }
+        const AmnbienteAutenticado = req.Amnbiente
+        res.json({
+            msj: "fue cambiado el estado",
+            Amnbiente,
+            AmnbienteAutenticado
+        }) 
+    },
 }
 
 export default httpAmbientesFormacion
