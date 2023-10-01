@@ -1,7 +1,7 @@
 <template>
     <div class="card-container">
         <div class="body" style="position: relative;">
-            <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="showModalAgregar = true" />
+            <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="alert = true" />
             <div style="margin-left: 5%;" class="text-h4">Materiales de apoyo</div>
             <q-space />
             <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
@@ -16,7 +16,7 @@
             <div v-for="(ambiente, index) in ambientess" :key="index">
                 <div class="card">
                     <div class="top-half">
-                        <div class="info">
+                        <div class="info" @click="toggleDetails(index)">
                             <p><strong>Código:</strong> {{ ambiente.id }}</p>
                             <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
                             <p><strong>Tipo:</strong> {{ ambiente.documento }}</p>
@@ -33,12 +33,17 @@
                                     class="arrow-icon" />
                             </button>
                         </div>
-
-
                     </div>
-
                     <q-slide-transition appear>
                         <div v-show="cardStates[index]">
+                            <div>
+                                <button @click="toggleDetails(index)" class="rotate-button">
+                                    <div class="arrow-icon" :class="{ rotate: isRotated[index] }">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow"
+                                            class="arrow-icon" />
+                                    </div>
+                                </button>
+                            </div>
                             <div class="bottom-half">
                                 <div class="info">
                                     <p>
@@ -52,110 +57,83 @@
                 </div>
             </div>
         </div>
-        <!-- Modal para agregar ambientes -->
-        <div>
-            <q-dialog v-model="showModalAgregar">
-                <q-card class="custom-modal">
-                    <q-card-section>
-                        <div class="text2">Agregar Materiales</div>
-                        <q-input v-model="codigo" label="Codigo" />
-                        <q-input v-model="Nombre" label="Nombre" />
-                        <q-input v-model="Tipo" label="Tipo" />
-
-                        <q-input v-model="Descripcion" label="Descripcion" />
-
-                        <q-card-section>
-                            <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
-                                prepend-icon="attach_file" @clear="limpiarCampo">
-                                <template v-slot:append>
-                                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                                </template>
-                            </q-input>
+        <q-dialog v-model="alert">
+            <q-card id="card" style="width: 500px; max-width: 100%;">
+                <q-card-section>
+                    <div class="text-h4">Registro</div>
+                </q-card-section>
+                <q-card-section class="q-pt-none" id="card">
+                    <q-card flat bordered class="my-card">
+                        <q-card-section class="q-pa-md">
+                            <div class="q-gutter-md">
+                                <q-input v-model="codigo" label="Código" />
+                            </div>
+                            <div class="q-gutter-md">
+                                <q-input v-model="nombre" label="Nombre" />
+                            </div>
+                            <div class="q-gutter-md">
+                                <q-input v-model="Descripcion" label="Descripcion" />
+                            </div>
+                            <div class="q-gutter-md">
+                                <q-input v-model="Tipo" label="Tipo" />
+                            </div>
+                            <q-card-section>
+                                <q-input class="input" v-model="archivoOEnlace" label="Documentos" dense clearable
+                                    prepend-icon="attach_file" @clear="limpiarCampo">
+                                    <template v-slot:append>
+                                        <q-icon name="attach_file" style="cursor: pointer"
+                                            @click="abrirSelectorDeArchivos" />
+                                    </template>
+                                </q-input>
+                            </q-card-section>
                         </q-card-section>
-                        <!-- fin -->
-                    </q-card-section>
-                    <q-card-section>
-                        <q-btn @click="showModalAgregar = false" label="Cancelar" />
-                        <q-btn @click="agregarAmbiente()" color="primary" label="Agregar" />
-
-                        <div v-if="validationErrors.codigo" class="error-message">{{ validationErrors.codigo }}</div>
-
-                    </q-card-section>
-                </q-card>
-            </q-dialog>
-        </div>
-
-        <!-- Modal para editar ambientes -->
-        <div>
-            <q-dialog v-model="showModalEdicion">
-                <q-card class="custom-modal">
-                    <q-card-section>
-                        <div class="text2">Editar Materiales</div>
-                        <q-input v-model="codigo" label="Codigo" />
-                        <q-input v-model="Nombre" label="Nombre" />
-                        <q-input v-model="Tipo" label="Tipo" />
-                        <q-input v-model="Descripcion" label="Descripcion" />
-
-                        <!-- inicio -->
                         <q-card-section>
-                            <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
-                                prepend-icon="attach_file" @clear="limpiarCampo">
-                                <template v-slot:append>
-                                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                                </template>
-                            </q-input>
+                            <div role="alert"
+                                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                                v-if="check !== ''">
+                                <div>
+                                    {{ check }}
+                                </div>
+                            </div>
                         </q-card-section>
-                        <!-- fin -->
-                    </q-card-section>
-                    <q-card-section>
-                        <q-btn @click="showModalEdicion = false" label="Cancelar" />
-                        <q-btn @click="guardarCambios" color="primary" label="Guardar Cambios" />
-                    </q-card-section>
-                </q-card>
-            </q-dialog>
-        </div>
-        <!-- Modal para eliminar ambientes -->
-        <div>
-            <q-dialog v-model="showModalEliminacion">
-                <q-card class="custom-modal">
-                    <q-card-section>
-                        <div class="text2">Eliminar Ambiente</div>
-                        <p>¿Estás seguro de que deseas eliminar este ambiente?</p>
-                    </q-card-section>
-                    <q-card-section>
-                        <q-btn @click="showModalEliminacion = false" label="Cancelar" />
-                        <q-btn @click="confirmarEliminacion" color="negative" label="Eliminar" />
-                    </q-card-section>
-                </q-card>
-            </q-dialog>
-        </div>
+                    </q-card>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+                    <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" v-close-popup />
+                    <q-btn flat label="Editar Usuario" v-else @click="editarMateriales()" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
     </div>
 </template>
-  
 <script setup>
 import { ref, onMounted } from "vue";
 import { useMaterialesApoyoStore } from "../stores/MaterialesApoyo.js";
 
 const Storemateriales = useMaterialesApoyoStore();
 let ambientess = ref([]);
-let showModalAgregar = ref(false);
-let showModalEdicion = ref(false); // Variable para controlar el modal de edición
+let alert = ref(false);
 let codigo = ref("");
-let Nombre = ref("");
+let nombre = ref("");
+let check = ref("")
 let errorMessage = ref("")
 const validationErrors = ref({});
+let bd = ref(false)
 let Tipo = ref("");
 let Descripcion = ref("");
 let IdCentroFormacion = ref("");
 const archivoOEnlace = ref("");
 const loading = ref(false);
 
-async function agregarAmbiente() {
+async function guardar() {
     loading.value = true;
     try {
         const r = await Storemateriales.addMaterialesApoyo({
             id: codigo.value,
-            nombre: Nombre.value,
+            nombre: nombre.value,
             documento: Tipo.value,
             descripccion: Descripcion.value,
             documentos: archivoOEnlace.value,
@@ -237,21 +215,22 @@ const abrirModalEdicion = (index) => {
     idAmbienteEditando.value = index;
     const ambienteSeleccionado = ambientess.value[index];
     codigo.value = ambienteSeleccionado.id;
-    Nombre.value = ambienteSeleccionado.nombre;
+    nombre.value = ambienteSeleccionado.nombre;
     Tipo.value = ambienteSeleccionado.documento;
     Descripcion.value = ambienteSeleccionado.descripccion;
 
     archivoOEnlace.value = ambienteSeleccionado.documentos;
-    showModalEdicion.value = true;
+    alert.value = true;
+    bd.value = true
 
 };
 
-const guardarCambios = async () => {
+const editarMateriales = async () => {
     if (idAmbienteEditando.value !== null) {
         const index = idAmbienteEditando.value;
         const ambienteEditado = {
             id: codigo.value,
-            nombre: Nombre.value,
+            nombre: nombre.value,
             documento: Tipo.value,
             descripccion: Descripcion.value,
             documentos: archivoOEnlace.value,
@@ -265,7 +244,7 @@ const guardarCambios = async () => {
 
         if (response.status === 200) {
             ambientess.value[index] = ambienteEditado;
-            showModalEdicion.value = false;
+            alert.value = false;
             idAmbienteEditando.value = null;
             limpiarFormulario()
         } else {
@@ -299,13 +278,13 @@ const confirmarEliminacion = async () => {
     }
 };
 function limpiarFormulario() {
-
     codigo.value = "";
-    Nombre.value = "";
+    nombre.value = "";
     Tipo.value = "";
     archivoOEnlace.value = "";
     IdCentroFormacion.value = "";
     Descripcion.value = "";
+    bd.value = false
 }
 function limpiarMensajeError() {
     errorMessage.value = null;

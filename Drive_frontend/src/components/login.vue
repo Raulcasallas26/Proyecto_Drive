@@ -177,6 +177,17 @@ let resp = ref("");
 let verdadero = ref("");
 let falso = ref("");
 
+onMounted(() => {
+    document.addEventListener('keyup', handleKeyPress);
+});
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter' && !$refs.startButton.hidden) {
+        event.preventDefault();
+        validar();
+    }
+}
+
 function olvideContra() {
     ingresaCorreo.value = true;
 }

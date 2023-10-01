@@ -7,7 +7,7 @@ const router = Router()
 
   router.get("/", httpRedesConocimiento.getRedesConocimiento)
   
-  router.get("/:id", httpRedesConocimiento.getRedesConocimientoId)
+  // router.get("/:id", httpRedesConocimiento.getRedesConocimientoId)
   
   router.post("/", [
     check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
@@ -15,6 +15,6 @@ const router = Router()
     validarResultados
   ], httpRedesConocimiento.postRedesConocimiento)
   
-  router.put("/:cedula", httpRedesConocimiento.putRedesConocimiento)
+  router.put("/:id", httpRedesConocimiento.putRedesConocimiento)
   
   export default router

@@ -6,12 +6,12 @@
                 :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
                 @virtual-scroll="onScroll">
                 <template v-slot:top>
-                    <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
-                        @click="alert = true" />
-                    <div style="margin-left: 5%;" class="text-h4">Usuarios</div>
+                    <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar"
+                        @click="agregar()" />
+                    <div style="margin-left: 5%" class="text-h4">Usuarios</div>
                     <q-space />
                     <q-input borderless dense debounce="300" color="primary" v-model="filter"
-                        style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;">
+                        style="border-radius: 10px; border: grey solid 0.5px; padding: 5px">
                         <template v-slot:append>
                             <q-icon name="search" />
                         </template>
@@ -32,10 +32,9 @@
                         <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
                     </q-td>
                 </template>
-
             </q-table>
         </div>
-        <q-dialog v-model="alert">
+        <q-dialog v-model="alert" data-controls-modal="your_div_id" data-backdrop="static" data-keyboard="false">
             <q-card id="card">
                 <q-card-section>
                     <div class="text-h4">Registro</div>
@@ -44,34 +43,38 @@
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
                             <div class="q-gutter-md">
-                                <q-input v-model="nombre" label="Nombre" />
+                                <q-input v-model="nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model="email" type="email" suffix="Example@soy.sena.edu.co" label="E-mail">
+                                <q-input v-model="email" type="email" suffix="Example@soy.sena.edu.co" label="E-mail"
+                                    :rules="[(val) => !!val || 'Campo requerido']">
                                     <template v-slot:append>
                                         <q-icon name="mail" />
                                     </template>
                                 </q-input>
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model.number="telefono" type="number" label="Telefono" />
+                                <q-input v-model.number="telefono" type="number" label="Telefono"
+                                    :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md">
-                                <q-input v-model.number="cedula" type="number" label="Cedula" />
+                                <q-input v-model.number="cedula" type="number" label="Cedula"
+                                    :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === false">
-                                <q-input v-model="password" :type="isPwd ? 'password' : 'text'"
-                                    label="Ingresar password">
+                                <q-input v-model="password" :type="isPwd ? 'password' : 'text'" label="Ingresar password"
+                                    :rules="[(val) => !!val || 'Campo requerido']">
                                     <template v-slot:append>
                                         <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                                             @click="isPwd = !isPwd" />
                                     </template>
                                 </q-input>
                             </div>
+                            <div></div>
                         </q-card-section>
                         <q-card-section>
                             <div role="alert"
-                                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                                style=" border: 2px solid red; border-radius: 20px;  text-align: center;  background-color: rgba(255, 0, 0, 0.304);"
                                 v-if="check !== ''">
                                 <div>
                                     {{ check }}
@@ -83,126 +86,182 @@
 
                 <q-card-actions align="right">
                     <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
-                    <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" v-close-popup />
-                    <q-btn flat label="Editar Usuario" v-else @click="editarUser()" color="primary" v-close-popup />
+                    <q-btn flat label="Guardar" v-if="bd === false" @click="validarYGuardar" color="primary" />
+                    <q-btn flat label="Editar Usuario" v-else @click="validaredit" color="primary" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
     </div>
 </template>
-
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useUsuariosStore } from "../stores/usuarios.js"
+import { ref, onMounted } from "vue";
+import { useUsuariosStore } from "../stores/usuarios.js";
 const useUsuario = useUsuariosStore();
-let alert = ref(false)
-let bd = ref(false)
-let check = ref("")
+let alert = ref(false);
+let bd = ref(false);
+let check = ref("");
 let isPwd = ref(true);
-let user = ref([])
-let nombre = ref("")
-let estado = ref("")
-let email = ref("")
-let telefono = ref("")
-let cedula = ref("")
-let password = ref("")
-let loading = ref(false)
-let indice = ref(null)
-let r = ref("")
+let user = ref([]);
+let nombre = ref("");
+let email = ref("");
+let telefono = ref("");
+let cedula = ref("");
+let password = ref("");
+let loading = ref(false);
+let indice = ref(null);
+let r = ref("");
 
 let columns = [
-    { name: 'nombre', align: 'center', label: 'Usuario', field: "nombre" },
-    { name: 'email', label: 'E-mail', align: 'center', field: "email" },
-    { name: 'telefono', label: 'Telefono', align: 'center', field: "telefono" },
-    { name: 'estado', label: 'Estado', align: 'center', field: "estado" },
-    { name: 'opciones', label: 'Opciones', align: 'center', field: "opciones" },
-]
-const originalRows = []
-const filter = ref('')
-const rowCount = ref(10)
-const rows = ref([...originalRows])
+    { name: "nombre", align: "center", label: "Usuario", field: "nombre" },
+    { name: "email", label: "E-mail", align: "center", field: "email" },
+    { name: "telefono", label: "Telefono", align: "center", field: "telefono" },
+    { name: "estado", label: "Estado", align: "center", field: "estado" },
+    { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
+];
+const originalRows = [];
+const filter = ref("");
+const rowCount = ref(10);
+const rows = ref([...originalRows]);
 console.log(indice.value);
-async function guardar() {
-    loading.value = true
-    let r = await useUsuario.addUsuarios({
-        nombre: nombre.value,
-        email: email.value,
-        telefono: telefono.value,
-        cedula: cedula.value,
-        password: password.value
-    })
-    console.log(r);
-    console.log("se guardo un nuevo usuario");
-    loading.value = false
-    listarUsuarios()
-    limpiarFormulario()
-}
 
+function mostrarAlerta(mensaje) {
+    alert.value = true;
+    check.value = mensaje;
+}
+async function validarYGuardar() {
+
+    if (nombre.value.trim() === "") {
+        mostrarAlerta("El Nombre es obligatorio");
+    } else if (email.value.trim() === "") {
+        mostrarAlerta("El Correo Electrónico es obligatorio");
+    } else if (!telefono.value) {
+        mostrarAlerta("El Teléfono es obligatorio");
+    } else if (!cedula.value) {
+        mostrarAlerta("La Cédula es obligatoria");
+        console.log(cedula.value);
+    } else if (password.value.trim() === "") {
+        mostrarAlerta("La Contraseña es obligatoria");
+    } else {
+        alert.value = false;
+        guardar()
+
+    }
+
+
+}
+async function guardar() {
+    loading.value = true;
+    try {
+        const response = await useUsuario.addUsuarios({
+            nombre: nombre.value,
+            email: email.value,
+            telefono: telefono.value,
+            cedula: cedula.value,
+            password: password.value,
+        });
+
+        if (response.status === 200) {
+            console.log("Se guardó un nuevo usuario");
+            listarUsuarios();
+            limpiarFormulario();
+            alert.value = false; // Cierra la alerta
+        } else {
+            console.error("Error al guardar el usuario");
+            // Puedes mostrar un mensaje de error aquí si es necesario
+        }
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        // Puedes manejar errores de red u otros errores aquí si es necesario
+    } finally {
+        loading.value = false;
+    }
+}
+async function validaredit() {
+
+    if (!nombre.value) {
+        mostrarAlerta("El nombre es obligatorio");
+    } else if (!email.value) {
+        mostrarAlerta("El correo electrónico es obligatorio");
+    } else if (!telefono.value) {
+        mostrarAlerta("El teléfono es obligatorio");
+    } else if (!cedula.value) {
+        mostrarAlerta("La cédula es obligatoria");
+        console.log(cedula.value);
+    } else {
+        // Todos los campos están completos y válidos, guarda los datos
+        console.log("paso validacion");
+        await editarUser()
+        // Cierra el modal
+    }
+
+}
 async function editarUser() {
-    loading.value = true
+    loading.value = true;
     console.log("hola estoy editando");
     let r = await useUsuario.editUsuarios(indice.value, {
         nombre: nombre.value,
         email: email.value,
         telefono: telefono.value,
-        cedula: cedula.value
-    })
+        cedula: cedula.value,
+    });
     console.log(r);
-    bd.value = false
-    loading.value = false
+    bd.value = false;
+    loading.value = false;
     console.log("limpiando datos");
-    listarUsuarios()
-    limpiarFormulario()
+    listarUsuarios();
+    limpiarFormulario();
 }
 
 async function activar(props) {
-    r.value = props.row
+    r.value = props.row;
     if (r.value.estado === true) {
-        r.value.estado = false
+        r.value.estado = false;
         console.log(r.value.estado, "resultado del if condicion");
     } else {
-        r.value.estado = true
+        r.value.estado = true;
         console.log(r.value.estado, "resultado del else condicion");
     }
-    let est = await useUsuario.activarUsuarios(r.value._id)
+    let est = await useUsuario.activarUsuarios(r.value._id);
     console.log(est);
 }
 
 function edito(props) {
-    bd.value = true
-    r.value = props.row
-    alert.value = true
-    indice.value = r.value._id
-    nombre.value = r.value.nombre
-    email.value = r.value.email
-    telefono.value = r.value.telefono
-    cedula.value = r.value.cedula
+    bd.value = true;
+    r.value = props.row;
+    alert.value = true;
+    indice.value = r.value._id;
+    nombre.value = r.value.nombre;
+    email.value = r.value.email;
+    telefono.value = r.value.telefono;
+    cedula.value = r.value.cedula;
 }
 
 function limpiarFormulario() {
     console.log("limpiar datos");
-    nombre.value = ""
-    email.value = ""
-    telefono.value = ""
-    cedula.value = ""
-    password.value = ""
+    nombre.value = "";
+    email.value = "";
+    telefono.value = "";
+    cedula.value = "";
+    password.value = "";
+    alert.value = false;
+    bd.value = false;
 }
 
-listarUsuarios()
+listarUsuarios();
 async function listarUsuarios() {
-    let usuarios = await useUsuario.getUsuarios()
+    let usuarios = await useUsuario.getUsuarios();
     console.log(usuarios);
-    user.value = usuarios.data.Usuarios
+    user.value = usuarios.data.Usuarios;
 }
 
 function agregar() {
-    alert.value = true
+    alert.value = true;
+
 }
 onMounted(() => {
-    listarUsuarios()
-    limpiarFormulario()
-})
-
+    listarUsuarios();
+    limpiarFormulario();
+});
 </script>
 <style scoped>
 #card {

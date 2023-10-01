@@ -50,6 +50,20 @@
             <q-item-section> Ambientes </q-item-section>
           </q-item>
 
+          <q-item clickable v-ripple to="/materialesApoyo">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/1556/1556328.png" />
+            </q-item-section>
+            <q-item-section>Materiales de apoyo</q-item-section>
+          </q-item>
+          
+          <q-item clickable v-ripple to="/redConocimento">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
+            </q-item-section>
+            <q-item-section> Red de Conocimiento </q-item-section>
+          </q-item>
+
           <q-item clickable v-ripple to="/investigacion">
             <q-item-section avatar>
               <q-icon name="search" />
@@ -63,21 +77,6 @@
             </q-item-section>
             <q-item-section> Instrumentos de Evaluacion </q-item-section>
           </q-item>
-
-          <q-item clickable v-ripple to="/materialesApoyo">
-            <q-item-section avatar>
-              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/1556/1556328.png" />
-            </q-item-section>
-            <q-item-section>Materiales</q-item-section>
-            </q-item>
-
-          <q-item clickable v-ripple to="/redConocimento">
-            <q-item-section avatar>
-              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
-            </q-item-section>
-            <q-item-section> Red de Conocimiento </q-item-section>
-          </q-item>
-
 
           <q-item clickable v-ripple to="/proyectos">
             <q-item-section avatar>

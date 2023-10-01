@@ -2,108 +2,97 @@
     <div class="card-container">
         <div>
             <q-table class="tabla" flat bordered title="Treats" :rows="red" :columns="columns" row-key="id" :filter="filter"
-                :loading="loading">
+                :loading="loading" able-header-class="" virtual-scroll :virtual-scroll-item-size="10"
+                :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
+                @virtual-scroll="onScroll">
                 <template v-slot:top>
-                    <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="showModal = true" />
+                    <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="agregar()" />
                     <div style="margin-left: 5%;" class="text-h4">Redes de Conocimiento</div>
                     <q-space />
-                    <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
-                color="primary" v-model="filter">
-                <template v-slot:append>
-                    <q-icon name="search" />
-                </template>
-            </q-input>
+                    <q-input borderless dense debounce="300"
+                        style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;" color="primary"
+                        v-model="filter">
+                        <template v-slot:append>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input>
                 </template>
 
-                <!-- columna para editar -->
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
-                        <q-btn class="q-mx-sm" color="primary" @click="abrirModalEdicion(props.row)">📝</q-btn>
-                        <q-btn class="q-mx-sm" color="green" outline @click="activar(props)"
-                            v-if="props.row.estado == false">✅</q-btn>
-                        <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
-                    </q-td>
+                        <q-btn class="q-mx-sm" color="primary" outline @click="edito(props)">📝</q-btn>
+                        </q-td>
                 </template>
             </q-table>
         </div>
-
-        <!-- Modal para agregar centros -->
         <div>
-            <q-dialog v-model="showModal">
-                <q-card class="custom-modal">
+            <q-dialog v-model="alert">
+                <q-card id="card" style="width: 35%;">
                     <q-card-section>
-                        <div class="text">Agregar Redes de Conocimineto</div>
-
-                        <q-input v-model="codigo" label="Código" />
-                        <q-input v-model="denominacion" label="Denominacion" />
-
+                        <div class="text-h4">Registro</div>
                     </q-card-section>
-                    <q-card-section>
-                        <q-btn @click="showModal = false" label="Cancelar" />
-                        <q-btn @click="agregarformacion()" color="primary" label="Agregar" />
+                    <q-card-section class="q-pt-none" id="card">
+                        <q-card flat bordered class="my-card">
+                            <q-card-section class="q-pa-md">
+                                <div class="q-gutter-md">
+                                    <q-input v-model="codigo" type="text" label="Codigo" />
+                                </div>
+                                <div class="q-gutter-md">
+                                    <q-input v-model="denominacion" type="text" label="Denominacion" />
+                                </div>
+                            </q-card-section>
+                            <q-card-section>
+                                <div role="alert"
+                                    style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                                    v-if="check !== ''">
+                                    <div>
+                                        {{ check }}
+                                    </div>
+                                </div>
+                            </q-card-section>
+                        </q-card>
                     </q-card-section>
+
+                    <q-card-actions align="right">
+                        <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+                        <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" v-close-popup />
+                        <q-btn flat label="Editar Usuario" v-else @click="editarRed()" color="primary" v-close-popup />
+                    </q-card-actions>
                 </q-card>
             </q-dialog>
         </div>
-
-        <!-- Modal para editar programas 
-      <div>
-        <q-dialog v-model="showModalEdicion">
-          <q-card class="custom-modal">
-            <q-card-section>
-              <div class="text">Editar Centro de Formación</div>
-              <q-input v-model="nombre" label="Nombre" />
-              <q-input v-model="codigo" label="Código" />
-              <q-input v-model="ciudad" label="Ciudad" />
-              <q-input v-model="direccion" label="direccion" />
-              <div></div>
-            </q-card-section>
-            <q-card-section>
-              <q-btn @click="showModalEdicion = false" label="Cancelar" />
-              <q-btn
-                @click="guardarCambios()"
-                color="primary"
-                label="Guardar Cambios"
-              />
-            </q-card-section>
-          </q-card>
-        </q-dialog>
-      </div>-->
     </div>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-const showModal = ref(false);
-const red = ref([]);
-const codigo = ref("");
+let red = ref([]);
+let alert = ref(false)
+let check = ref("")
 let r = ref("")
+let bd = ref(false)
+let indice = ref(null)
+let codigo = ref("");
 let denominacion = ref("");
 import { useRedesConocimientoStore } from "../stores/RedesConocimiento.js";
-const storeredes = useRedesConocimientoStore();
+const useRedes = useRedesConocimientoStore();
 let columns = [
     { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-    ,
-    {
-        name: "denominacion",
-        label: "Denominacion",
-        align: "center",
-        field: "denominacion",
-    },
-    { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
+    { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion", },
+    { name: "opciones", label: "⚫⚫⚫", align: "center", field: "opciones" },
 ];
 
 const loading = ref(false);
 const filter = ref("");
 
 async function obtenerredes() {
-    let redes = await storeredes.getRedesConocimiento();
+    let redes = await useRedes.getRedesConocimiento();
     console.log(redes);
     red.value = redes.data.RedesConocimiento;
     console.log(redes.data);
 }
-async function agregarformacion() {
+async function guardar() {
     loading.value = true;
-    let r = await storeredes.addRedesConocimiento({
+    let r = await useRedes.addRedesConocimiento({
         denominacion: denominacion.value,
         codigo: codigo.value,
 
@@ -112,13 +101,41 @@ async function agregarformacion() {
     loading.value = false;
     obtenerredes();
     limpiarFormulario();
-    showModal.value = false;
+    alert.value = false;
+}
+
+async function editarRed() {
+    loading.value = true
+    console.log(indice.value);
+    let res = await useRedes.editRedesConocimiento(indice.value, {
+        denominacion: denominacion.value,
+        codigo: codigo.value,
+    })
+    console.log(indice.value);
+    console.log(res);
+    bd.value = false
+    loading.value = false
+    obtenerredes()
+    limpiarFormulario()
+}
+
+function edito(props) {
+    agregar()
+    bd.value = true
+    r.value = props.row
+    indice.value = r.value._id
+    console.log(indice.value);
+    denominacion.value = r.value.denominacion
+    codigo.value = r.value.codigo
 }
 
 function limpiarFormulario() {
-
-    codigo.value = "";
+    console.log("limpie el formulario");
     denominacion.value = "";
+    codigo.value = "";
+}
+function agregar() {
+    alert.value = true
 }
 
 onMounted(async () => {

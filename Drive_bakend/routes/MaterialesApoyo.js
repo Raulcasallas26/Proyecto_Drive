@@ -10,6 +10,7 @@ router.get("/", httpMaterialesApoyo.getMaterialesApoyo)
 router.get("/:id", httpMaterialesApoyo.getMaterialesApoyoId)
 
 router.post("/", [
+  check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
   check("nombre", "el nombre es obligatorio",).notEmpty().trim().isString(),
   check("documento", "el docuemnto es obligatorio").notEmpty().trim().isString(),
   validarResultados

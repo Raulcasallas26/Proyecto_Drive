@@ -10,30 +10,29 @@ const httpRedesConocimiento = {
         }
     },
 
-    getRedesConocimientoId: async (req, res) => {
-        const { id } = req.params;
+    // getRedesConocimientoId: async (req, res) => {
+    //     const { id } = req.params;
 
-        try {
-            const RedesConocimiento = await RedesConocimientoModel.findOne({ id });
-            res.json({ RedesConocimiento })
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al obtener las redes de conocimiento con el id proporcionado", error });
-        }
-    },
+    //     try {
+    //         const RedesConocimiento = await RedesConocimientoModel.findOne({ id });
+    //         res.json({ RedesConocimiento })
+    //     } catch (error) {
+    //         res.status(500).json({ mensaje: "Error al obtener las redes de conocimiento con el id proporcionado", error });
+    //     }
+    // },
 
     postRedesConocimiento: async (req, res) => {
         const { denominacion, codigo } = req.body;
-        const red = new RedesConocimientoModel({
-            denominacion,
-            codigo
-        });
-
         try {
-            const nuevaRedesConocimiento = await red.save();
+            const red = new RedesConocimientoModel({
+                denominacion,
+                codigo
+            });
+            await red.save();
 
             res.json({
                 mensaje: "Una nueva red de conocimiento insertada!!",
-                nuevaRedesConocimiento
+                red
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar la nueva red de conocimiento", error })
@@ -41,24 +40,13 @@ const httpRedesConocimiento = {
     },
 
     putRedesConocimiento: async (req, res) => {
-        const { denominacion, codigo } = req.body;
-
-        try {
-            const RedesConocimientoActualizada = await RedesConocimientoModel.findOneAndUpdate(
-                { denominacion, codigo }
-            );
-
-            if (RedesConocimientoActualizada) {
-                res.json({
-                    mensaje: "Registro actualizado exitosamente!!",
-                    RedesConocimientoActualizada
-                });
-            } else {
-                res.json({ mensaje: "No se encontro la red de conocimiento con el id proporcionado" })
-            }
-        } catch (error) {
-            req.status(500).json({ mensaje: "Error al actualizar la red de conocimiento" })
-        }
+        const { id } = req.params;
+        const { denominacion, codigo} = req.body;
+        const redes = await RedesConocimientoModel.findByIdAndUpdate(id, {denominacion, codigo}, { new: true })
+        res.json({
+            msg: "ok",
+            redes
+        })
     }
 }
 

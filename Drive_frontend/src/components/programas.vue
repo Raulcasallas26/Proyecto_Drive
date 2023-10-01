@@ -6,12 +6,11 @@
         :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[15]"
         @virtual-scroll="onScroll">>
         <template v-slot:top>
-          <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
-            @click="alert = true" />
-          <div style="margin-left: 5%;" class="text-h4">Programas</div>
+          <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar" @click="alert = true" />
+          <div style="margin-left: 5%" class="text-h4">Programas</div>
           <q-space />
           <q-input borderless dense debounce="300" color="primary" v-model="filter"
-            style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;">
+            style="border-radius: 10px; border: grey solid 0.5px; padding: 5px">
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -29,7 +28,8 @@
           <q-td :props="props">
             <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
             <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito(props)">📝</q-btn>
-            <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false" @click="activar(props)">✅</q-btn>
+            <q-btn class="q-mx-sm" color="green" outline v-if="props.row.estado == false"
+              @click="activar(props)">✅</q-btn>
             <q-btn class="q-mx-sm" color="red" outline v-else @click="activar(props)">❌</q-btn>
           </q-td>
         </template>
@@ -37,7 +37,7 @@
     </div>
 
     <q-dialog v-model="alert">
-      <q-card id="card" style="width: 35%;">
+      <q-card id="card" style="width: 35%">
         <q-card-section>
           <div class="text-h4">Registro</div>
         </q-card-section>
@@ -45,24 +45,26 @@
           <q-card flat bordered class="my-card">
             <q-card-section class="q-pa-md">
               <div class="q-gutter-md">
-                <q-input v-model="codigo" label="Código" />
+                <q-input v-model="codigo" label="Código" :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
               <div class="q-gutter-md">
-                <q-input v-model="denominacion" label="Denominación" />
+                <q-input v-model="denominacion" label="Denominación" :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
               <div class="q-gutter-md">
-                <q-input v-model="version" label="Versión" />
+                <q-input v-model="version" label="Versión" :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
               <div class="q-gutter-md">
-                <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona una opción" />
+                <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona un nivel de formacion "
+                  :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
               <div>
                 <q-select v-model="redDeConocimientoSeleccionada" :options="opcionesRedDeConocimiento"
-                  label="Red de Conocimiento" />
+                  label="Red de Conocimiento" :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
               <q-card-section>
                 <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular"
-                  dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
+                  :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
+                  @clear="limpiarCampo">
                   <template v-slot:append>
                     <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
                   </template>
@@ -70,9 +72,12 @@
               </q-card-section>
             </q-card-section>
             <q-card-section>
-              <div role="alert"
-                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
-                v-if="check !== ''">
+              <div role="alert" style="
+                  border: 2px solid red;
+                  border-radius: 20px;
+                  text-align: center;
+                  background-color: rgba(255, 0, 0, 0.304);
+                " v-if="check !== ''">
                 <div>
                   {{ check }}
                 </div>
@@ -83,8 +88,8 @@
 
         <q-card-actions align="right">
           <q-btn flat label="Cerrar" @click="limpiarFormulario(), cerrar()" color="primary" v-close-popup />
-          <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" v-close-popup />
-          <q-btn flat label="Editar Usuario" v-else @click="editarPrograma()" color="primary" v-close-popup />
+          <q-btn flat label="Guardar" v-if="bd === false" @click="validarYGuardar()" color="primary" />
+          <q-btn flat label="Editar Usuario" v-else @click="validareditar()" color="primary" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -99,12 +104,14 @@ const useProgramas = useProgramasFormacionStore();
 let proga = ref([]);
 let check = ref("");
 let bd = ref(false);
-let r = ref("")
+let r = ref("");
+let niveldeformacion = ref("");
 let alert = ref(false);
+let archivoOEnlace = ref("");
 let denominacion = ref("");
 let codigo = ref("");
 let version = ref("");
-let indice = ref(null)
+let indice = ref(null);
 let opciones = [
   "auxiliar",
   "operario",
@@ -116,7 +123,12 @@ let opciones = [
 
 let columns = [
   { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-  { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion", },
+  {
+    name: "denominacion",
+    label: "Denominacion",
+    align: "center",
+    field: "denominacion",
+  },
   { name: "version", label: "Version", align: "center", field: "version" },
   { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
@@ -129,76 +141,118 @@ async function obtenerformacion() {
   console.log(programas);
   proga.value = programas.data.ProgramasFormacion;
 }
+function mostrarAlerta(mensaje) {
+  alert.value = true;
+  check.value = mensaje;
+}
+async function validarYGuardar() {
+  if (codigo.value.trim() === "") {
+    mostrarAlerta("El Codigo es obligatorio");
+  } else if (denominacion.value.trim() === "") {
+    mostrarAlerta("La Denominacion es obligatoria");
+  } else if (!version.value) {
+    mostrarAlerta("La version es obligatoria");
+  } else if (!niveldeformacion.value) {
 
+    mostrarAlerta("el Nivel de formacion es oblogatorio");
+  } else if (!archivoOEnlace.value) {
+    mostrarAlerta("el Diseño curricular es oblogatorio");
+  } else {
+    alert.value = false;
+    guardar();
+  }
+}
 async function guardar() {
-  loading.value = true
+  loading.value = true;
   let res = await useProgramas.addProgramasFormacion({
     denominacion: denominacion.value,
     codigo: codigo.value,
-    version: version.value
-  })
+    version: version.value,
+    niveldeformacion: niveldeformacion.value,
+    archivoOEnlace: archivoOEnlace.value,
+  });
   console.log(res);
   console.log("se guardo un nuevo programa");
-  loading.value = false
-  obtenerformacion()
-  limpiarFormulario()
+  loading.value = false;
+  obtenerformacion();
+  limpiarFormulario();
 }
 
 async function activar(props) {
-  r.value = props.row
-    if (r.value.estado === true) {
-        r.value.estado = false
-        console.log(r.value.estado, "resultado del if condicion");
-    } else {
-        r.value.estado = true
-        console.log(r.value.estado, "resultado del else condicion");
-    }
-    let est = await useProgramas.activarProgramasFormacion(r.value._id)
-    console.log(est);
+  r.value = props.row;
+  if (r.value.estado === true) {
+    r.value.estado = false;
+    console.log(r.value.estado, "resultado del if condicion");
+  } else {
+    r.value.estado = true;
+    console.log(r.value.estado, "resultado del else condicion");
+  }
+  let est = await useProgramas.activarProgramasFormacion(r.value._id);
+  console.log(est);
 }
-
+async function validareditar() {
+  if (codigo.value.trim() === "") {
+    mostrarAlerta("El Codigo es obligatorio");
+  } else if (denominacion.value.trim() === "") {
+    mostrarAlerta("La Denominacion es obligatoria");
+  } else if (!version.value) {
+    mostrarAlerta("La version es obligatoria");
+  } else if (!niveldeformacion.value) {
+    mostrarAlerta("el Nivel de formacion es oblogatorio");
+  } else if (!archivoOEnlace.value) {
+    mostrarAlerta("el Diseño curricular es oblogatorio");
+  } else {
+    alert.value = false;
+    editarPrograma();
+  }
+}
 async function editarPrograma() {
-  loading.value = true
+  loading.value = true;
   console.log(indice.value);
   let res = await useProgramas.editProgramasFormacion(indice.value, {
     denominacion: denominacion.value,
     codigo: codigo.value,
     version: version.value,
-  })
+    niveldeformacion: niveldeformacion.value,
+    archivoOEnlace: archivoOEnlace.value,
+  });
   console.log(indice.value);
   console.log(res);
-  bd.value = false
-  loading.value = false
-  obtenerformacion()
-  limpiarFormulario()
+  bd.value = false;
+  loading.value = false;
+  obtenerformacion();
+  limpiarFormulario();
 }
 
 function edito(props) {
-  alert.value = true
-  bd.value = true
-  r.value = props.row
-  indice.value = r.value._id
+  alert.value = true;
+  bd.value = true;
+  r.value = props.row;
+  indice.value = r.value._id;
   console.log(indice.value);
-  denominacion.value = r.value.denominacion
-  codigo.value = r.value.codigo
-  version.value = r.value.version
+  denominacion.value = r.value.denominacion;
+  codigo.value = r.value.codigo;
+  version.value = r.value.version;
+  niveldeformacion.value = r.value.niveldeformacion;
+  archivoOEnlace.value = r.value.archivoOEnlace;
 }
 
 function limpiarFormulario() {
   denominacion.value = "";
   codigo.value = "";
   version.value = "";
-  opciones.value = ""
+  opciones.value = "";
+  niveldeformacion.value = "";
+  archivoOEnlace.value = "";
 }
-const niveldeformacion = ref(null);
 
-const archivoOEnlace = ref(""); // Variable para almacenar el nombre del archivo seleccionado
+// Variable para almacenar el nombre del archivo seleccionado
 
 const abrirSelectorDeArchivos = () => {
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.style.display = 'none';
-  fileInput.addEventListener('change', handleFileSelection);
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.style.display = "none";
+  fileInput.addEventListener("change", handleFileSelection);
   document.body.appendChild(fileInput);
   fileInput.click();
 };
@@ -213,8 +267,8 @@ const handleFileSelection = (event) => {
 };
 
 function cerrar() {
-  bd.value = false
-  alert.value = false
+  bd.value = false;
+  alert.value = false;
 }
 
 // Función para limpiar el campo
