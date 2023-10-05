@@ -1,12 +1,12 @@
 <template>
   <div class="center">
     <img
-      src="https://lostramites.com.co/wp-content/uploads/logo-de-SENA-png-Negro-300x300.png"
+      src="../img/icono.png"
       id="img2"
       alt=""
     />
 
-    <!-- <h1 class="h1">Bienvenido!!!</h1> -->
+    <!-- https://lostramites.com.co/wp-content/uploads/logo-de-SENA-png-Negro-300x300.png <h1 class="h1">Bienvenido!!!</h1> -->
   </div>
 </template>
 
@@ -24,8 +24,8 @@
 
 #img2 {
   max-width: 100%; /* Aumentar el tamaño de la imagen */
-  width: 30rem;
-  opacity: 0.5;
+  opacity: 40%;
+  filter: brightness(0%) grayscale(100%);
 }
 
 .h1 {
