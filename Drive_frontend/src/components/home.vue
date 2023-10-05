@@ -6,7 +6,7 @@
       alt=""
     />
 
-    <h1 class="h1">Bienvenido!!!</h1>
+    <!-- <h1 class="h1">Bienvenido!!!</h1> -->
   </div>
 </template>
 
@@ -24,9 +24,8 @@
 
 #img2 {
   max-width: 100%; /* Aumentar el tamaño de la imagen */
-  width: 30em;
-  opacity: 10%;
-  margin-top: 5%;
+  width: 30rem;
+  opacity: 0.5;
 }
 
 .h1 {
