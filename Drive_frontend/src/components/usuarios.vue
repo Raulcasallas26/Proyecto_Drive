@@ -34,11 +34,16 @@
                 </template>
             </q-table>
         </div>
-        <q-dialog v-model="alert" data-controls-modal="your_div_id" data-backdrop="static" data-keyboard="false">
+        <q-dialog v-model="alert" persistent>
             <q-card id="card">
-                <q-card-section>
-                    <div class="text-h4">Registro</div>
-                </q-card-section>
+                <div style="display: flex;">
+                    <q-card-section>
+                        <div class="text-h4">Registro</div>
+                    </q-card-section>
+                    <div style="margin-left: auto;    margin-bottom: auto;">
+                    <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" /></div>
+                </div>
+
                 <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
@@ -268,4 +273,62 @@ onMounted(() => {
     width: 35em;
     max-width: 100%;
 }
+
+.btng {
+    
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+}
+
+/* Define la animación de entrada para la "X" */
+@keyframes fadeInX {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Define la animación de salida para la "X" */
+@keyframes fadeOutX {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+}
+
+/* Aplica las transiciones y animaciones */
+.close-button {
+    animation-duration: 0.3s;
+    /* Duración de la animación */
+    animation-timing-function: ease;
+    /* Función de temporización (puedes ajustarla) */
+}
+
+/* Inicialmente, la "X" estará invisible */
+.close-button:before {
+    opacity: 0;
+}
+
+/* Cuando la "X" está activa, aplica la animación de entrada */
+.close-button.active:before {
+    animation-name: fadeInX;
+    opacity: 1;
+}
+
+/* Cuando la "X" está inactiva, aplica la animación de salida */
+.close-button:not(.active):before {
+    animation-name: fadeOutX;
+    opacity: 0;
+}
+
 </style>

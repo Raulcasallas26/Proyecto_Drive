@@ -64,6 +64,13 @@
             <q-item-section> Red de Conocimiento </q-item-section>
           </q-item>
 
+          <q-item clickable v-ripple to="/proyectos">
+            <q-item-section avatar>
+              <q-icon name="schema" />
+            </q-item-section>
+            <q-item-section> proyectos </q-item-section>
+          </q-item>
+
           <q-item clickable v-ripple to="/investigacion">
             <q-item-section avatar>
               <q-icon name="search" />
@@ -76,13 +83,6 @@
               <q-icon name="quiz" />
             </q-item-section>
             <q-item-section> Instrumentos de Evaluacion </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/proyectos">
-            <q-item-section avatar>
-              <q-icon name="schema" />
-            </q-item-section>
-            <q-item-section> proyectos </q-item-section>
           </q-item>
 
           <q-separator />

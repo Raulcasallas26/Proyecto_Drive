@@ -1,17 +1,21 @@
 import express from "express"
 import mongoose from "mongoose"
 
-import ProgramasFormacion from "../routes/ProgramasFormacion.js";
+
 import login from "../routes/login.js";
 import usuarios from "../routes/Usuarios.js";
-import AmbientesFormacion from "../routes/AmbientesFormacion.js";
 import ciudades from "../routes/Ciudades.js";
+import proyecto from "../routes/Proyectos.js";
 import GuiasAprendiz from "../routes/GuiasAprendiz.js";
-import InstrumentrosEvaluacion from "../routes/InstrumentrosEvaluacion.js";
+import RolesUsuarios from "../routes/RolesUsuarios.js"; 
+import investigacion from "../routes/Investigaciones.js"  
 import MaterialesApoyo from "../routes/MaterialesApoyo.js";
-import RolesUsuarios from "../routes/RolesUsuarios.js";  
-import CentrosFormacion from "../routes/CentrosFormacion.js" 
-import RedesConocimiento from "../routes/RedesConocimiento.js"
+import CentrosFormacion from "../routes/CentrosFormacion.js";
+import RedesConocimiento from "../routes/RedesConocimiento.js";
+import AmbientesFormacion from "../routes/AmbientesFormacion.js";
+import ProgramasFormacion from "../routes/ProgramasFormacion.js";
+import retroalimentacionRed from "../routes/RetroAlimentacionRed.js"
+import InstrumentrosEvaluacion from "../routes/InstrumentrosEvaluacion.js";
 
 import cors from "cors"
 class Server {   
@@ -23,17 +27,20 @@ class Server {
     }
 
     routes() { 
-        this.app.use('/ProgramasFormacion', ProgramasFormacion);
         this.app.use('/login', login) ;
-        this.app.use('/usuarios',usuarios );
-        this.app.use('/AmbientesFormacion', AmbientesFormacion); 
         this.app.use('/ciudad', ciudades);
+        this.app.use('/usuarios', usuarios); 
+        this.app.use('/Proyectos', proyecto);
         this.app.use('/GuiasAprendiz', GuiasAprendiz);
-        this.app.use('/InstrumentosEvaluacion', InstrumentrosEvaluacion)
-        this.app.use('/MaterialesApoyo', MaterialesApoyo);
         this.app.use('/RolesUsuarios', RolesUsuarios);
-        this.app.use('/CentrosFormmacion',CentrosFormacion);
-        this.app.use('/RedesConocimiento',RedesConocimiento)
+        this.app.use('/investigacion', investigacion);
+        this.app.use('/MaterialesApoyo', MaterialesApoyo);
+        this.app.use('/CentrosFormmacion', CentrosFormacion);
+        this.app.use('/RedesConocimiento', RedesConocimiento);
+        this.app.use('/ProgramasFormacion', ProgramasFormacion);
+        this.app.use('/AmbientesFormacion', AmbientesFormacion);
+        this.app.use('/retroalimentacionRed', retroalimentacionRed);
+        this.app.use('/InstrumentosEvaluacion', InstrumentrosEvaluacion);
     }
 
     conectarDB() {

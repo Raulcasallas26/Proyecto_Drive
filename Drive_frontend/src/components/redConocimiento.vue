@@ -21,13 +21,21 @@
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
                         <q-btn class="q-mx-sm" color="primary" outline @click="edito(props)">📝</q-btn>
-                        </q-td>
+                    </q-td>
                 </template>
             </q-table>
         </div>
         <div>
-            <q-dialog v-model="alert">
+            <q-dialog v-model="alert" persistent>
                 <q-card id="card" style="width: 35%;">
+                    <div style="display: flex;">
+                        <q-card-section>
+                            <div class="text-h4">Registro</div>
+                        </q-card-section>
+                        <div style="margin-left: auto;    margin-bottom: auto;">
+                            <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
+                        </div>
+                    </div>
                     <q-card-section>
                         <div class="text-h4">Registro</div>
                     </q-card-section>
@@ -90,6 +98,7 @@ async function obtenerredes() {
     red.value = redes.data.RedesConocimiento;
     console.log(redes.data);
 }
+
 async function guardar() {
     loading.value = true;
     let r = await useRedes.addRedesConocimiento({
@@ -133,6 +142,8 @@ function limpiarFormulario() {
     console.log("limpie el formulario");
     denominacion.value = "";
     codigo.value = "";
+    alert.value = false
+    bd.value = false
 }
 function agregar() {
     alert.value = true
@@ -148,4 +159,54 @@ onMounted(async () => {
     font-size: 400%;
     color: green;
 }
-</style>
+
+/* Define la animación de entrada para la "X" */
+@keyframes fadeInX {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Define la animación de salida para la "X" */
+@keyframes fadeOutX {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+}
+
+/* Aplica las transiciones y animaciones */
+.close-button {
+    animation-duration: 0.3s;
+    /* Duración de la animación */
+    animation-timing-function: ease;
+    /* Función de temporización (puedes ajustarla) */
+}
+
+/* Inicialmente, la "X" estará invisible */
+.close-button:before {
+    opacity: 0;
+}
+
+/* Cuando la "X" está activa, aplica la animación de entrada */
+.close-button.active:before {
+    animation-name: fadeInX;
+    opacity: 1;
+}
+
+/* Cuando la "X" está inactiva, aplica la animación de salida */
+.close-button:not(.active):before {
+    animation-name: fadeOutX;
+    opacity: 0;
+}</style>
