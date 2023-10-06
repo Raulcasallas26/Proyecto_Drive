@@ -17,6 +17,14 @@
                         </template>
                     </q-input>
                 </template>
+                <template v-slot:body-cell-nombre="props">
+                    <q-td :props="props">
+                        <q-avatar>
+                            <img src="../img/perfil.png">
+                        </q-avatar>
+                        {{ props.row.nombre }}
+                    </q-td>
+                </template>
                 <template v-slot:body-cell-estado="props">
                     <q-td :props="props">
                         <span class="text-green" v-if="props.row.estado == true">Activo</span>
@@ -41,7 +49,8 @@
                         <div class="text-h4">Registro</div>
                     </q-card-section>
                     <div style="margin-left: auto;    margin-bottom: auto;">
-                    <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" /></div>
+                        <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
+                    </div>
                 </div>
 
                 <q-card-section class="q-pt-none" id="card">
@@ -52,7 +61,7 @@
                             </div>
                             <div class="q-gutter-md">
                                 <q-input v-model="email" type="email" suffix="Example@soy.sena.edu.co" label="E-mail"
-                                    :rules="[(val) => !!val || 'Campo requerido']">
+                                    :rules="[validarEmail]">
                                     <template v-slot:append>
                                         <q-icon name="mail" />
                                     </template>
@@ -116,6 +125,22 @@ let loading = ref(false);
 let indice = ref(null);
 let r = ref("");
 
+const emailValido = ref(true); // Inicialmente se asume que el correo es válido
+
+const validarEmail = (val) => {
+    // Expresión regular para validar una dirección de correo electrónico
+    const patron = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    // Utiliza la expresión regular para verificar el formato
+    if (!patron.test(val)) {
+        emailValido.value = false;
+        return "Revisa la sintaxis de tu correo";
+    } else {
+        emailValido.value = true;
+        return true;
+    }
+};
+
 let columns = [
     { name: "nombre", align: "center", label: "Usuario", field: "nombre" },
     { name: "email", label: "E-mail", align: "center", field: "email" },
@@ -125,20 +150,19 @@ let columns = [
 ];
 const originalRows = [];
 const filter = ref("");
-const rowCount = ref(10);
-const rows = ref([...originalRows]);
-console.log(indice.value);
 
 function mostrarAlerta(mensaje) {
     alert.value = true;
     check.value = mensaje;
 }
 async function validarYGuardar() {
-
+    validarEmail()
     if (nombre.value.trim() === "") {
         mostrarAlerta("El Nombre es obligatorio");
     } else if (email.value.trim() === "") {
         mostrarAlerta("El Correo Electrónico es obligatorio");
+    } else if (emailValido.value === true) {
+        mostrarAlerta("Escriba correctamente el su E-mail");
     } else if (!telefono.value) {
         mostrarAlerta("El Teléfono es obligatorio");
     } else if (!cedula.value) {
@@ -275,7 +299,7 @@ onMounted(() => {
 }
 
 .btng {
-    
+
     background-color: rgba(0, 0, 0, 0);
     border-color: rgba(0, 0, 0, 0);
 }
@@ -330,5 +354,4 @@ onMounted(() => {
     animation-name: fadeOutX;
     opacity: 0;
 }
-
 </style>

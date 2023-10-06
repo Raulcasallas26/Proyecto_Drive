@@ -1,8 +1,8 @@
 <template>
     <div class="card-container">
         <div class="body">
-            <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="agregar()" />
-            <div style="margin-left: 5%;" class="text-h4">Proyectos</div>
+            <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
+            <div style="margin-left: 5%;" class="text-h4">Retroalimentacion de Red</div>
             <q-space />
             <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
                 color="primary" v-model="filter">
@@ -82,9 +82,6 @@
                             <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
                         </div>
                     </div>
-                    <q-card-section>
-                        <div class="text-h4">Registro</div>
-                    </q-card-section>
                     <q-card-section class="q-pt-none" id="card">
                         <q-card flat bordered class="my-card">
                             <q-card-section class="q-pa-md">

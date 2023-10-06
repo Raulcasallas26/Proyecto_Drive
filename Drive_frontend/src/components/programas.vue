@@ -38,16 +38,14 @@
 
     <q-dialog v-model="alert" persistent>
       <q-card id="card" style="width: 35%">
-      <div style="display: flex;">
-                    <q-card-section>
-                        <div class="text-h4">Registro</div>
-                    </q-card-section>
-                    <div style="margin-left: auto;    margin-bottom: auto;">
-                    <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" /></div>
-                </div>
-        <q-card-section>
-          <div class="text-h4">Registro</div>
-        </q-card-section>
+        <div style="display: flex;">
+          <q-card-section>
+            <div class="text-h4">Registro</div>
+          </q-card-section>
+          <div style="margin-left: auto;    margin-bottom: auto;">
+            <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
+          </div>
+        </div>
         <q-card-section class="q-pt-none" id="card">
           <q-card flat bordered class="my-card">
             <q-card-section class="q-pa-md">
@@ -327,6 +325,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -339,6 +338,7 @@ onMounted(() => {
     opacity: 1;
     transform: translateX(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(-20px);
@@ -347,8 +347,10 @@ onMounted(() => {
 
 /* Aplica las transiciones y animaciones */
 .close-button {
-  animation-duration: 0.3s; /* Duración de la animación */
-  animation-timing-function: ease; /* Función de temporización (puedes ajustarla) */
+  animation-duration: 0.3s;
+  /* Duración de la animación */
+  animation-timing-function: ease;
+  /* Función de temporización (puedes ajustarla) */
 }
 
 /* Inicialmente, la "X" estará invisible */
@@ -366,6 +368,4 @@ onMounted(() => {
 .close-button:not(.active):before {
   animation-name: fadeOutX;
   opacity: 0;
-}
-
-</style>
+}</style>

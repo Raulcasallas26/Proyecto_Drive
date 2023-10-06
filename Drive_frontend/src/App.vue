@@ -5,6 +5,8 @@
         <q-avatar>
           <img src="../src/img/logo_sena.png" style="filter: invert(1);" alt="">
         </q-avatar>
+        <q-btn v-if="isMobile" icon="menu" round dense @click="drawerRight = !drawerRight" class="q-mr-md"
+          style="background-color: rgba(26, 0, 128, 0.282); color: white" />
         <q-toolbar-title>
         </q-toolbar-title>
         <button v-if="!isInLoginComponent" class="btng">
@@ -17,9 +19,9 @@
         </button>
       </q-toolbar>
     </q-header>
-    <q-drawer v-if="!isInLoginComponent" v-model="drawer" style="background-color: green" show-if-above :mini="miniState"
-      @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100" :breakpoint="500"
-      bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+    <q-drawer v-if="!isInLoginComponent && !isMobile" v-model="drawer" style="background-color: green" show-if-above
+      :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100"
+      :breakpoint="500" bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }" style="background-color: white">
         <q-list padding>
           <q-item clickable v-ripple id="btn" to="/home">
@@ -56,7 +58,7 @@
             </q-item-section>
             <q-item-section>Materiales de apoyo</q-item-section>
           </q-item>
-          
+
           <q-item clickable v-ripple to="/redConocimento">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
@@ -69,6 +71,20 @@
               <q-icon name="schema" />
             </q-item-section>
             <q-item-section> proyectos </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/registroCalificado">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/128/4933/4933054.png" />
+            </q-item-section>
+            <q-item-section> Registro Calificado </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/retroalimentacionRed">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/128/943/943424.png" />
+            </q-item-section>
+            <q-item-section> Retroalimentacion de Red </q-item-section>
           </q-item>
 
           <q-item clickable v-ripple to="/investigacion">
@@ -102,12 +118,50 @@
   </q-layout>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 let drawer = ref(false)
 let miniState = ref(true)
+let drawerRight = ref(false)
 const leftDrawerOpen = ref(false);
 const route = useRoute(); // Obtén la información de la ruta actual
+const windowWidth = ref(window.innerWidth);
+
+// Calcula si el ancho de la ventana es menor a 300px (para mostrar u ocultar el menú lateral)
+const isMobile = computed(() => {
+  return windowWidth.value < 600;
+});
+
+// Función para abrir/cerrar el menú lateral
+const toggleDrawer = () => {
+  drawer.value = !drawer.value;
+};
+
+// Agrega un listener para detectar cambios en el ancho de la ventana
+window.addEventListener('resize', () => {
+  windowWidth.value = window.innerWidth;
+});
+
+// Cierra el menú lateral cuando se carga la página en dispositivos móviles
+onMounted(() => {
+  if (isMobile.value) {
+    drawer.value = false;
+  }
+});
+
+// Observa cambios en el valor de isMobile para cerrar el menú lateral si es necesario
+watch(isMobile, (newValue) => {
+  if (newValue) {
+    drawer.value = false;
+  }
+});
+
+
+
+
+
+
+
 
 // Calcula si estás en el componente de inicio de sesión
 const isInLoginComponent = computed(() => {
@@ -121,6 +175,21 @@ const toggleLeftDrawer = () => {
 
 
 <style scoped>
+
+/* Estilo del botón de hamburguesa en dispositivos móviles */
+.q-btn.is-mobile {
+  display: block;
+  margin: 10px; /* Ajusta el margen según tus necesidades */
+}
+
+/* Estilo del menú lateral en dispositivos móviles */
+.q-drawer.is-mobile {
+  width: 100%;
+  max-width: 100%;
+}
+
+
+
 #text {
   font-size: 20px;
   font-family: cursive;

@@ -1,54 +1,57 @@
 <template>
     <q-layout view="lHh lpR lFf">
-        <div class="row" style="position: relative;">
-            <div class="col-5" id="imagen">
-                <img :src="currentImage" style="width: 1000px;" class="bg" alt="Cargando imagen..." id="img">
+        <div class="row" style="display: flex; flex-wrap: wrap; max-width: 100%;">
+            <div style="flex: 1 1 400px; height: 100px;">
+                <div class="col-5" id="imagen">
+                    <img :src="currentImage" style="width: 1000px;" class="bg" alt="Cargando imagen..." id="img">
+                </div>
             </div>
-
-            <div class="col-7" style="position: relative;">
-                <div id="cart">
-                    <q-card id="card" flat bordered class="my-card">
-                        <q-card-section>
-                            <h5 id="h1" style="display: flex; justify-content: center;">Iniciar sesion</h5>
-                        </q-card-section>
-                        <q-card-section class="q-pa-md">
-                            <div role="alert"
-                                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
-                                v-if="check !== ''">
-                                <div>
-                                    {{ check }}
+            <div style="flex: 2 1 400px;  ">
+                <div class="col-7" style="position: relative; height: 100vh;">
+                    <div id="cart" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <q-card id="card" flat bordered class="my-card">
+                            <q-card-section>
+                                <h5 id="h1" style="display: flex; justify-content: center;">Iniciar sesion</h5>
+                            </q-card-section>
+                            <q-card-section class="q-pa-md">
+                                <div role="alert"
+                                    style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                                    v-if="check !== ''">
+                                    <div>
+                                        {{ check }}
+                                    </div>
                                 </div>
+                                <div class="q-gutter-md">
+                                    <q-input v-model="cedula" type="text" label="Cedula"
+                                        :rules="[val => !!val || 'Campo requerido']" />
+                                </div>
+                                <div class="q-gutter-md">
+                                    <q-input v-model="password" :type="isPwd ? 'password' : 'text'"
+                                        :rules="[val => !!val || 'Campo requerido']" label="Ingresar password">
+                                        <template v-slot:append>
+                                            <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                                                @click="isPwd = !isPwd" />
+                                        </template>
+                                    </q-input>
+                                </div>
+                            </q-card-section>
+                            <div style="display: flex;  justify-content: center;">
+                                <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
+                                <q-btn v-else
+                                    style="background-color: green;display: flex; justify-content: center; color: white;"
+                                    @click="validar()">
+                                    Iniciar</q-btn>
                             </div>
-                            <div class="q-gutter-md">
-                                <q-input v-model="cedula" type="text" label="Cedula"
-                                    :rules="[val => !!val || 'Campo requerido']" />
-                            </div>
-                            <div class="q-gutter-md">
-                                <q-input v-model="password" :type="isPwd ? 'password' : 'text'"
-                                    :rules="[val => !!val || 'Campo requerido']" label="Ingresar password">
-                                    <template v-slot:append>
-                                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                            @click="isPwd = !isPwd" />
-                                    </template>
-                                </q-input>
-                            </div>
-                        </q-card-section>
-                        <div style="display: flex;  justify-content: center;">
-                            <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
-                            <q-btn v-else
-                                style="background-color: green;display: flex; justify-content: center; color: white;"
-                                @click="validar()">
-                                Iniciar</q-btn>
-                        </div>
-                        <q-card-section>
-                            <div class="cursor-pointer" style="color: blue;" @click="olvideContra()">
-                                {{ label }}
-                                <!-- <q-popup-edit v-model="label" auto-save v-slot="scope">
+                            <q-card-section>
+                                <div class="cursor-pointer" style="color: blue;" @click="olvideContra()">
+                                    {{ label }}
+                                    <!-- <q-popup-edit v-model="label" auto-save v-slot="scope">
                                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
                             </q-popup-edit> -->
-                            </div>
-                        </q-card-section>
-                    </q-card>
+                                </div>
+                            </q-card-section>
+                        </q-card>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,9 +70,10 @@
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
                             <div class="q-gutter-md">
-                                <q-input v-model="email" type="email" suffix="Example@soy.sena.edu.co" label="E-mail">
+                                <q-input v-model="email" type="email" label="E-mail"
+                                    :rules="[validarEmail]">
                                     <template v-slot:append>
-                                        <q-icon name="mail" />
+                                        <q-icon name="email" />
                                     </template>
                                 </q-input>
                             </div>
@@ -77,9 +81,9 @@
                         <q-card-section>
                             <div role="alert"
                                 style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
-                                v-if="check !== ''">
+                                v-if="net !== ''">
                                 <div>
-                                    {{ check }}
+                                    {{ net }}
                                 </div>
                             </div>
                         </q-card-section>
@@ -88,7 +92,7 @@
 
                 <q-card-actions align="right">
                     <q-btn flat label="Cerrar" color="primary" v-close-popup />
-                    <q-btn flat label="Siguiente" @click="comprovar()" color="primary" v-close-popup />
+                    <q-btn flat label="Siguiente" @click="validarCorreo()" color="primary" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -105,7 +109,8 @@
                 <q-card-section class="q-pt-none">
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
-                            <p>Revice su correo '{{ correo }}', recibirá un correo electronico con instrucciones para
+                            <p>Revice su correo '<strong>{{ email }}</strong>', recibirá un correo electronico con
+                                instrucciones para
                                 restablecer su contraseña. Si no llega, asegurese de revisar su carpeta Span</p>
                         </q-card-section>
                         <q-card-section>
@@ -115,7 +120,7 @@
                 </q-card-section>
 
                 <q-card-actions align="right">
-                    <q-btn flat label="Iniciar sesion" to="/" color="primary" v-close-popup />
+                    <q-btn flat label="Iniciar sesion" to="/" @click="limpiar()" color="primary" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -167,8 +172,8 @@ let passwordNueva = ref(false);
 let label = ref('Olvidaste la contraseña')
 let isPwd = ref(true);
 let loading = ref(false)
-let correo = ref("example00@gmail.com")
-let text = ref('')
+let email = ref("")
+let net = ref('')
 let r = ref("")
 let cedula = ref("");
 let password = ref("");
@@ -176,6 +181,40 @@ let check = ref("");
 let resp = ref("");
 let verdadero = ref("");
 let falso = ref("");
+
+const emailValido = ref(true); // Inicialmente se asume que el correo es válido
+
+const validarEmail = (val) => {
+    // Expresión regular para validar una dirección de correo electrónico
+    const patron = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    // Utiliza la expresión regular para verificar el formato
+    if (!patron.test(val)) {
+        emailValido.value = false;
+        return "Formato de correo electrónico no válido";
+    } else {
+        emailValido.value = true;
+        return true;
+    }
+};
+
+function validarCorreo() {
+    if (email.value.trim() === "") {
+        net.value = "Digite el E-mail (campo obligatorio)"
+    } else if (emailValido.value === false) {
+        net.value = "Digite el E-mail correctamente"
+    } else {
+        net.value = ""
+        console.log(email.value);
+        ingresaCorreo.value = false
+        comprovar()
+    }
+
+}
+
+function limpiar() {
+    email.value = ""
+}
 
 onMounted(() => {
     document.addEventListener('keyup', handleKeyPress);

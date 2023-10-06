@@ -36,9 +36,6 @@
                             <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
                         </div>
                     </div>
-                    <q-card-section>
-                        <div class="text-h4">Registro</div>
-                    </q-card-section>
                     <q-card-section class="q-pt-none" id="card">
                         <q-card flat bordered class="my-card">
                             <q-card-section class="q-pa-md">

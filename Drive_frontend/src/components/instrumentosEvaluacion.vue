@@ -1,7 +1,7 @@
 <template>
     <div class="card-container">
         <div class="body">
-            <q-btn style="background-color: green;" :disable="loading" label="Agregar" @click="agregar()" />
+            <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
             <div style="margin-left: 5%;" class="text-h4">Instrumentos de Evaluacion</div>
             <q-space />
             <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"

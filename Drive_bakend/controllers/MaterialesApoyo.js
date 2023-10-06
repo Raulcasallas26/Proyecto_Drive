@@ -23,21 +23,18 @@ const httpMaterialesApoyo = {
     },
 
     postMaterialesApoyo: async (req, res) => {
-        const { id, nombre, documento, descripccion, documentos } = req.body;
-        const MaterialesApoyo = new MaterialesApoyoModel({
-          id,
-          nombre,
-          documento,
-          descripccion,
-          documentos
-        });
+        const {  nombre, documento,} = req.body;
 
         try {
-            const nuevoMaterialesApoyo = await MaterialesApoyo.save();
+            const MaterialesApoyo = new MaterialesApoyoModel({
+                nombre,
+                documento,
+            });
+            await MaterialesApoyo.save();
 
             res.json({
                 mensaje: "Un material de apoyo insertado!!",
-                nuevoMaterialesApoyo
+                MaterialesApoyo
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar material de apoyo", error });
@@ -46,8 +43,8 @@ const httpMaterialesApoyo = {
 
     putMaterialesApoyo: async (req, res) => {
         const { id } = req.params;
-        const { nombre, documento, descripccion, documentos } = req.body;
-        const MaterialesApoyo = await MaterialesApoyoModel.findByIdAndUpdate(id, { nombre, documento, descripccion, documentos }, { new: true })
+        const { nombre, documento} = req.body;
+        const MaterialesApoyo = await MaterialesApoyoModel.findByIdAndUpdate(id, { nombre, documento}, { new: true })
         res.json({
             msg: "ok",
             MaterialesApoyo
