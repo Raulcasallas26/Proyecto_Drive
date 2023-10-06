@@ -22,7 +22,7 @@
                                     </div>
                                 </div>
                                 <div class="q-gutter-md">
-                                    <q-input v-model-number="cedula" type="number" label="Cedula"
+                                    <q-input v-model="cedula" type="number" label="Cedula"
                                         :rules="[val => !!val || 'Campo requerido']" />
                                 </div>
                                 <div class="q-gutter-md">
