@@ -1,7 +1,7 @@
 <template>
     <q-layout view="lHh lpR lFf">
         <div class="row" style="display: flex; flex-wrap: wrap; max-width: 100%;">
-            <div style="flex: 1 1 400px; height: 100px;">
+            <div style="flex: 1 1 400px; height: 0px;">
                 <div class="col-5" id="imagen">
                     <img :src="currentImage" style="width: 1000px;" class="bg" alt="Cargando imagen..." id="img">
                 </div>
@@ -45,9 +45,6 @@
                             <q-card-section>
                                 <div class="cursor-pointer" style="color: blue;" @click="olvideContra()">
                                     {{ label }}
-                                    <!-- <q-popup-edit v-model="label" auto-save v-slot="scope">
-                                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
-                            </q-popup-edit> -->
                                 </div>
                             </q-card-section>
                         </q-card>

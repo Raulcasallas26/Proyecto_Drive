@@ -23,7 +23,7 @@
                             </div>
                         </div>
                         <div>
-                            <div >
+                            <div>
                                 <q-btn-dropdown flat round dense icon="more_vert">
                                     <q-list>
                                         <q-btn round  icon="img:https://cdn-icons-png.flaticon.com/512/724/724933.png" /><br>

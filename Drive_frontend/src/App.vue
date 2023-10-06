@@ -5,8 +5,99 @@
         <q-avatar>
           <img src="../src/img/logo_sena.png" style="filter: invert(1);" alt="">
         </q-avatar>
-        <q-btn v-if="isMobile" icon="menu" round dense @click="drawerRight = !drawerRight" class="q-mr-md"
-          style="background-color: rgba(26, 0, 128, 0.282); color: white" />
+        <!-- <q-btn v-if="!isInLoginComponent && isMobile" icon="menu" round dense @click="drawerRight = !drawerRight"
+          class="q-mr-md" style="background-color: rgba(26, 0, 128, 0.282); color: white" /> -->
+        <div>
+          <q-btn-dropdown flat round dense v-if="!isInLoginComponent && isMobile" icon="menu">
+            
+                <q-list padding>
+                  <q-item clickable v-ripple id="btn" to="/home">
+                    <q-item-section avatar>
+                      <q-icon name="home" />
+                    </q-item-section>
+                    <q-item-section>Inicio </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/usuarios">
+                    <q-item-section avatar>
+                      <q-icon name="people" />
+                    </q-item-section>
+                    <q-item-section> Usuarios</q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/programas">
+                    <q-item-section avatar>
+                      <q-icon name="book" />
+                    </q-item-section>
+                    <q-item-section> Programas </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/ambientes">
+                    <q-item-section avatar>
+                      <q-icon name="dashboard" />
+                    </q-item-section>
+                    <q-item-section> Ambientes </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/materialesApoyo">
+                    <q-item-section avatar>
+                      <q-icon name="img:https://cdn-icons-png.flaticon.com/512/1556/1556328.png" />
+                    </q-item-section>
+                    <q-item-section>Materiales de apoyo</q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/redConocimento">
+                    <q-item-section avatar>
+                      <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
+                    </q-item-section>
+                    <q-item-section> Red de Conocimiento </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/proyectos">
+                    <q-item-section avatar>
+                      <q-icon name="schema" />
+                    </q-item-section>
+                    <q-item-section> proyectos </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/registroCalificado">
+                    <q-item-section avatar>
+                      <q-icon name="img:https://cdn-icons-png.flaticon.com/128/4933/4933054.png" />
+                    </q-item-section>
+                    <q-item-section> Registro Calificado </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/retroalimentacionRed">
+                    <q-item-section avatar>
+                      <q-icon name="img:https://cdn-icons-png.flaticon.com/128/943/943424.png" />
+                    </q-item-section>
+                    <q-item-section> Retroalimentacion de Red </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/investigacion">
+                    <q-item-section avatar>
+                      <q-icon name="search" />
+                    </q-item-section>
+                    <q-item-section> Investigacion </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-ripple to="/instrumentosEvaluacion">
+                    <q-item-section avatar>
+                      <q-icon name="quiz" />
+                    </q-item-section>
+                    <q-item-section> Instrumentos de Evaluacion </q-item-section>
+                  </q-item>
+
+                  <q-separator />
+                  <q-item clickable v-ripple to="/">
+                    <q-item-section avatar>
+                      <q-icon name="login" />
+                    </q-item-section>
+                    <q-item-section> Salir </q-item-section>
+                  </q-item>
+                </q-list>
+          </q-btn-dropdown>
+        </div>
         <q-toolbar-title>
         </q-toolbar-title>
         <button v-if="!isInLoginComponent" class="btng">
@@ -175,11 +266,11 @@ const toggleLeftDrawer = () => {
 
 
 <style scoped>
-
 /* Estilo del botón de hamburguesa en dispositivos móviles */
 .q-btn.is-mobile {
   display: block;
-  margin: 10px; /* Ajusta el margen según tus necesidades */
+  margin: 10px;
+  /* Ajusta el margen según tus necesidades */
 }
 
 /* Estilo del menú lateral en dispositivos móviles */
