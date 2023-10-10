@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const PoryectoSchema = new mongoose.Schema({
-    id: {type: String},
     nombre:{type:String},
     codigo:{type:String},
     descripcion:{type:String},

@@ -73,7 +73,7 @@
 
         <div>
             <q-dialog v-model="alert" persistent>
-                <q-card id="card" style="width: 35%">
+                <q-card id="card">
                     <div style="display: flex;">
                         <q-card-section>
                             <div class="text-h4">Registro</div>
@@ -342,6 +342,11 @@ onMounted(async () => {
     justify-content: center;
     position: relative;
     margin: 1rem;
+}
+
+#card {
+    width: 35em;
+    max-width: 100%;
 }
 
 .text {

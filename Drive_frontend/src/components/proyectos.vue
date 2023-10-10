@@ -5,7 +5,7 @@
             <div style="margin-left: 5%;" class="text-h4">Proyectos</div>
             <q-space />
             <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
-                color="primary" v-model="filter">
+                color="primary" >
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
@@ -73,7 +73,7 @@
 
         <div>
             <q-dialog v-model="alert" persistent>
-                <q-card id="card" style="width: 35%">
+                <q-card id="card">
                     <div style="display: flex;">
                         <q-card-section>
                             <div class="text-h4">Registro</div>
@@ -117,7 +117,7 @@
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div>
-                                    <q-select v-model="programa" :options="opcionesprograma" label="Programa"
+                                    <q-select v-model="programa" :options="opcionesPrograma" label="Programa"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <q-card-section>
@@ -147,7 +147,7 @@
                     <q-card-actions align="right">
                         <q-btn flat label="Cerrar" @click="limpiarFormulario(), cerrar()" color="primary" v-close-popup />
                         <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" />
-                        <q-btn flat label="Editar Usuario" v-else @click="editar()" color="primary" />
+                        <q-btn flat label="Editar Proyecto" v-else @click="editar()" color="primary" />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -174,6 +174,14 @@ let version = ref("")
 let programa = ref("")
 let documento = ref("")
 let IdPrograma = ref("");
+let opcionesPrograma = ref ([])
+
+async function ListarProyectos() {
+    let Proyecto = await useProyecto.getProyectos();
+    console.log(Proyecto);
+    Program.value = Proyecto.data.Proyecto;
+    console.log(Program.value);
+}
 
 async function guardar() {
     loading.value = true;
@@ -193,6 +201,50 @@ async function guardar() {
     limpiarFormulario()
 }
 
+function limpiarFormulario() {
+    codigo.value = ""
+    nombre.value = ""
+    version.value = ""
+    descripcion.value = ""
+    fecha.value = ""
+    documento.value = ""
+    IdPrograma.value = ""
+    alert.value = false
+    bd.value = false
+}
+
+const edito = (index) => {
+    bd.value = true
+    indice.value = index;
+    let r = Program.value[index];
+    codigo.value = r.codigo;
+    nombre.value = r.nombre;
+    version.value = r.version;
+    descripcion.value = r.descripcion;
+    fecha.value = r.fecha;
+    documento.value = r.documento;
+    IdPrograma.value = r.IdPrograma;
+    alert.value = true;
+};
+
+const editar = async () => {
+    loading.value = true
+    let r = await useProyecto.editProyectos(indice.value, {
+        codigo: codigo.value,
+        nombre: nombre.value,
+        version: version.value,
+        descripcion: descripcion.value,
+        fecha: fecha.value,
+        documento: documento.value,
+        IdPrograma: IdPrograma.value,
+    });
+    console.log(r);
+    bd.value = false
+    loading.value = false
+    ListarProyectos()
+    limpiarFormulario()
+};
+
 async function activar(proyecto) {
     console.log("hola");
     console.log(proyecto.estado);
@@ -208,38 +260,18 @@ async function activar(proyecto) {
     console.log(est);
 }
 
-async function ListarProyectos() {
-    let Proyecto = await useProyecto.getProyectos();
-    console.log(Proyecto);
-    Program.value = Proyecto.data.Proyecto;
-    console.log();
+ListarProyectos()
+
+function agregar() {
+    alert.value = true
 }
 
-function limpiarFormulario() {
-    codigo.value = ""
-    nombre.value = ""
-    version.value = ""
-    descripcion.value = ""
-    fecha.value = ""
-    documento.value = ""
-    IdPrograma.value = ""
-    alert.value = false
-    bd.value = false
-}
-
+onMounted(async () => {
+    await ListarProyectos();
+});
+const limpiarCampo = ref()
 const cardStates = ref({});
 const isRotated = ref({});
-const toggleDetails = (index) => {
-    // Cambia el estado de la card en el índice específico
-    cardStates.value[index] = !cardStates.value[index];
-    isRotated.value[index] = !isRotated.value[index];
-};
-
-const opciones = [
-    "001 Centro Agroturistico sede san gil",
-    "002 Centro Agroturistico sede socorro",
-];
-
 const abrirSelectorDeArchivos = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -276,62 +308,6 @@ const handleFileSelection = (event) => {
 
     event.target.remove(); // Elimina el input de tipo file después de su uso
 };
-
-// Función para abrir el modal de edición con los datos del ambiente seleccionado
-const edito = (index) => {
-    bd.value = true
-    indice.value = index;
-    let r = Program.value[index];
-    codigo.value = r.codigo;
-    nombre.value = r.nombre;
-    version.value = r.version;
-    descripcion.value = r.descripcion;
-    fecha.value = r.fecha;
-    documento.value = r.documento;
-    IdPrograma.value = r.IdPrograma;
-    alert.value = true;
-};
-
-const editar = async () => {
-    if (indice.value !== null) {
-        const index = indice.value;
-        const ambienteEditado = {
-            codigo: codigo.value,
-            nombre: nombre.value,
-            version: version.value,
-            descripcion: descripcion.value,
-            fecha: fecha.value,
-            documento: documento.value,
-            IdPrograma: IdPrograma.value,
-        };
-
-        // Llamar al método de la store para editar el ambiente en la base de datos
-        const response = await useProyecto.editProyectos(
-            Program.value[index]._id,
-            ambienteEditado
-        );
-
-        if (response.status === 200) {
-
-            Program.value[index] = ambienteEditado;
-            alert.value = false;
-            indice.value = null;
-        } else {
-
-            console.error('Error al guardar los cambios en el servidor');
-        }
-    }
-};
-ListarProyectos()
-
-function agregar() {
-    alert.value = true
-}
-
-onMounted(async () => {
-    await ListarProyectos();
-});
-//editProyectos   useProyecto
 </script>
 
 <style scoped>
@@ -375,6 +351,11 @@ onMounted(async () => {
     /* Aumenta el tamaño en un 5% */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     /* Agrega una sombra suave */
+}
+
+#card {
+    width: 35em;
+    max-width: 100%;
 }
 
 .card {
@@ -483,4 +464,5 @@ onMounted(async () => {
 .close-button:not(.active):before {
     animation-name: fadeOutX;
     opacity: 0;
-}</style>
+}
+</style>

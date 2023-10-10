@@ -299,7 +299,6 @@ onMounted(() => {
 }
 
 .btng {
-
     background-color: rgba(0, 0, 0, 0);
     border-color: rgba(0, 0, 0, 0);
 }

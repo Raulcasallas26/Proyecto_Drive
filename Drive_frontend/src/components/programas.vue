@@ -37,7 +37,7 @@
     </div>
 
     <q-dialog v-model="alert" persistent>
-      <q-card id="card" style="width: 35%">
+      <q-card id="card">
         <div style="display: flex;">
           <q-card-section>
             <div class="text-h4">Registro</div>
@@ -300,6 +300,11 @@ onMounted(() => {
   font-weight: bold;
 
   /* Agrega otros estilos según tus necesidades */
+}
+
+#card {
+    width: 35em;
+    max-width: 100%;
 }
 
 .text {

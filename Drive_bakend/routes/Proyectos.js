@@ -9,8 +9,7 @@ router.get("/", httpProyecto.getProyecto)
 
 // router.get("/:id", httpProyecto.getProyectoId)
 
-router.post("/", [  
-], httpProyecto.postProyecto)
+router.post("/", [ ], httpProyecto.postProyecto)
 
 router.put("/:id", httpProyecto.putProyecto)
 

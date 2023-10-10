@@ -1,8 +1,7 @@
 import ProyectoModel from "../models/Proyectos.js"
-import bcrypt from "bcrypt"
 
 const httpProyecto = { 
-    getProyecto: async (req, res) => {
+    getProyecto: async (req, res) => { 
         try {
             const Proyecto = await ProyectoModel.find();
             res.status(200).json({ Proyecto });
@@ -43,28 +42,33 @@ const httpProyecto = {
 
     putProyecto: async (req, res) => {
         const { id } = req.params;
-        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, idRolUsuario, idRedConocimiento} = req.body;
-        const usuario = await ProyectoModel.findByIdAndUpdate(id, {nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, idRolUsuario, idRedConocimiento}, { new: true })
+        const { nombre, codigo, descripcion, version, documento} = req.body;
+        const proyecto = await ProyectoModel.findByIdAndUpdate(id, 
+            {nombre, 
+            codigo, 
+            descripcion, 
+            version, 
+            documento}, { new: true })
         res.json({
             msg: "ok",
-            usuario
+            proyecto
         })
     },
 
     putProyectoEstado: async (req, res) => {
             const { id } = req.params  
             const usu = await ProyectoModel.findById(id)
-            let usuario = null
+            let proyecto = null
             if (usu.estado) {
-                usuario = await ProyectoModel.findByIdAndUpdate(id, { estado: false })
+                proyecto = await ProyectoModel.findByIdAndUpdate(id, { estado: false })
             } else {
-                usuario = await ProyectoModel.findByIdAndUpdate(id, { estado: true })
+                proyecto = await ProyectoModel.findByIdAndUpdate(id, { estado: true })
             }
-            const usuarioAutenticado = req.usuario
+            const proyectoAutenticado = req.proyecto
             res.json({
                 msj: "fue cambiado el estado",
-                usuario,
-                usuarioAutenticado
+                proyecto,
+                proyectoAutenticado
             }) 
         },
 }

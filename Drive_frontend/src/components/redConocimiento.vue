@@ -6,7 +6,7 @@
                 :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
                 @virtual-scroll="onScroll">
                 <template v-slot:top>
-                    <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="agregar()" />
+                    <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
                     <div style="margin-left: 5%;" class="text-h4">Redes de Conocimiento</div>
                     <q-space />
                     <q-input borderless dense debounce="300"
@@ -27,7 +27,7 @@
         </div>
         <div>
             <q-dialog v-model="alert" persistent>
-                <q-card id="card" style="width: 35%;">
+                <q-card id="card" >
                     <div style="display: flex;">
                         <q-card-section>
                             <div class="text-h4">Registro</div>
@@ -181,6 +181,11 @@ onMounted(async () => {
         opacity: 0;
         transform: translateX(-20px);
     }
+}
+
+#card {
+    width: 35em;
+    max-width: 100%;
 }
 
 /* Aplica las transiciones y animaciones */

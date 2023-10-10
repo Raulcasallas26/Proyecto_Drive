@@ -9,7 +9,7 @@ export const useProyectosStore = defineStore(
                 let res = await axios.post(`${urlBackend}/Proyectos`, info)
                 return res
             } catch (error) {
-                console.log("hay un error en la post");
+                console.log("hay un error en la post Programas");
                 return error
             }
         }
@@ -19,7 +19,7 @@ export const useProyectosStore = defineStore(
                 let res = await axios.get(`${urlBackend}/Proyectos`)
                 return res
             } catch (error) {
-                console.log("hay un error en el get");
+                console.log("hay un error en el get Programas");
                 return error
             }
         }
@@ -28,7 +28,7 @@ export const useProyectosStore = defineStore(
                 let res = await axios.put(`${urlBackend}/Proyectos/${id}`, info)
                 return res
             } catch (error) {
-                console.log("hay un error en edirUsers");
+                console.log("hay un error en editProgramas");
                 return error
             }
         }
@@ -37,7 +37,7 @@ export const useProyectosStore = defineStore(
                 let res = await axios.put(`${urlBackend}/Proyectos/estado/${id}`)
                 return res.data
             } catch (error) {
-                console.log("hay un error en activarUser");
+                console.log("hay un error en activarProgramas");
                 return error
             }
         }

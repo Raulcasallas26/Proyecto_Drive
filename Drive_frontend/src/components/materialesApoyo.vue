@@ -16,18 +16,21 @@
             <div v-for="(ambiente, index) in material" :key="index">
                 <div class="card">
                     <div class="top-half">
-                        <div class="info">
-                            <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
-                            <div class="info">
-                                <p><strong>Documentos:</strong> {{ ambiente.documento }}</p>
+                        <div class="carta">
+                            <div class="info" style="text-overflow: ellipsis;">
+                                <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
+                                <div class="info">
+                                    <p><strong>Documentos:</strong> {{ ambiente.documento }}</p>
+                                </div>
                             </div>
                         </div>
                         <div>
                             <div>
                                 <q-btn-dropdown flat round dense icon="more_vert">
                                     <q-list>
-                                        <q-btn round  icon="img:https://cdn-icons-png.flaticon.com/512/724/724933.png" /><br>
-                                        <q-btn @click="edito(index)" round  icon="img:https://cdn-icons-png.flaticon.com/512/650/650143.png" />
+                                        <q-btn round icon="img:https://cdn-icons-png.flaticon.com/512/724/724933.png" /><br>
+                                        <q-btn @click="edito(index)" round
+                                            icon="img:https://cdn-icons-png.flaticon.com/512/650/650143.png" />
                                     </q-list>
                                 </q-btn-dropdown>
                             </div>
@@ -235,6 +238,12 @@ onMounted(async () => {
     /* Aumenta el tamaño en un 5% */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     /* Agrega una sombra suave */
+}
+
+.carta{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .card {
