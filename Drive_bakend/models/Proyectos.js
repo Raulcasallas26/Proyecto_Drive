@@ -8,7 +8,7 @@ const PoryectoSchema = new mongoose.Schema({
     version:{type:String},
     documento:{type:String},
     IdPrograma:{type:String},
-    estado:{type: Boolean, default: true},
+    estado:{type: Boolean, default: true}
 }) 
 
-export default mongoose.model("Proyecto", PoryectoSchema)
+export default mongoose.model("proyec", PoryectoSchema)

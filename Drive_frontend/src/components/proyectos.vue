@@ -5,7 +5,7 @@
             <div style="margin-left: 5%;" class="text-h4">Proyectos</div>
             <q-space />
             <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
-                color="primary" >
+                color="primary">
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
@@ -76,7 +76,7 @@
                 <q-card id="card">
                     <div style="display: flex;">
                         <q-card-section>
-                            <div class="text-h4">Registro</div>
+                            <div class="text-h4">Registro de Proyecto</div>
                         </q-card-section>
                         <div style="margin-left: auto;    margin-bottom: auto;">
                             <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
@@ -167,20 +167,19 @@ let check = ref("")
 let indice = ref(null);
 let bd = ref(false)
 let nombre = ref("");
-let codigo = ref("");
+let codigo = ref(""); 
 let descripcion = ref("");
 let fecha = ref("")
 let version = ref("")
 let programa = ref("")
 let documento = ref("")
 let IdPrograma = ref("");
-let opcionesPrograma = ref ([])
+let opcionesPrograma = ref([])
 
 async function ListarProyectos() {
-    let Proyecto = await useProyecto.getProyectos();
-    console.log(Proyecto);
-    Program.value = Proyecto.data.Proyecto;
-    console.log(Program.value);
+    let Proyectos = await useProyecto.getProyectos();
+    console.log(Proyectos);
+    Program.value = Proyectos.data.Proyecto;
 }
 
 async function guardar() {
@@ -214,9 +213,10 @@ function limpiarFormulario() {
 }
 
 const edito = (index) => {
-    bd.value = true
-    indice.value = index;
     let r = Program.value[index];
+    bd.value = true
+    indice.value = r._id;
+    alert.value = true;
     codigo.value = r.codigo;
     nombre.value = r.nombre;
     version.value = r.version;
@@ -224,7 +224,6 @@ const edito = (index) => {
     fecha.value = r.fecha;
     documento.value = r.documento;
     IdPrograma.value = r.IdPrograma;
-    alert.value = true;
 };
 
 const editar = async () => {
@@ -269,9 +268,17 @@ function agregar() {
 onMounted(async () => {
     await ListarProyectos();
 });
+
+const toggleDetails = (index) => {
+    // Cambia el estado de la card en el índice específico
+    cardStates.value[index] = !cardStates.value[index];
+    isRotated.value[index] = !isRotated.value[index];
+};
+
 const limpiarCampo = ref()
 const cardStates = ref({});
 const isRotated = ref({});
+
 const abrirSelectorDeArchivos = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";

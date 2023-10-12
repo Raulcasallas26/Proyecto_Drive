@@ -1,16 +1,15 @@
 import mongoose from "mongoose";
 
 const UsuariosSchema = new mongoose.Schema({
-    id: {type: String},
-    nombre:{type:String},
-    apellidos:{type:String},
-    cedula:{type:String},
-    telefono:{type:String},
-    email:{type:String},
-    password:{type:String},
-    perfilProfesional:{type:String},
-    curriculum:{type:String},
-    estado:{type: Boolean, default: true},
+    nombre:{type:String, require: true},
+    apellidos:{type:String, require: true},
+    cedula:{type:Number, require: true, unique:true},
+    telefono:{type:Number, require: true},
+    email:{type:String, require: true, unique:true},
+    password:{type:String, require: true},
+    perfilProfesional:{type:String, require: true},
+    curriculum:{type:String, require: true}, 
+    estado:{type: Boolean, default: true, require: true},
     idRolUsuario:{type:String},
     idRedConocimiento:{type:String}
 }) 

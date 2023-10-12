@@ -21,14 +21,15 @@ const httpProyecto = {
     // },
 
     postProyecto: async ( req, res ) => {
-        const {nombre, codigo, descripcion, version, documento} = req.body;
+        const {nombre, codigo, descripcion, version, documento, IdPrograma} = req.body;
         try {
             const proyecto = new ProyectoModel({
                 nombre,
                 codigo, 
                 descripcion, 
                 version, 
-                documento
+                documento,
+                IdPrograma
             });
             await proyecto.save();
             res.json({
@@ -42,16 +43,17 @@ const httpProyecto = {
 
     putProyecto: async (req, res) => {
         const { id } = req.params;
-        const { nombre, codigo, descripcion, version, documento} = req.body;
+        const { nombre, codigo, descripcion, version, documento, IdPrograma} = req.body;
         const proyecto = await ProyectoModel.findByIdAndUpdate(id, 
             {nombre, 
-            codigo, 
+            codigo,
             descripcion, 
             version, 
-            documento}, { new: true })
+            documento,
+            IdPrograma}, { new: true })
         res.json({
             msg: "ok",
-            proyecto
+            proyecto,
         })
     },
 

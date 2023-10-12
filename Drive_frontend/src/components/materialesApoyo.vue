@@ -43,7 +43,7 @@
             <q-card id="card" style="width: 500px; max-width: 100%;">
                 <div style="display: flex;">
                     <q-card-section>
-                        <div class="text-h4">Registro</div>
+                        <div class="text-h4">Registro de Materiales de apoyo</div>
                     </q-card-section>
                     <div style="margin-left: auto;    margin-bottom: auto;">
                         <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />

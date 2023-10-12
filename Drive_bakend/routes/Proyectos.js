@@ -11,7 +11,7 @@ router.get("/", httpProyecto.getProyecto)
 
 router.post("/", [ ], httpProyecto.postProyecto)
 
-router.put("/:id", httpProyecto.putProyecto)
+router.put("/:id", httpProyecto.putProyecto) 
 
 router.put("/estado/:id", httpProyecto.putProyectoEstado)
 

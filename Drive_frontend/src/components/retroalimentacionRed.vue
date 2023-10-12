@@ -76,7 +76,7 @@
                 <q-card id="card">
                     <div style="display: flex;">
                         <q-card-section>
-                            <div class="text-h4">Registro</div>
+                            <div class="text-h4">Registro de Retroalimentacion</div>
                         </q-card-section>
                         <div style="margin-left: auto;    margin-bottom: auto;">
                             <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />

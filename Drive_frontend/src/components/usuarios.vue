@@ -3,7 +3,7 @@
         <div>
             <q-table flat bordered title="Treats" :rows="user" :columns="columns" row-key="id" :filter="filter"
                 :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="10"
-                :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
+                :virtual-scroll-sticky-size-start="10"  :rows-per-page-options="[15]"
                 @virtual-scroll="onScroll">
                 <template v-slot:top>
                     <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar"
@@ -46,7 +46,7 @@
             <q-card id="card">
                 <div style="display: flex;">
                     <q-card-section>
-                        <div class="text-h4">Registro</div>
+                        <div class="text-h4">Registro de Usiarios</div>
                     </q-card-section>
                     <div style="margin-left: auto;    margin-bottom: auto;">
                         <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
@@ -224,6 +224,18 @@ async function validaredit() {
     }
 
 }
+
+function edito(props) {
+    r.value = props.row;
+    bd.value = true;
+    alert.value = true;
+    indice.value = r.value._id;
+    nombre.value = r.value.nombre;
+    email.value = r.value.email;
+    telefono.value = r.value.telefono;
+    cedula.value = r.value.cedula;
+}
+
 async function editarUser() {
     loading.value = true;
     console.log("hola estoy editando");
@@ -252,17 +264,6 @@ async function activar(props) {
     }
     let est = await useUsuario.activarUsuarios(r.value._id);
     console.log(est);
-}
-
-function edito(props) {
-    bd.value = true;
-    r.value = props.row;
-    alert.value = true;
-    indice.value = r.value._id;
-    nombre.value = r.value.nombre;
-    email.value = r.value.email;
-    telefono.value = r.value.telefono;
-    cedula.value = r.value.cedula;
 }
 
 function limpiarFormulario() {

@@ -210,6 +210,7 @@ async function agregarAmbiente() {
   });
   getAmbientesformacion();
   showModalAgregar.value = false
+  loading.value = false
   /* console.log(Nombre.value, codigo.value, Tipo.value, Descripcion.value); */
 }
 
