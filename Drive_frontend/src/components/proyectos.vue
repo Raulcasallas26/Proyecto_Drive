@@ -1,6 +1,9 @@
 <template>
     <div class="card-container">
-        <div class="body">
+        <div v-if="load == true" style="margin-top: 5px;">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+        <div v-else class="body">
             <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
             <div style="margin-left: 5%;" class="text-h4">Proyectos</div>
             <q-space />
@@ -158,7 +161,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useProyectosStore } from "../stores/Proyecto.js";
-
+import { load } from "../routes/direccion.js"
 const useProyecto = useProyectosStore();
 const loading = ref(false);
 let Program = ref([]);
@@ -177,9 +180,11 @@ let IdPrograma = ref("");
 let opcionesPrograma = ref([])
 
 async function ListarProyectos() {
+    load.value = true
     let Proyectos = await useProyecto.getProyectos();
     console.log(Proyectos);
     Program.value = Proyectos.data.Proyecto;
+    load.value = false
 }
 
 async function guardar() {

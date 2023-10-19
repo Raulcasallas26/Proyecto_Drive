@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const RetroAlimentacionRedSchema = new mongoose.Schema({
-    id: { type: String, required: false },
+    codigo: { type: String},
     nombre: { type: String, required: false },
     codigoFicha: { type: String, required: false }, 
     descripcion:{type:String, required: false},

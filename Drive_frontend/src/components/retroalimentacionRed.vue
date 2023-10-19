@@ -1,6 +1,9 @@
 <template>
     <div class="card-container">
-        <div class="body">
+        <div v-if="load == true" style="margin-top: 5px;">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+        <div v-else class="body">
             <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
             <div style="margin-left: 5%;" class="text-h4">Retroalimentacion de Red</div>
             <q-space />
@@ -157,9 +160,9 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useProyectosStore } from "../stores/Proyecto.js";
-
-const useProyecto = useProyectosStore();
+import { useRetroalimentacionRedStore } from "../stores/RetroalimentacionRed";
+import { load } from "../routes/direccion.js"
+const useRetroalimentacion = useRetroalimentacionRedStore();
 const loading = ref(false);
 let Program = ref([]);
 let alert = ref(false);
@@ -175,9 +178,18 @@ let programa = ref("")
 let documento = ref("")
 let IdPrograma = ref("");
 
+async function ListarProyectos() {
+    load.value = true
+    let Proyecto = await useRetroalimentacion.getRetroalimentacionRed();
+    console.log(Proyecto);
+    Program.value = Proyecto.data.Proyecto;
+    console.log();
+    load.value = false
+}
+
 async function guardar() {
     loading.value = true;
-    let r = await useProyecto.addProyectos({
+    let r = await useRetroalimentacion.addProyectos({
         codigo: codigo.value,
         nombre: nombre.value,
         version: version.value,
@@ -193,6 +205,56 @@ async function guardar() {
     limpiarFormulario()
 }
 
+const edito = (index) => {
+    bd.value = true
+    indice.value = index;
+    let r = Program.value[index];
+    codigo.value = r.codigo;
+    nombre.value = r.nombre;
+    version.value = r.version;
+    descripcion.value = r.descripcion;
+    fecha.value = r.fecha;
+    documento.value = r.documento;
+    IdPrograma.value = r.IdPrograma;
+    alert.value = true;
+};
+
+const editar = async () => {
+    if (indice.value !== null) {
+        const index = indice.value;
+        const ambienteEditado = {
+            codigo: codigo.value,
+            nombre: nombre.value,
+            version: version.value,
+            descripcion: descripcion.value,
+            fecha: fecha.value,
+            documento: documento.value,
+            IdPrograma: IdPrograma.value,
+        };
+
+        // Llamar al método de la store para editar el ambiente en la base de datos
+        const response = await useRetroalimentacion.editProyectos(
+            Program.value[index]._id,
+            ambienteEditado
+        );
+
+        if (response.status === 200) {
+
+            Program.value[index] = ambienteEditado;
+            alert.value = false;
+            indice.value = null;
+        } else {
+
+            console.error('Error al guardar los cambios en el servidor');
+        }
+    }
+};
+ListarProyectos()
+
+function agregar() {
+    alert.value = true
+}
+
 async function activar(proyecto) {
     console.log("hola");
     console.log(proyecto.estado);
@@ -204,15 +266,8 @@ async function activar(proyecto) {
         r.estado = true;
         console.log(r.estado, "resultado del else");
     }
-    let est = await useProyecto.activarProyectos(r._id);
+    let est = await useRetroalimentacion.activarProyectos(r._id);
     console.log(est);
-}
-
-async function ListarProyectos() {
-    let Proyecto = await useProyecto.getProyectos();
-    console.log(Proyecto);
-    Program.value = Proyecto.data.Proyecto;
-    console.log();
 }
 
 function limpiarFormulario() {
@@ -235,10 +290,6 @@ const toggleDetails = (index) => {
     isRotated.value[index] = !isRotated.value[index];
 };
 
-const opciones = [
-    "001 Centro Agroturistico sede san gil",
-    "002 Centro Agroturistico sede socorro",
-];
 
 const abrirSelectorDeArchivos = () => {
     const fileInput = document.createElement("input");
@@ -278,60 +329,12 @@ const handleFileSelection = (event) => {
 };
 
 // Función para abrir el modal de edición con los datos del ambiente seleccionado
-const edito = (index) => {
-    bd.value = true
-    indice.value = index;
-    let r = Program.value[index];
-    codigo.value = r.codigo;
-    nombre.value = r.nombre;
-    version.value = r.version;
-    descripcion.value = r.descripcion;
-    fecha.value = r.fecha;
-    documento.value = r.documento;
-    IdPrograma.value = r.IdPrograma;
-    alert.value = true;
-};
 
-const editar = async () => {
-    if (indice.value !== null) {
-        const index = indice.value;
-        const ambienteEditado = {
-            codigo: codigo.value,
-            nombre: nombre.value,
-            version: version.value,
-            descripcion: descripcion.value,
-            fecha: fecha.value,
-            documento: documento.value,
-            IdPrograma: IdPrograma.value,
-        };
-
-        // Llamar al método de la store para editar el ambiente en la base de datos
-        const response = await useProyecto.editProyectos(
-            Program.value[index]._id,
-            ambienteEditado
-        );
-
-        if (response.status === 200) {
-
-            Program.value[index] = ambienteEditado;
-            alert.value = false;
-            indice.value = null;
-        } else {
-
-            console.error('Error al guardar los cambios en el servidor');
-        }
-    }
-};
-ListarProyectos()
-
-function agregar() {
-    alert.value = true
-}
 
 onMounted(async () => {
     await ListarProyectos();
 });
-//editProyectos   useProyecto
+//editProyectos   useRetroalimentacion
 </script>
 
 <style scoped>

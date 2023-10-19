@@ -1,6 +1,9 @@
 <template>
     <div class="card-container">
-        <div>
+        <div v-if="load == true" style="margin-top: 5px;">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+        <div v-else>
             <q-table class="tabla" flat bordered title="Treats" :rows="red" :columns="columns" row-key="id" :filter="filter"
                 :loading="loading" able-header-class="" virtual-scroll :virtual-scroll-item-size="10"
                 :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
@@ -70,6 +73,8 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRedesConocimientoStore } from "../stores/RedesConocimiento.js";
+import { load } from "../routes/direccion.js"
 let red = ref([]);
 let alert = ref(false)
 let check = ref("")
@@ -78,7 +83,6 @@ let bd = ref(false)
 let indice = ref(null)
 let codigo = ref("");
 let denominacion = ref("");
-import { useRedesConocimientoStore } from "../stores/RedesConocimiento.js";
 const useRedes = useRedesConocimientoStore();
 let columns = [
     { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
@@ -90,10 +94,12 @@ const loading = ref(false);
 const filter = ref("");
 
 async function obtenerredes() {
+    load.value = true
     let redes = await useRedes.getRedesConocimiento();
     console.log(redes);
     red.value = redes.data.RedesConocimiento;
     console.log(redes.data);
+    load.value = false
 }
 
 async function guardar() {

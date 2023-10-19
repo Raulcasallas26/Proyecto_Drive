@@ -1,10 +1,12 @@
 <template>
     <div class="q-pa-md">
-        <div>
+        <div v-if="load == true">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+        <div v-else>
             <q-table flat bordered title="Treats" :rows="user" :columns="columns" row-key="id" :filter="filter"
                 :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="10"
-                :virtual-scroll-sticky-size-start="10"  :rows-per-page-options="[15]"
-                @virtual-scroll="onScroll">
+                :virtual-scroll-sticky-size-start="10" :rows-per-page-options="[15]" @virtual-scroll="onScroll">
                 <template v-slot:top>
                     <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar"
                         @click="agregar()" />
@@ -110,6 +112,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUsuariosStore } from "../stores/usuarios.js";
+import { load } from "../routes/direccion.js"
 const useUsuario = useUsuariosStore();
 let alert = ref(false);
 let bd = ref(false);
@@ -267,7 +270,6 @@ async function activar(props) {
 }
 
 function limpiarFormulario() {
-    console.log("limpiar datos");
     nombre.value = "";
     email.value = "";
     telefono.value = "";
@@ -279,9 +281,11 @@ function limpiarFormulario() {
 
 listarUsuarios();
 async function listarUsuarios() {
+    load.value = true
     let usuarios = await useUsuario.getUsuarios();
     console.log(usuarios);
     user.value = usuarios.data.Usuarios;
+    load.value = false
 }
 
 function agregar() {

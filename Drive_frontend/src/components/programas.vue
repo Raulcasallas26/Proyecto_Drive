@@ -1,6 +1,9 @@
 <template>
   <div class="card-container">
-    <div>
+    <div v-if="load == true" style="margin-top: 5px;">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+    <div v-else>
       <q-table class="tabla" flat bordered title="Treats" :rows="proga" :columns="columns" row-key="id" :filter="filter"
         :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
         :virtual-scroll-sticky-size-start="20" :pagination="pagination" :rows-per-page-options="[15]"
@@ -104,7 +107,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useProgramasFormacionStore } from "../stores/programasformacion.js";
-
+import { load } from "../routes/direccion.js"
 const useProgramas = useProgramasFormacionStore();
 let proga = ref([]);
 let check = ref("");
@@ -142,9 +145,11 @@ const filter = ref("");
 const loading = ref(false);
 
 async function obtenerformacion() {
+  load.value = true
   let programas = await useProgramas.getProgramasFormacion();
   console.log(programas);
   proga.value = programas.data.ProgramasFormacion;
+  load.value = false
 }
 function mostrarAlerta(mensaje) {
   alert.value = true;

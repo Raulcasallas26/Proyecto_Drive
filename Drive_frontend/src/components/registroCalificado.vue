@@ -1,12 +1,15 @@
 <template>
     <div class="card-container">
-        <div class="body">
+        <div v-if="load == true" style="margin-top: 5px;">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+        <div v-else class="body">
             <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
             <div style="margin-left: 5%;" class="text-h4">Registro Calificado</div>
             <q-space />
         </div>
         <div>
-            <div v-for="(registro, i) in RegisCal" :key="i">
+            <div v-for="(registro, index) in RegisCal" :key="index">
                 <div class="q-pa-md row items-start q-gutter-md" id="cart">
                     <q-card class="my-card" flat bordered>
                         <div class="q-pa-md row items-start q-gutter-md">
@@ -68,7 +71,7 @@
                         </div>
                         <q-card-actions>
                             <q-btn label="Descargar" icon="download" color="green" @click="open('right')" />
-                            <q-btn label="Editar" icon="edit" color="primary" outline @click="open('right')" />
+                            <q-btn label="Editar" @click="edito(index)" icon="edit" color="primary" outline />
                         </q-card-actions>
                     </q-card>
                 </div>
@@ -90,43 +93,29 @@
                         <q-card flat bordered class="my-card">
                             <q-card-section class="q-pa-md">
                                 <div class="q-gutter-md">
-                                    <q-input v-model="codigo" label="Código"
+                                    <q-input v-model="titulo" label="Titulo"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div class="q-gutter-md">
-                                    <q-input v-model="nombre" label="Nombre"
+                                    <q-input v-model="lugar" label="Lugar"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div class="q-gutter-md">
-                                    <q-input v-model="version" label="Versión"
+                                    <q-input v-model="metodologia" label="Metodologia"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
-                                <div class="q-gutter-md" v-show="bd === true">
-                                    <q-input v-model="fecha" mask="date" :rules="['date']" label="Fecha">
-                                        <template v-slot:append>
-                                            <q-icon name="event" class="cursor-pointer">
-                                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                    <q-date v-model="fecha">
-                                                        <div class="row items-center justify-end">
-                                                            <q-btn v-close-popup label="Close" color="primary" flat />
-                                                        </div>
-                                                    </q-date>
-                                                </q-popup-proxy>
-                                            </q-icon>
-                                        </template>
-                                    </q-input>
-                                </div>
+                                
                                 <div class="q-gutter-md">
-                                    <q-input v-model="descripcion" label="Descripcion"
+                                    <q-input v-model="creditos" label="Creditos"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div>
-                                    <q-select v-model="programa" :options="opcionesPrograma" label="Programa"
+                                    <q-input v-model="codigoSnies" label="Codigo Snies"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <q-card-section>
                                     <q-input class="input" v-model="documento"
-                                        label="Archivo o enlace del diseño curricular"
+                                        label="Archivo o enlace del registro calificado"
                                         :rules="[(val) => !!val || 'Campo requerido']" dense clearable
                                         prepend-icon="attach_file" @clear="limpiarCampo">
                                         <template v-slot:append>
@@ -150,8 +139,7 @@
 
                     <q-card-actions align="right">
                         <q-btn flat label="Cerrar" @click="limpiarFormulario(), cerrar()" color="primary" v-close-popup />
-                        <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" />
-                        <q-btn flat label="Editar Proyecto" v-else @click="editar()" color="primary" />
+                        <q-btn flat label="Editar Proyecto" @click="editar()" color="primary" />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -163,24 +151,118 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRegistroCalificadoStore } from "../stores/RegistroCalificado.js"
+import { load } from "../routes/direccion.js"
 const useRegistroCalificado = useRegistroCalificadoStore()
 let RegisCal = ref([]);
 let loading = ref(false)
 let alert = ref(false)
-
+let titulo = ref("")
+let lugar = ref("")
+let metodologia = ref("")
+let creditos = ref("")
+let codigoSnies = ref("")
+let documento = ref("")
+let indice = ref(null)
+let fecha = ref("")
+let check = ref("")
 
 async function ListarRegistro() {
+    load.value = true
     let Registro = await useRegistroCalificado.getRegistroCalificado();
     console.log(Registro);
     RegisCal.value = Registro.data.RegistroCalificado;
+    load.value = false
 }
 
+function edito(index) {
+    let r = RegisCal.value[index];
+    alert.value = true;
+    indice.value = r._id;
+    titulo.value = r.titulo;
+    lugar = r.lugarDesarrollo;
+    metodologia.value = r.metodologia;
+    creditos.value = r.creditos;
+    codigoSnies.value = r.codigoSnies;
+}
+
+const editar = async () => {
+    loading.value = true
+    let r = await useRegistroCalificado.editRegistroCalificado(indice.value, {
+        titulo: titulo.value,
+        lugarDesarrollo: lugar.value,
+        metodologia: metodologia.value,
+        creditos: creditos.value,
+        codigoSnies: codigoSnies.value,
+        fecha: fecha.value,
+        documento: documento.value,
+    });
+    console.log(r);
+    loading.value = false
+    ListarRegistro()
+    alert.value = false
+};
+
 ListarRegistro()
+
+function limpiarFormulario() {
+    titulo.value = ""
+    lugar.value = ""
+    metodologia.value = ""
+    creditos.value = ""
+    codigoSnies.value = ""
+    alert.value = false
+}
 
 onMounted(async () => {
     await ListarRegistro();
 });
 
+const toggleDetails = (i) => {
+    // Cambia el estado de la card en el índice específico
+    cardStates.value[index] = !cardStates.value[index];
+    isRotated.value[index] = !isRotated.value[index];
+};
+
+const limpiarCampo = ref()
+const cardStates = ref({});
+const isRotated = ref({});
+
+const abrirSelectorDeArchivos = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.style.display = "none";
+    fileInput.addEventListener("change", handleFileSelection);
+    document.body.appendChild(fileInput);
+    fileInput.click();
+};
+
+// Función para manejar la selección de archivos
+const handleFileSelection = (event) => {
+    const selectedFile = event.target.files[0];
+    const selectedFileName = selectedFile ? selectedFile.name : "";
+
+    // Asignar el nombre del archivo al campo documento
+    documento.value = selectedFileName;
+
+    // Buscar la opción que corresponde al nombre del archivo
+    const selectedOption = opciones.find((option) =>
+        option.includes(selectedFileName)
+    );
+
+    if (selectedOption) {
+        // Enviar el texto correspondiente a la opción seleccionada
+        const textoDeOpcion = selectedOption;
+        // Aquí puedes hacer lo que necesites con textoDeOpcion
+        alert(`Texto de la opción seleccionada: ${textoDeOpcion}`);
+    } else {
+        // Manejar el caso en que no se encuentre una opción correspondiente
+        alert(
+            "No se encontró una opción correspondiente al archivo seleccionado."
+        );
+    }
+
+    event.target.remove(); // Elimina el input de tipo file después de su uso
+};
 </script>
 <style scoped>
 .body {

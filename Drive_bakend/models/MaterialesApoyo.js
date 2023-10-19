@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 
 const MaterialesApoyoSchema = new mongoose.Schema({
-    nombre:{type:String},
+    codigo: {type: String},
+    nombre:{type:String}, 
     documento:{type:String},
+    descripccion:{type:String},
+    documentos:{type:String},
 }) 
 
 export default mongoose.model("MaterialesApoyo", MaterialesApoyoSchema)
+

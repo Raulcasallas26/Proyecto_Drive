@@ -1,6 +1,9 @@
 <template>
   <div class="card-container">
-    <div class="body" style="position: relative">
+    <div v-if="load == true" style="margin-top: 5px;">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+    <div v-else class="body" style="position: relative">
       <q-btn style="background-color: green; color: white; " :disable="loading" label="Agregar" @click="showModalAgregar = true" />
       <div style="margin-left: 5%" class="text-h4">Ambientes de formacion</div>
       <q-space />
@@ -162,7 +165,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
-
+import { load } from "../routes/direccion.js"
 const useambiente = useAmbientesFormacionStore();
 let ambientess = ref([]);
 let showModalAgregar = ref(false);
@@ -230,8 +233,10 @@ async function activar(ambiente) {
 }
 
 async function getAmbientesformacion() {
+  load.value = true
   let Formacion = await useambiente.getAmbientesFormacion();
   ambientess.value = Formacion.data.AmbientesFormacion;
+  load.value = false
 }
 
 const cardStates = ref({});
