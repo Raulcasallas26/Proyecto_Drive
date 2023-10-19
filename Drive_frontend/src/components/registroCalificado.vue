@@ -167,11 +167,9 @@ let fecha = ref("")
 let check = ref("")
 
 async function ListarRegistro() {
-    load.value = true
     let Registro = await useRegistroCalificado.getRegistroCalificado();
     console.log(Registro);
     RegisCal.value = Registro.data.RegistroCalificado;
-    load.value = false
 }
 
 function edito(index) {
@@ -179,7 +177,7 @@ function edito(index) {
     alert.value = true;
     indice.value = r._id;
     titulo.value = r.titulo;
-    lugar = r.lugarDesarrollo;
+    lugar.value = r.lugarDesarrollo;
     metodologia.value = r.metodologia;
     creditos.value = r.creditos;
     codigoSnies.value = r.codigoSnies;

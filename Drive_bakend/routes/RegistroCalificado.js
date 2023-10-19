@@ -7,7 +7,7 @@ router.get("/", httpRegistroCalificado.getRegistroCalificado)
 
 // router.get("/:cedula", httpRegistroCalificado.getRegistroCalificadoId)
 
-router.post("/", [], httpRegistroCalificado.postRegistroCalificado)
+// router.post("/", [], httpRegistroCalificado.postRegistroCalificado)
 
 router.put("/:id", httpRegistroCalificado.putRegistroCalificado)
 
