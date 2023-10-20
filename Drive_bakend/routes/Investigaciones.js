@@ -6,10 +6,12 @@ const router = Router()
 
 router.get("/", httpInvestigaciones.getInvestigaciones)
 
-router.get("/:cedula", httpInvestigaciones.getInvestigacionesId)
+// router.get("/:cedula", httpInvestigaciones.getInvestigacionesId)
 
 router.post("/", [], httpInvestigaciones.postInvestigaciones)
 
 router.put("/:id", httpInvestigaciones.putInvestigaciones)
+
+router.put("/estado/:id", httpInvestigaciones.putinvestigacionesEstado)
 
 export default router

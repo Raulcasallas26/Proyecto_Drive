@@ -1,10 +1,11 @@
 <template>
   <div class="card-container">
     <div v-if="load == true" style="margin-top: 5px;">
-            <q-linear-progress ark rounded indeterminate color="green" />
-        </div>
+      <q-linear-progress ark rounded indeterminate color="green" />
+    </div>
     <div v-else class="body" style="position: relative">
-      <q-btn style="background-color: green; color: white; " :disable="loading" label="Agregar" @click="showModalAgregar = true" />
+      <q-btn style="background-color: green; color: white; " :disable="loading" label="Agregar"
+        @click="showModalAgregar = true" />
       <div style="margin-left: 5%" class="text-h4">Ambientes de formacion</div>
       <q-space />
       <q-input borderless dense debounce="300" style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
@@ -131,16 +132,15 @@
               <q-select v-model="IdCentroFormacion" :options="opciones" :rules="[(val) => !!val || 'Campo requerido']"
                 label="Selecciona una Id de Centro de Formacion" />
             </div>
-            <!-- inicio -->
-            <q-card-section>
-              <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
-                :rules="[(val) => !!val || 'Campo requerido']" prepend-icon="attach_file" @clear="limpiarCampo">
+            <div class="q-gutter-md">
+              <q-input class="input" v-model="documento" label="Archivo o enlace del diseño curricular"
+                :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
+                @clear="limpiarCampo">
                 <template v-slot:append>
                   <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
                 </template>
               </q-input>
-            </q-card-section>
-            <!-- fin -->
+            </div>
           </q-card-section>
           <div role="alert" style="
               border: 2px solid red;

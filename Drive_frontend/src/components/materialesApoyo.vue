@@ -1,22 +1,12 @@
 <template>
   <div class="card-container">
     <div class="body" style="position: relative">
-      <q-btn
-        style="background-color: green; color: white;"
-        :disable="loading"
-        label="Agregar"
-        @click="showModalAgregar = true"
-      />
-      <div style="margin-left: 5%" class="text-h4">Materiales de Formacion</div>
+      <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
+        @click="showModalAgregar = true" />
+      <div style="margin-left: 5%" class="text-h4">Materiales de Apoyo</div>
       <q-space />
-      <q-input
-        borderless
-        dense
-        debounce="300"
-        style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
-        color="primary"
-        v-model="filter"
-      >
+      <q-input borderless dense debounce="300" style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
+        color="primary" v-model="filter">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
@@ -35,19 +25,11 @@
             <div class="buttons">
               <button @click="toggleDetails(index)" class="rotate-button">
                 <div class="arrow-icon" :class="{ rotate: isRotated[index] }">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/32/32195.png"
-                    alt="Arrow"
-                    class="arrow-icon"
-                  />
+                  <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
                 </div>
               </button>
               <button class="editar" @click="abrirModalEdicion(index)">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/650/650143.png"
-                  alt="Editar"
-                  class="arrow-icon"
-                />
+                <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Editar" class="arrow-icon" />
               </button>
             </div>
           </div>
@@ -75,61 +57,36 @@
             <div class="text2">Agregar Materiales</div>
             <q-input v-model="codigo" label="Codigo" />
             <q-input v-model="Nombre" label="Nombre" />
-            <q-input
-              v-model="Tipo"
-              label="Tipo"
-              hint="Este campo se llena solo si adjunta un archivo"
-              readonly
-            />
+            <q-input v-model="Tipo" label="Tipo" hint="Este campo se llena solo si adjunta un archivo" readonly />
 
             <q-input v-model="descripcion" label="Descripcion" />
 
             <q-card-section>
-              <q-input
-                class="input"
-                v-model="archivoOEnlace"
-                label="Documentos"
-                outlined
-                dense
-                clearable
-                prepend-icon="attach_file"
-                @clear="limpiarCampo"
-              >
+              <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
+                prepend-icon="attach_file" @clear="limpiarCampo">
                 <template v-slot:append>
-                  <q-icon
-                    name="attach_file"
-                    style="cursor: pointer"
-                    @click="abrirSelectorDeArchivos"
-                  />
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
                 </template>
               </q-input>
             </q-card-section>
             <!-- fin -->
-            <div
-              role="alert"
-              style="
+            <div role="alert" style="
                 border: 2px solid red;
                 border-radius: 20px;
                 text-align: center;
                 background-color: rgba(255, 0, 0, 0.304);
-              "
-              v-if="check !== ''"
-            >
+              " v-if="check !== ''">
               <div>
                 {{ check }}
               </div>
             </div>
           </q-card-section>
           <q-card-section>
-            <q-btn
-              @click="
-                () => {
-                  showModalAgregar = false;
-                  limpiarFormulario();
-                }
-              "
-              label="Cancelar"
-            />
+            <q-btn @click="() => {
+                showModalAgregar = false;
+                limpiarFormulario();
+              }
+              " label="Cancelar" />
 
             <q-btn @click="validarYGuardar()" color="primary" label="Agregar" />
 
@@ -147,61 +104,27 @@
         <q-card class="custom-modal">
           <q-card-section>
             <div class="text2">Editar Materiales</div>
-            <q-input
-              v-model="codigo"
-              label="Codigo"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-input
-              v-model="Nombre"
-              label="Nombre"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-input
-              v-model="Tipo"
-              label="Tipo"
-              :rules="[(val) => !!val || 'Campo requerido']"
-              hint="Este campo se llena solo si adjunta un archivo"
-              readonly
-            />
-            <q-input
-              v-model="descripcion"
-              label="Descripcion"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
+            <q-input v-model="codigo" label="Codigo" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-input v-model="Nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-input v-model="Tipo" label="Tipo" :rules="[(val) => !!val || 'Campo requerido']"
+              hint="Este campo se llena solo si adjunta un archivo" readonly />
+            <q-input v-model="descripcion" label="Descripcion" :rules="[(val) => !!val || 'Campo requerido']" />
 
             <!-- inicio -->
             <q-card-section>
-              <q-input
-                class="input"
-                v-model="archivoOEnlace"
-                :rules="[(val) => !!val || 'Campo requerido']"
-                label="Documentos"
-                outlined
-                dense
-                clearable
-                prepend-icon="attach_file"
-                @clear="limpiarCampo"
-              >
+              <q-input class="input" v-model="archivoOEnlace" :rules="[(val) => !!val || 'Campo requerido']"
+                label="Documentos" outlined dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
                 <template v-slot:append>
-                  <q-icon
-                    name="attach_file"
-                    style="cursor: pointer"
-                    @click="abrirSelectorDeArchivos"
-                  />
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
                 </template>
               </q-input>
             </q-card-section>
-            <div
-              role="alert"
-              style="
+            <div role="alert" style="
                 border: 2px solid red;
                 border-radius: 20px;
                 text-align: center;
                 background-color: rgba(255, 0, 0, 0.304);
-              "
-              v-if="check !== ''"
-            >
+              " v-if="check !== ''">
               <div>
                 {{ check }}
               </div>
@@ -209,20 +132,12 @@
             <!-- fin -->
           </q-card-section>
           <q-card-section>
-            <q-btn
-              @click="
-                () => {
-                  showModalEdicion = false;
-                  limpiarFormulario();
-                }
-              "
-              label="Cancelar"
-            />
-            <q-btn
-              @click="validaredit()"
-              color="primary"
-              label="Guardar Cambios"
-            />
+            <q-btn @click="() => {
+                showModalEdicion = false;
+                limpiarFormulario();
+              }
+              " label="Cancelar" />
+            <q-btn @click="validaredit()" color="primary" label="Guardar Cambios" />
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -255,6 +170,7 @@ let showModalAgregar = ref(false);
 let showModalEdicion = ref(false); // Variable para controlar el modal de edición
 let codigo = ref("");
 let Nombre = ref("");
+let filter = ref("");
 let check = ref("");
 let errorMessage = ref("");
 const validationErrors = ref({});
@@ -277,7 +193,7 @@ async function validarYGuardar() {
     mostrarAlerta("El Tipo es obligatorio");
   } else if (descripcion.value.trim() === "") {
     mostrarAlerta("La Descripcion es obligatoria");
-  }  else if (archivoOEnlace.value.trim() === "") {
+  } else if (archivoOEnlace.value.trim() === "") {
     mostrarAlerta("el archivo es obligatorio");
   } else {
     alert.value = false;
@@ -346,8 +262,6 @@ const toggleDetails = (index) => {
 };
 
 const opciones = [
-  "001 Centro Agroturistico sede san gil",
-  "002 Centro Agroturistico sede socorro",
 ];
 
 const abrirSelectorDeArchivos = () => {
@@ -406,7 +320,7 @@ async function validaredit() {
     mostrarAlerta("El Tipo es obligatorio");
   } else if (descripcion.value.trim() === "") {
     mostrarAlerta("La Descripcion es obligatoria");
-  }  else if (archivoOEnlace.value.trim() === "") {
+  } else if (archivoOEnlace.value.trim() === "") {
     mostrarAlerta("el archivo es obligatorio");
   } else {
     alert.value = false;
@@ -430,8 +344,8 @@ const guardarCambios = async () => {
       ambientess.value[index]._id,
       ambienteEditado
     );
-console.log("edite");
-console.log(ambienteEditado);
+    console.log("edite");
+    console.log(ambienteEditado);
     if (response.status === 200) {
       ambientess.value[index] = ambienteEditado;
       showModalEdicion.value = false;

@@ -28,8 +28,8 @@
                             <span class="text-red" v-else> Inactivo</span>
                         </div>
                         <div style="display: flex; margin-left: auto; margin-bottom: auto;">
-                            <strong>Fecha:</strong>
-                            <p>{{ red.fecha ? red.fecha.substring(0, 10) : '' }} </p>
+                            <strong>Año:</strong>
+                            <p>{{ red.fecha ? red.fecha.substring(0, 4) : '' }} </p>
                         </div>
                         <div class="buttons">
                             <button @click="toggleDetails(index)" class="rotate-button">
@@ -162,6 +162,7 @@ const loading = ref(false);
 let Retro = ref([]);
 let alert = ref(false);
 let check = ref("")
+let filter = ref("")
 let indice = ref(null);
 let bd = ref(false)
 let nombre = ref("");
@@ -177,7 +178,6 @@ async function Listarretroalimentacion() {
     let Retroalimentacion = await useRetroalimentacion.getRetroalimentacionRed();
     console.log(Retroalimentacion);
     Retro.value = Retroalimentacion.data.RetroAlimentacionRed;
-    console.log(Retro.value[1].fecha);
     load.value = false
 }
 

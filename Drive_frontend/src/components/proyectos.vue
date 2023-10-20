@@ -119,11 +119,11 @@
                                     <q-input v-model="descripcion" label="Descripcion"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
-                                <div>
+                                <div class="q-gutter-md">
                                     <q-select v-model="programa" :options="opcionesPrograma" label="Programa"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
-                                <q-card-section>
+                                <div class="q-gutter-md">
                                     <q-input class="input" v-model="documento"
                                         label="Archivo o enlace del diseño curricular"
                                         :rules="[(val) => !!val || 'Campo requerido']" dense clearable
@@ -133,7 +133,7 @@
                                                 @click="abrirSelectorDeArchivos" />
                                         </template>
                                     </q-input>
-                                </q-card-section>
+                                </div>
                             </q-card-section>
                             <q-card-section>
                                 <div role="alert"
@@ -170,7 +170,7 @@ let check = ref("")
 let indice = ref(null);
 let bd = ref(false)
 let nombre = ref("");
-let codigo = ref(""); 
+let codigo = ref("");
 let descripcion = ref("");
 let fecha = ref("")
 let version = ref("")
@@ -263,6 +263,11 @@ async function activar(proyecto) {
     }
     let est = await useProyecto.activarProyectos(r._id);
     console.log(est);
+}
+
+function cerrar() {
+    bd.value = false;
+    alert.value = false;
 }
 
 ListarProyectos()

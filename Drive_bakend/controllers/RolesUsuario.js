@@ -65,52 +65,23 @@ const httpRolesUsuarios = {
         }
     },
     
-    activarRolesUsuarios: async (req, res) => {
-        const { id: _id } = req.params;
-    
-        try {
-            const rol = await RolesUsuariosModel.findById(_id);
-    
-            if (!rol) {
-                return res.status(404).json({ mensaje: "No se encontró el rol con el ID proporcionado" });
-            }
-    
-            rol.estado = !rol.estado; // Cambia el estado
-    
-            await rol.save(); // Guarda el cambio de estado en la base de datos
-    
-            const usuarioAutenticado = req.usuario; // Asumiendo que la propiedad correcta es 'usuario'
-    
-            res.json({
-                msj: "El estado fue cambiado exitosamente",
-                rol,
-                usuarioAutenticado
-            });
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al cambiar el estado del rol", error: error.message });
-        }
-    }
-    
-    /* activarRolesUsuarios: async (req, res) => {
-        const { id: _id } = req.params;
-        const formacion = await RolesUsuariosModel.findById(id);
-        let rol = null;
-        if (formacion.estado) {
-            rol = await RolesUsuariosModel.findByIdAndUpdate(id, {
-                estado: false,
-            });
+    putRolesEstado: async (req, res) => {
+        const { id } = req.params  
+        const rol = await RolesUsuariosModel.findById(id)
+        let Roles = null
+        if (rol.estado) {
+            Roles = await RolesUsuariosModel.findByIdAndUpdate(id, { estado: false })
         } else {
-            rol = await RolesUsuariosModel.findByIdAndUpdate(id, {
-                estado: true,
-            });
+            Roles = await RolesUsuariosModel.findByIdAndUpdate(id, { estado: true })
         }
-        const programaAutenticado = req.RolesUsuarios;
+            Roles = req.Roles
         res.json({
             msj: "fue cambiado el estado",
-            rol,
-            programaAutenticado,
-        });
-    }, */
+            Roles,
+        }) 
+    },
+    
+    
 }
 
 export default httpRolesUsuarios

@@ -17,4 +17,6 @@ router.post("/", [
 
 router.put("/:id", httpRolesUsuarios.putRolUsuarios)
 
+router.put("/estado/:id", httpRolesUsuarios.putRolesEstado)
+
 export default router

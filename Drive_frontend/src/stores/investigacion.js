@@ -37,7 +37,7 @@ export const useInvestigacionStore = defineStore(
                 let res = await axios.put(`${urlBackend}/Investigacion/estado/${id}`)
                 return res.data
             } catch (error) {
-                console.log("hay un error en activarUser");
+                console.log("hay un error en activarInvestigacion");
                 return error
             }
         }
