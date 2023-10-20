@@ -12,4 +12,6 @@ router.post("/", [], httpRetroAlimentacionRed.postRetroAlimentacionRed)
 
 router.put("/:id", httpRetroAlimentacionRed.putRetroAlimentacionRed)
 
+router.put("/estado/:id", httpRetroAlimentacionRed.putRetroalimentacionRedEstado)
+
 export default router

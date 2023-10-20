@@ -22,13 +22,12 @@ const httpRetroAlimentacionRed = {
     },
 
     postRetroAlimentacionRed: async (req, res) => {
-        const { codigo, nombre, codigoFicha, descripcion, fecha, documentos, idprograma } = req.body;
+        const { codigo, nombre, codigoFicha, descripcion, documentos, idprograma } = req.body;
         const RetroAlimentacionRed = new RetroAlimentacionRedModel({
             codigo,
             nombre,
             codigoFicha,
             descripcion,
-            fecha,
             documentos,
             idprograma
         });
@@ -68,8 +67,24 @@ const httpRetroAlimentacionRed = {
         } catch (error) {
             res.status(500).json({ mensaje: "Error al actualizar la retro alimentacion de la red" })
         }
-    }
+    },
 
+    putRetroalimentacionRedEstado: async (req, res) => {
+        const { id } = req.params  
+        const red = await RetroAlimentacionRedModel.findById(id)
+        let Retroalimentacion = null
+        if (red.estado) {
+            Retroalimentacion = await RetroAlimentacionRedModel.findByIdAndUpdate(id, { estado: false })
+        } else {
+            Retroalimentacion = await RetroAlimentacionRedModel.findByIdAndUpdate(id, { estado: true })
+        }
+        const RetroalimentacionAutenticado = req.Retroalimentacion
+        res.json({
+            msj: "fue cambiado el estado",
+            Retroalimentacion,
+            RetroalimentacionAutenticado
+        }) 
+    },
 }
 
 export default httpRetroAlimentacionRed

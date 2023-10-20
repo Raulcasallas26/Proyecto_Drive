@@ -7,7 +7,7 @@ const RegistroCalificadoSchema = new mongoose.Schema({
     metodologia:{type:String, required: false},
     creditos:{type:String, required: false},
     codigoSnies:{type:String, required: false}, 
-    fecha:{type:String,default: Date.now, required:false},
+    fecha:{type:Date, default: Date.now}, 
     documento:{type:String, required:false}
 })
 

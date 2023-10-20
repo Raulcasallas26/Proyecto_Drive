@@ -43,12 +43,13 @@ const httpProyecto = {
 
     putProyecto: async (req, res) => {
         const { id } = req.params;
-        const { nombre, codigo, descripcion, version, documento, IdPrograma} = req.body;
+        const { nombre, codigo, descripcion, version, fecha, documento, IdPrograma} = req.body;
         const proyecto = await ProyectoModel.findByIdAndUpdate(id, 
             {nombre, 
             codigo,
             descripcion, 
             version, 
+            fecha,
             documento,
             IdPrograma}, { new: true })
         res.json({

@@ -184,6 +184,7 @@ async function ListarProyectos() {
     let Proyectos = await useProyecto.getProyectos();
     console.log(Proyectos);
     Program.value = Proyectos.data.Proyecto;
+    console.log(Program.value[0].fecha);
     load.value = false
 }
 

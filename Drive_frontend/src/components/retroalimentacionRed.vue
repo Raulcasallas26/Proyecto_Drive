@@ -15,21 +15,21 @@
             </q-input>
         </div>
         <div>
-            <div v-for="(proyecto, index) in Program" :key="index">
+            <div v-for="(red, index) in Retro" :key="index">
                 <div class="card">
                     <div class="top-half" style="display: flex;">
                         <div class="info" @click="toggleDetails(index)">
-                            <p><strong>Código:</strong> {{ proyecto.codigo }}</p>
-                            <p><strong>Nombre:</strong> {{ proyecto.nombre }}</p>
+                            <p><strong>Código:</strong> {{ red.codigo }}</p>
+                            <p><strong>Nombre:</strong> {{ red.nombre }}</p>
+                            <p><strong>Ficha:</strong> {{ red.codigoFicha }}</p>
                             <strong>Estado: </strong>
-                            <span class="text-green" v-if="proyecto.estado === true">
+                            <span class="text-green" v-if="red.estado === true">
                                 Activo</span>
                             <span class="text-red" v-else> Inactivo</span>
                         </div>
                         <div style="display: flex; margin-left: auto; margin-bottom: auto;">
-                            <p><strong>Version: </strong> {{ proyecto.version }} &nbsp; &nbsp; </p>
                             <strong>Fecha:</strong>
-                            <p>{{ proyecto.fecha ? proyecto.fecha.substring(0, 10) : '' }} </p>
+                            <p>{{ red.fecha ? red.fecha.substring(0, 10) : '' }} </p>
                         </div>
                         <div class="buttons">
                             <button @click="toggleDetails(index)" class="rotate-button">
@@ -45,10 +45,10 @@
                         </div>
                     </div>
                     <div style="display: flex; justify-content: flex-end">
-                        <q-btn id="boton-estado" class="q-pa-r" color="green" outline @click="activar(proyecto)"
-                            v-if="proyecto.estado === false">✅Activar
+                        <q-btn id="boton-estado" class="q-pa-r" color="green" outline @click="activar(red)"
+                            v-if="red.estado === false">✅
                         </q-btn>
-                        <q-btn class="q-pa-r" color="red" outline @click="activar(proyecto)" v-else>⚠ inactivar</q-btn>
+                        <q-btn class="q-pa-r" color="red" outline @click="activar(red)" v-else>❌</q-btn>
                     </div>
                     <q-slide-transition appear>
                         <div v-show="cardStates[index]">
@@ -63,9 +63,9 @@
                             </div>
                             <div class="bottom-half">
                                 <div class="info">
-                                    <p><strong>Descripcion:</strong> {{ proyecto.descripcion }}</p>
-                                    <p><strong>Documento:</strong> {{ proyecto.documento }}</p>
-                                    <p><strong>ID Programa:</strong>{{ proyecto.idCentroDeFormacion }}</p>
+                                    <p><strong>Descripcion:</strong> {{ red.descripcion }}</p>
+                                    <p><strong>Documento:</strong> {{ red.documentos }}</p>
+                                    <p><strong>Programa:</strong>{{ red.idprograma }}</p>
                                 </div>
                             </div>
                         </div>
@@ -97,8 +97,7 @@
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div class="q-gutter-md">
-                                    <q-input v-model="version" label="Versión"
-                                        :rules="[(val) => !!val || 'Campo requerido']" />
+                                    <q-input v-model="ficha" label="Ficha" :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div class="q-gutter-md" v-show="bd === true">
                                     <q-input v-model="fecha" mask="date" :rules="['date']" label="Fecha">
@@ -117,10 +116,6 @@
                                 </div>
                                 <div class="q-gutter-md">
                                     <q-input v-model="descripcion" label="Descripcion"
-                                        :rules="[(val) => !!val || 'Campo requerido']" />
-                                </div>
-                                <div>
-                                    <q-select v-model="programa" :options="opcionesprograma" label="Programa"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <q-card-section>
@@ -164,58 +159,56 @@ import { useRetroalimentacionRedStore } from "../stores/RetroalimentacionRed";
 import { load } from "../routes/direccion.js"
 const useRetroalimentacion = useRetroalimentacionRedStore();
 const loading = ref(false);
-let Program = ref([]);
+let Retro = ref([]);
 let alert = ref(false);
 let check = ref("")
 let indice = ref(null);
 let bd = ref(false)
 let nombre = ref("");
 let codigo = ref("");
-let descripcion = ref("");
+let ficha = ref("");
 let fecha = ref("")
-let version = ref("")
-let programa = ref("")
 let documento = ref("")
+let descripcion = ref("")
 let IdPrograma = ref("");
 
-async function ListarProyectos() {
+async function Listarretroalimentacion() {
     load.value = true
-    let Proyecto = await useRetroalimentacion.getRetroalimentacionRed();
-    console.log(Proyecto);
-    Program.value = Proyecto.data.Proyecto;
-    console.log();
+    let Retroalimentacion = await useRetroalimentacion.getRetroalimentacionRed();
+    console.log(Retroalimentacion);
+    Retro.value = Retroalimentacion.data.RetroAlimentacionRed;
+    console.log(Retro.value[1].fecha);
     load.value = false
 }
 
 async function guardar() {
     loading.value = true;
-    let r = await useRetroalimentacion.addProyectos({
+    let r = await useRetroalimentacion.addRetroalimentacionRed({
         codigo: codigo.value,
         nombre: nombre.value,
-        version: version.value,
-        descripcion: descripcion.value,
+        codigoFicha: ficha.value,
         fecha: fecha.value,
-        documento: documento.value,
-        IdPrograma: IdPrograma.value,
+        descripcion: descripcion.value,
+        documentos: documento.value,
+        Idprograma: IdPrograma.value,
     });
     console.log(r);
     loading.value = false
     alert.value = false
-    ListarProyectos();
+    Listarretroalimentacion();
     limpiarFormulario()
 }
 
 const edito = (index) => {
     bd.value = true
     indice.value = index;
-    let r = Program.value[index];
+    let r = Retro.value[index];
     codigo.value = r.codigo;
     nombre.value = r.nombre;
-    version.value = r.version;
+    ficha.value = r.codigoFicha;
     descripcion.value = r.descripcion;
-    fecha.value = r.fecha;
-    documento.value = r.documento;
-    IdPrograma.value = r.IdPrograma;
+    fecha.value = r.fecha.substring(0, 10);
+    documento.value = r.documentoS;
     alert.value = true;
 };
 
@@ -225,22 +218,22 @@ const editar = async () => {
         const ambienteEditado = {
             codigo: codigo.value,
             nombre: nombre.value,
-            version: version.value,
-            descripcion: descripcion.value,
+            codigoFicha: ficha.value,
             fecha: fecha.value,
-            documento: documento.value,
-            IdPrograma: IdPrograma.value,
+            descripcion: descripcion.value,
+            documentos: documento.value,
+            Idprograma: IdPrograma.value,
         };
 
         // Llamar al método de la store para editar el ambiente en la base de datos
-        const response = await useRetroalimentacion.editProyectos(
-            Program.value[index]._id,
+        const response = await useRetroalimentacion.editRetroalimentacionRed(
+            Retro.value[index]._id,
             ambienteEditado
         );
 
         if (response.status === 200) {
 
-            Program.value[index] = ambienteEditado;
+            Retro.value[index] = ambienteEditado;
             alert.value = false;
             indice.value = null;
         } else {
@@ -249,16 +242,16 @@ const editar = async () => {
         }
     }
 };
-ListarProyectos()
+Listarretroalimentacion()
 
 function agregar() {
     alert.value = true
 }
 
-async function activar(proyecto) {
+async function activar(red) {
     console.log("hola");
-    console.log(proyecto.estado);
-    let r = proyecto;
+    console.log(red.estado);
+    let r = red;
     if (r.estado === true) {
         r.estado = false;
         console.log(r.estado, "resultado del if");
@@ -266,18 +259,17 @@ async function activar(proyecto) {
         r.estado = true;
         console.log(r.estado, "resultado del else");
     }
-    let est = await useRetroalimentacion.activarProyectos(r._id);
+    let est = await useRetroalimentacion.activarRetroalimentacionRed(r._id);
     console.log(est);
 }
 
 function limpiarFormulario() {
     codigo.value = ""
     nombre.value = ""
-    version.value = ""
     descripcion.value = ""
+    ficha.value = ""
     fecha.value = ""
     documento.value = ""
-    IdPrograma.value = ""
     alert.value = false
     bd.value = false
 }
@@ -332,9 +324,9 @@ const handleFileSelection = (event) => {
 
 
 onMounted(async () => {
-    await ListarProyectos();
+    await Listarretroalimentacion();
 });
-//editProyectos   useRetroalimentacion
+//editreds   useRetroalimentacion
 </script>
 
 <style scoped>
@@ -491,4 +483,5 @@ onMounted(async () => {
 .close-button:not(.active):before {
     animation-name: fadeOutX;
     opacity: 0;
-}</style>
+}
+</style>
