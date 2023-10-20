@@ -2,7 +2,7 @@
   <div class="card-container">
     <div class="body" style="position: relative">
       <q-btn
-        style="background-color: green"
+        style="background-color: green; color: white;"
         :disable="loading"
         label="Agregar"
         @click="showModalAgregar = true"
@@ -79,6 +79,7 @@
               v-model="Tipo"
               label="Tipo"
               hint="Este campo se llena solo si adjunta un archivo"
+              readonly
             />
 
             <q-input v-model="descripcion" label="Descripcion" />
@@ -161,6 +162,7 @@
               label="Tipo"
               :rules="[(val) => !!val || 'Campo requerido']"
               hint="Este campo se llena solo si adjunta un archivo"
+              readonly
             />
             <q-input
               v-model="descripcion"

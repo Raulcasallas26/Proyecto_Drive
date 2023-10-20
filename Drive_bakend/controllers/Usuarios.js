@@ -11,7 +11,7 @@ const httpUsuarios = {
         }
     },
 
-    
+
 
     // getUsuariosId: async (req, res) => {
     //     const { id } = req.params;
@@ -24,22 +24,24 @@ const httpUsuarios = {
     // },
 
     postUsuarios: async (req, res) => {
-        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, idRolUsuario, idRedConocimiento } = req.body;
+        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, estado, RolUsuario, RedConocimiento } = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const usuario = new UsuariosModel({
+            nombre,
+            apellidos,
+            cedula,
+            telefono,
+            email,
+            password: hashedPassword,
+            perfilProfesional,
+            curriculum,
+            estado,
+            RolUsuario,
+            RedConocimiento
+        });
+
         try {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const usuario = new UsuariosModel({
-                nombre,
-                apellidos,
-                cedula,
-                telefono,
-                email,
-                password: hashedPassword,
-                perfilProfesional,
-                curriculum,
-                estado,
-                idRolUsuario,
-                idRedConocimiento
-            });
             await usuario.save();
             res.json({
                 mensaje: "Un usuario insertado!!",
@@ -52,7 +54,7 @@ const httpUsuarios = {
 
     putUsuarios: async (req, res) => {
         const { id } = req.params;
-        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, idRolUsuario, idRedConocimiento } = req.body;
+        const { nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, RolUsuario, RedConocimiento } = req.body;
         const usuario = await UsuariosModel.findByIdAndUpdate(id,
             {
                 nombre,
@@ -63,8 +65,8 @@ const httpUsuarios = {
                 password,
                 perfilProfesional,
                 curriculum,
-                idRolUsuario,
-                idRedConocimiento
+                RolUsuario,
+                RedConocimiento
             }, { new: true })
         res.json({
             msg: "ok",

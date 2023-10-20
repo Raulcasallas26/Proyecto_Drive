@@ -10,8 +10,8 @@ const UsuariosSchema = new mongoose.Schema({
     perfilProfesional:{type:String, require: true},
     curriculum:{type:String, require: true}, 
     estado:{type: Boolean, default: true, require: true},
-    idRolUsuario:{type:String},
-    idRedConocimiento:{type:String}
+    RolUsuario:{type:String},
+    RedConocimiento:{type:String}
 }) 
 
 export default mongoose.model("Usuario", UsuariosSchema)

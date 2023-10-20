@@ -16,7 +16,7 @@
                 </q-item-section>
                 <q-item-section>Inicio </q-item-section>
               </q-item>
-
+              
               <q-item clickable v-ripple to="/usuarios">
                 <q-item-section avatar>
                   <q-icon name="people" />
@@ -59,11 +59,22 @@
                 <q-item-section> proyectos </q-item-section>
               </q-item>
 
+
+
               <q-item clickable v-ripple to="/registroCalificado">
                 <q-item-section avatar>
                   <q-icon name="img:https://cdn-icons-png.flaticon.com/128/4933/4933054.png" />
                 </q-item-section>
                 <q-item-section> Registro Calificado </q-item-section>
+              </q-item>
+
+
+              <q-item clickable v-ripple to="/roles">
+                <q-item-section avatar>
+                  <q-icon
+                    name="img:https://icons.veryicon.com/png/o/education-technology/data-exchange/role-management-13.png" />
+                </q-item-section>
+                <q-item-section> Roles de Usuario</q-item-section>
               </q-item>
 
               <q-item clickable v-ripple to="/retroalimentacionRed">
@@ -163,6 +174,15 @@
             </q-item-section>
             <q-item-section> Registro Calificado </q-item-section>
           </q-item>
+
+          
+          <q-item clickable v-ripple to="/roles">
+                <q-item-section avatar>
+                  <q-icon
+                    name="img:https://icons.veryicon.com/png/o/education-technology/data-exchange/role-management-13.png" />
+                </q-item-section>
+                <q-item-section> Roles de Usuario</q-item-section>
+              </q-item>
 
           <q-item clickable v-ripple to="/retroalimentacionRed">
             <q-item-section avatar>

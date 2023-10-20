@@ -14,7 +14,7 @@ router.post("/", [
   // check("apellidos", "el apellido es obligatorio",).notEmpty().trim().isString(),
   check("cedula", "el numero de identificacion es obligatorio").notEmpty().trim().isNumeric(),
   check("telefono", "el telefono es obligatorio").notEmpty().trim().isNumeric(),
-  check("email", "el correo es obligatorio").notEmpty().trim().isString().custom(),
+  check("email", "el correo es obligatorio").notEmpty().trim().isString(),
   check("password", "la contraseña es obligatoria").notEmpty().trim().isString(),
   // check("perfilProfesional", "el perfil profecional es obligatorio").notEmpty().trim().isString(),
   // check("curriculum", "el curriculum es obligatorio").notEmpty().trim().isString(),

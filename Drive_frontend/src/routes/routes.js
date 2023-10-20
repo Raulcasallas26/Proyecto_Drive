@@ -1,5 +1,6 @@
 import home from "../components/home.vue" 
 import login from "../components/login.vue"
+import roles from "../components/rolesusu.vue";
 import usuarios from "../components/usuarios.vue"
 import ambientes from "../components/ambiente.vue"
 import programas from "../components/programas.vue"
@@ -15,6 +16,7 @@ import {createRouter, createWebHashHistory} from "vue-router"
 const routes=[
     {path:"/",component:login},
     {path:"/home",component: home},
+    {path:"/roles",component: roles},
     {path:"/usuarios",component: usuarios},
     {path:"/programas",component: programas},
     {path:"/ambientes",component: ambientes},

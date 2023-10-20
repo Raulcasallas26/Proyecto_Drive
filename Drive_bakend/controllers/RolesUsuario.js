@@ -4,7 +4,7 @@ const httpRolesUsuarios = {
     getRolesUsuarios: async ( req, res ) => {
         try {
             const RolesUsuario = await RolesUsuariosModel.find({});
-            res.json({ roles });
+            res.json({RolesUsuario });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al obtener los roles", error });
         }
@@ -22,9 +22,11 @@ const httpRolesUsuarios = {
     },
 
     postRolesUsuarios: async ( req, res ) => {
-        const { denominacion } = req.body;
+        const { codigo, denominacion,  } = req.body;
         const rol = new RolesUsuariosModel({
-            denominacion
+           codigo,
+           denominacion,
+           
         });
 
         try {
@@ -39,48 +41,76 @@ const httpRolesUsuarios = {
         }
     },
 
-    putRolUsuarios: async ( req, res ) => {
+    putRolUsuarios: async (req, res) => {
         const { id } = req.params;
-        const { denominacion } = req.body;
-
+        const { denominacion, codigo } = req.body;
+    
         try {
             const RolesUsuariosActualizado = await RolesUsuariosModel.findOneAndUpdate(
-                { id },
-                { $set: { denominacion } },
+                { _id: id }, // Cambiado de 'id' a '_id' si estás usando el ID de MongoDB
+                { denominacion, codigo },
                 { new: true }
             );
-
-            if ( RolesUsuariosActualizado ) {
+    
+            if (RolesUsuariosActualizado) {
                 res.json({
                     mensaje: "Registro modificado exitosamente",
                     RolesUsuarios: RolesUsuariosActualizado
                 });
             } else {
-                res.json({ mensaje: "No se encontro el rol con el id propocionado" })
+                res.json({ mensaje: "No se encontró el rol con el ID proporcionado" });
             }
         } catch (error) {
-            res.status(500).json({ mensaje: "Error al actualizar el rol", error })
+            res.status(500).json({ mensaje: "Error al actualizar el rol", error: error.message });
         }
     },
-
-    // deleteRolesUsuarios: async ( req, res ) => {
-    //     const { id } = req.params;
-
-    //     try {
-    //         const RolesUsuariosEliminado = await RolesUsuariosModel.findOneAndDelete({ Id });
-
-    //         if ( RolesUsuariosEliminado ) {
-    //             res.json({
-    //                 mensaje:"Cliente eliminado exitosamente",
-    //                 RolesUsuarios: RolesUsuariosEliminado
-    //             });
-    //         } else {
-    //             res.json({ mensaje: "No se encontro el rol con el id proporcionado" })
-    //         }
-    //     } catch (error) {
-    //         res.status(500).json({ mensaje: "Error al eliminar el rol", error })
-    //     }
-    // }
+    
+    activarRolesUsuarios: async (req, res) => {
+        const { id: _id } = req.params;
+    
+        try {
+            const rol = await RolesUsuariosModel.findById(_id);
+    
+            if (!rol) {
+                return res.status(404).json({ mensaje: "No se encontró el rol con el ID proporcionado" });
+            }
+    
+            rol.estado = !rol.estado; // Cambia el estado
+    
+            await rol.save(); // Guarda el cambio de estado en la base de datos
+    
+            const usuarioAutenticado = req.usuario; // Asumiendo que la propiedad correcta es 'usuario'
+    
+            res.json({
+                msj: "El estado fue cambiado exitosamente",
+                rol,
+                usuarioAutenticado
+            });
+        } catch (error) {
+            res.status(500).json({ mensaje: "Error al cambiar el estado del rol", error: error.message });
+        }
+    }
+    
+    /* activarRolesUsuarios: async (req, res) => {
+        const { id: _id } = req.params;
+        const formacion = await RolesUsuariosModel.findById(id);
+        let rol = null;
+        if (formacion.estado) {
+            rol = await RolesUsuariosModel.findByIdAndUpdate(id, {
+                estado: false,
+            });
+        } else {
+            rol = await RolesUsuariosModel.findByIdAndUpdate(id, {
+                estado: true,
+            });
+        }
+        const programaAutenticado = req.RolesUsuarios;
+        res.json({
+            msj: "fue cambiado el estado",
+            rol,
+            programaAutenticado,
+        });
+    }, */
 }
 
 export default httpRolesUsuarios

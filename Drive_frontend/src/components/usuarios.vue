@@ -19,12 +19,11 @@
                         </template>
                     </q-input>
                 </template>
-                <template v-slot:body-cell-nombre="props">
-                    <q-td :props="props">
-                        <q-avatar>
+                <template v-slot:body-cell-perfil="props">
+                    <q-td :props="props" >
+                        <q-avatar @click="detalles(props)">
                             <img src="../img/perfil.png">
                         </q-avatar>
-                        {{ props.row.nombre }}
                     </q-td>
                 </template>
                 <template v-slot:body-cell-estado="props">
@@ -40,6 +39,8 @@
                         <q-btn class="q-mx-sm" color="green" outline @click="activar(props)"
                             v-if="props.row.estado == false">✅</q-btn>
                         <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
+                        
+                        <q-btn class="q-mx-sm" outline @click="detalles(props)">👁️‍🗨️</q-btn>
                     </q-td>
                 </template>
             </q-table>
@@ -62,6 +63,10 @@
                                 <q-input v-model="nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md">
+                                <q-input v-model="apellido" label="Apellido"
+                                    :rules="[(val) => !!val || 'Campo requerido']" />
+                            </div>
+                            <div class="q-gutter-md">
                                 <q-input v-model="email" type="email" suffix="Example@soy.sena.edu.co" label="E-mail"
                                     :rules="[validarEmail]">
                                     <template v-slot:append>
@@ -75,6 +80,22 @@
                             </div>
                             <div class="q-gutter-md">
                                 <q-input v-model.number="cedula" type="number" label="Cedula"
+                                    :rules="[(val) => !!val || 'Campo requerido']" />
+                            </div>
+                            <div class="q-gutter-md" v-if="bd === true">
+                                <q-input v-model="perfilProfesional" label="Perfil Profecional"
+                                    :rules="[(val) => !!val || 'Campo requerido']" />
+                            </div>
+                            <div class="q-gutter-md" v-if="bd === true">
+                                <q-input v-model="curriculum" label="Curriculum"
+                                    :rules="[(val) => !!val || 'Campo requerido']" />
+                            </div>
+                            <div class="q-gutter-md" v-if="bd === true">
+                                <q-input v-model="rolUsuario" label="Rol de Usuario"
+                                    :rules="[(val) => !!val || 'Campo requerido']" />
+                            </div>
+                            <div class="q-gutter-md" v-if="bd === true">
+                                <q-input v-model="RedConocimiento" label="Ref de Conocimiento"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === false">
@@ -107,6 +128,53 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
+
+
+        <q-dialog v-model="detalle" >
+            <q-card id="card" style="background-color: rgba(255, 255, 255, 0.959);">
+                <div style="display: flex;">
+                    <q-card-section>
+                        <div class="text-h4">Detalles de {{ nombre }}</div>
+                    </q-card-section>
+                    <div style="margin-left: auto;    margin-bottom: auto;">
+                        <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" v-close-popup />
+                    </div>
+                </div>
+
+                <q-card-section class="q-pt-none" id="card">
+                    <q-card flat bordered class="my-card" style="border-radius: 10px;">
+                        <q-card-section class="q-pa-md">
+                            <p><strong style="font-size:large; ">Nombre:</strong> {{ r.nombre }}</p>
+                            <p><strong style="font-size:large; ">Apellido:</strong> {{ r.apellidos }}</p>
+                            <p><strong style="font-size:large; ">E-mail:</strong> {{ r.email }}</p>
+                            <p><strong style="font-size:large; ">Telefono:</strong> {{ r.telefono }}</p>
+                            <p><strong style="font-size:large; ">Cedula:</strong> {{ r.cedula }}</p>
+                            <p><strong style="font-size:large; ">Perfil Profecional:</strong> {{ r.perfilProfesional }}</p>
+                            <p><strong style="font-size:large; ">Curriculum:</strong> {{ r.curriculum }}</p>
+                            <p><strong style="font-size:large; ">Rol:</strong> {{ r.rolUsuario }}</p>
+                            <p><strong style="font-size:large; ">Red de Conocimiento:</strong> {{ r.RedConocimiento }}</p>
+                        </q-card-section>
+                                <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
+                                <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito()">📝</q-btn>
+                            
+                        <q-card-section>
+                            <div role="alert"
+                                style=" border: 2px solid red; border-radius: 20px;  text-align: center;  background-color: rgba(255, 0, 0, 0.304);"
+                                v-if="check !== ''">
+                                <div>
+                                    {{ check }}
+                                </div>
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+                    <q-btn flat label="Editar Usuario" @click="validaredit" color="primary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 <script setup>
@@ -115,15 +183,21 @@ import { useUsuariosStore } from "../stores/usuarios.js";
 import { load } from "../routes/direccion.js"
 const useUsuario = useUsuariosStore();
 let alert = ref(false);
+let detalle = ref(false)
 let bd = ref(false);
 let check = ref("");
 let isPwd = ref(true);
 let user = ref([]);
 let nombre = ref("");
+let apellido = ref("");
 let email = ref("");
 let telefono = ref("");
 let cedula = ref("");
 let password = ref("");
+let perfilProfesional = ref("");
+let curriculum = ref("");
+let rolUsuario = ref("");
+let RedConocimiento = ref("");
 let loading = ref(false);
 let indice = ref(null);
 let r = ref("");
@@ -145,9 +219,10 @@ const validarEmail = (val) => {
 };
 
 let columns = [
-    { name: "nombre", align: "center", label: "Usuario", field: "nombre" },
+    { name: "perfil", align: "center", label: "Perfil", field: "Perfil" },
+    { name: "nombre", align: "center", label: "Nombre", field: "nombre" },
+    { name: "apellido", align: "center", label: "Apellido", field: "apellidos" },
     { name: "email", label: "E-mail", align: "center", field: "email" },
-    { name: "telefono", label: "Telefono", align: "center", field: "telefono" },
     { name: "estado", label: "Estado", align: "center", field: "estado" },
     { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
 ];
@@ -162,6 +237,8 @@ async function validarYGuardar() {
     validarEmail()
     if (nombre.value.trim() === "") {
         mostrarAlerta("El Nombre es obligatorio");
+    } else if (apellido.value.trim() === "") {
+        mostrarAlerta("El Apellido es obligatorio");
     } else if (email.value.trim() === "") {
         mostrarAlerta("El Correo Electrónico es obligatorio");
     } else if (emailValido.value === true) {
@@ -186,6 +263,7 @@ async function guardar() {
     try {
         const response = await useUsuario.addUsuarios({
             nombre: nombre.value,
+            apellidos: apellido.value,
             email: email.value,
             telefono: telefono.value,
             cedula: cedula.value,
@@ -234,16 +312,30 @@ function edito(props) {
     alert.value = true;
     indice.value = r.value._id;
     nombre.value = r.value.nombre;
+    apellido.value = r.value.apellidos;
+    email.value = r.value.email;
+    telefono.value = r.value.telefono;
+    cedula.value = r.value.cedula;
+    perfilProfesional.value = r.value.perfilProfesional
+}
+
+function detalles(props) {
+    r.value = props.row;
+    detalle.value = true;
+    nombre.value = r.value.nombre;
+    apellido.value = r.value.apellidos;
     email.value = r.value.email;
     telefono.value = r.value.telefono;
     cedula.value = r.value.cedula;
 }
+
 
 async function editarUser() {
     loading.value = true;
     console.log("hola estoy editando");
     let r = await useUsuario.editUsuarios(indice.value, {
         nombre: nombre.value,
+        apellidos: apellido.value,
         email: email.value,
         telefono: telefono.value,
         cedula: cedula.value,
@@ -271,6 +363,7 @@ async function activar(props) {
 
 function limpiarFormulario() {
     nombre.value = "";
+    apellido.value = "";
     email.value = "";
     telefono.value = "";
     cedula.value = "";
@@ -290,8 +383,9 @@ async function listarUsuarios() {
 
 function agregar() {
     alert.value = true;
-
 }
+
+
 onMounted(() => {
     listarUsuarios();
     limpiarFormulario();

@@ -11,6 +11,7 @@ router.get("/:id", httpRolesUsuarios.getRolesUsuariosId)
 
 router.post("/", [
   check("denominacion", "La denominacion es un campo requerido").notEmpty().trim().isString(),
+  check("codigo", "El Codigo es un campo requerido").notEmpty().trim().isString(),
   validarResultados
 ], httpRolesUsuarios.postRolesUsuarios)
 
