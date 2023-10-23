@@ -1,10 +1,10 @@
 import CentrosFormacionModel from "../models/CentrosFormacion.js"
 
 const httpCentrosFormacion = {
-    getCentrosFormacion: async ( req, res ) => {
+    getCentrosFormacion: async ( req, res ) => { 
         try {
             const CentrosFormacion = await CentrosFormacionModel.find({});
-            res.json({ CentrosFormacion });
+            res.status(200).json({ CentrosFormacion });
         } catch (error) {
             res.status( 500 ).json({ mensaje: "Error al obtener los centros de formacion", error });
         }
@@ -41,30 +41,30 @@ const httpCentrosFormacion = {
         }
     },
 
-    putCentrosFormacion: async ( req, res ) => {
-        const { id } = req.params.id;
+    putCentrosFormacion: async (req, res) => {
+        const { id } = req.params;
         const { nombre, codigo, direccion } = req.body;
-
+    
         try {
-            
             const CentrosFormacionActualizado = await CentrosFormacionModel.findOneAndUpdate(
-                { id },
-                 { $set: {nombre, codigo, direccion } },
-                 { new: true }
+                { _id: id },
+                { $set: { nombre, codigo, direccion } },
+                { new: true }
             );
-
+    
             if (CentrosFormacionActualizado) {
                 res.json({
                     mensaje: "Registro modificado exitosamente",
                     CentrosFormacion: CentrosFormacionActualizado
                 });
             } else {
-                res.json({ mensaje: "No se encontro el centro con la id proporcionada" })
+                res.json({ mensaje: "No se encontró el centro con la ID proporcionada" });
             }
         } catch (error) {
-            res.status( 500 ).json({ mensaje: "Error al actualizar el centro" })
+            res.status(500).json({ mensaje: "Error al actualizar el centro", error: error.message });
         }
     }
+    
     
 }
 

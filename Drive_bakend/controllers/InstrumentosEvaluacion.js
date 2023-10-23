@@ -12,15 +12,15 @@ const httpInstrumentosEvaluacion = {
         }
     },
 
-    getInstrumentosEvaluacionId: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const InstrumentosEvaluacion = await InstrumentoEvaluacionModel.findOne({ id });
-            res.json({ InstrumentosEvaluacion })
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al obtener informacion de instrumentos de evaluacion", error })
-        }
-    },
+    // getInstrumentosEvaluacionId: async (req, res) => {
+    //     const { id } = req.params;
+    //     try {
+    //         const InstrumentosEvaluacion = await InstrumentoEvaluacionModel.findOne({ id });
+    //         res.json({ InstrumentosEvaluacion })
+    //     } catch (error) {
+    //         res.status(500).json({ mensaje: "Error al obtener informacion de instrumentos de evaluacion", error })
+    //     }
+    // },
 
     postInstrumentosEvaluacion: async (req, res) => {
         const { nombre, documento, estado } = req.body;
@@ -53,30 +53,21 @@ const httpInstrumentosEvaluacion = {
     },
 
     putInstrumentosEvaluacionEstado: async (req, res) => {
-        const { id } = req.params;
-
-        try {
-
-            const InstrumentosEvaluacion = await InstrumentoEvaluacionModel.findOne({ id });
-
-            if (!InstrumentosEvaluacion) {
-                return res.status(400).json({ mensaje: "instrumentos de evaluacion no encontrados" });
-            }
-
-            InstrumentosEvaluacion.estado = !InstrumentosEvaluacion.estado
-
-            await InstrumentosEvaluacion.save();
-
-            const estadoMensaje = InstrumentosEvaluacion.estado ? "Activo" : "Inactivo";
-
-            res.json({
-                mensaje: `Estado de instrumentos de evaluacion modificado a  ${estadoMensaje}`,
-                InstrumentosEvaluacion: InstrumentosEvaluacion
-            });
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al cambiar la informacion del instrumento de evaluacion", error })
+        const { id } = req.params  
+        const instrument = await InstrumentoEvaluacionModel.findById(id)
+        let Instrumento = null
+        if (instrument.estado) {
+            Instrumento = await InstrumentoEvaluacionModel.findByIdAndUpdate(id, { estado: false })
+        } else {
+            Instrumento = await InstrumentoEvaluacionModel.findByIdAndUpdate(id, { estado: true })
         }
-    }
+        const InstrumentoAutenticado = req.Instrumento
+        res.json({
+            msj: "fue cambiado el estado",
+            Instrumento,
+            InstrumentoAutenticado
+        }) 
+    },
 }
 
 export default httpInstrumentosEvaluacion

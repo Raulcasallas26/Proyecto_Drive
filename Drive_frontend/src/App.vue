@@ -16,7 +16,7 @@
                 </q-item-section>
                 <q-item-section>Inicio </q-item-section>
               </q-item>
-              
+
               <q-item clickable v-ripple to="/usuarios">
                 <q-item-section avatar>
                   <q-icon name="people" />
@@ -89,6 +89,13 @@
                   <q-icon name="search" />
                 </q-item-section>
                 <q-item-section> Investigacion </q-item-section>
+              </q-item>
+
+              <q-item clickable v-ripple to="/centroforma">
+                <q-item-section avatar>
+                  <q-icon name="school" />
+                </q-item-section>
+                <q-item-section>Centros de Formacion</q-item-section>
               </q-item>
 
               <q-item clickable v-ripple to="/instrumentosEvaluacion">
@@ -175,14 +182,14 @@
             <q-item-section> Registro Calificado </q-item-section>
           </q-item>
 
-          
+
           <q-item clickable v-ripple to="/roles">
-                <q-item-section avatar>
-                  <q-icon
-                    name="img:https://icons.veryicon.com/png/o/education-technology/data-exchange/role-management-13.png" />
-                </q-item-section>
-                <q-item-section> Roles de Usuario</q-item-section>
-              </q-item>
+            <q-item-section avatar>
+              <q-icon
+                name="img:https://icons.veryicon.com/png/o/education-technology/data-exchange/role-management-13.png" />
+            </q-item-section>
+            <q-item-section> Roles de Usuario</q-item-section>
+          </q-item>
 
           <q-item clickable v-ripple to="/retroalimentacionRed">
             <q-item-section avatar>
@@ -196,6 +203,13 @@
               <q-icon name="search" />
             </q-item-section>
             <q-item-section> Investigacion </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/centroforma">
+            <q-item-section avatar>
+              <q-icon name="school" />
+            </q-item-section>
+            <q-item-section>Centros de Formacion</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple to="/instrumentosEvaluacion">

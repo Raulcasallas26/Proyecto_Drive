@@ -6,7 +6,7 @@ const router = Router()
 
 router.get("/", httpCentrosFormacion.getCentrosFormacion)
 
-router.get("/:cedula", httpCentrosFormacion.getCentrosFormacionId)
+router.get("/:id", httpCentrosFormacion.getCentrosFormacionId)
 
 router.post("/", [], httpCentrosFormacion.postCentrosFormacion)
 

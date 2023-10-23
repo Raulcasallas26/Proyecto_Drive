@@ -1,183 +1,223 @@
 <template>
     <div class="card-container">
-        <div class="body">
+        <div v-if="load == true" style="margin-top: 5px;">
+            <q-linear-progress ark rounded indeterminate color="green" />
+        </div>
+        <div v-else class="body">
             <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
             <div style="margin-left: 5%;" class="text-h4">Instrumentos de Evaluacion</div>
             <q-space />
             <q-input borderless dense debounce="300" style="border-radius: 10px; border:grey solid 0.5px; padding: 5px;"
-                color="primary" v-model="filter">
+                color="primary">
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
             </q-input>
         </div>
         <div>
-            <div v-for="(instru, index) in Instrumen" :key="index">
+            <div v-for="(instrumento, index) in Instrumentos" :key="index">
                 <div class="card">
-                    <div class="top-half">
-                        <div class="info">
-                            <p><strong>Código:</strong> {{ instru.codigo }}</p>
-                            <p><strong>Nombre:</strong> {{ instru.nombre }}</p>
-                            <p><strong>Tipo:</strong> {{ instru.tipo }}</p>
+                    <div class="top-half" style="display: flex;">
+                        <div class="info" @click="toggleDetails(index)">
+                            <p><strong>Nombre:</strong> {{ instrumento.nombre }}</p>
+                            <strong>Estado: </strong>
+                            <span class="text-green" v-if="instrumento.estado === true">
+                                Activo</span>
+                            <span class="text-red" v-else> Inactivo</span>
                         </div>
-                        <div class="buttons">
-                            <button @click="toggleDetails(index)" class="rotate-button">
-                                <div class="arrow-icon" :class="{ rotate: isRotated[index] }">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow"
-                                        class="arrow-icon" />
-                                </div>
-                            </button>
-                            <button class="editar" @click="abrirModalEdicion(index)">
-                                <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Editar"
-                                    class="arrow-icon" />
-                            </button>
+                        <div>
+                            <div class="q-pa-md">
+                                <q-btn-dropdown style="background-color: rgba(255, 255, 255, 0); border: none;"
+                                    icon="more_vert">
+                                    <q-list>
+                                        <q-item v-close-popup >
+                                            <q-item-section>
+                                                    <q-btn icon="edit" @click="edito(index)" id="boton-estado" color="black" outline>
+                                                </q-btn>
+                                            </q-item-section>
+                                        </q-item>
+
+                                        <q-item v-close-popup>
+                                            <q-item-section>
+                                                    <q-btn icon="download" id="boton-estado" color="primary" outline>
+                                                </q-btn>
+                                            </q-item-section>
+                                        </q-item>
+
+                                        <q-item v-close-popup >
+                                            <div style="display: flex; justify-content: flex-end">
+                                                <q-btn id="boton-estado" class="q-pa-r" color="green" outline
+                                                    @click="activar(instrumento)" v-if="instrumento.estado === false">✅
+                                                </q-btn>
+                                                <q-btn class="q-pa-r" color="red" outline @click="activar(instrumento)"
+                                                    v-else>❌</q-btn>
+                                            </div>
+                                        </q-item>
+                                    </q-list>
+                                </q-btn-dropdown>
+                            </div>
                         </div>
                     </div>
 
-                    <q-slide-transition appear>
-                        <div v-show="cardStates[index]">
-                            <div class="bottom-half">
-                                <div class="info">
-                                    <p>
-                                        <strong>Descripción:</strong> {{ ambiente.descripcion }}
-                                    </p>
-                                    <p><strong>Documentos:</strong> {{ ambiente.documentos }}</p>
-                                    <p>
-                                        <strong>ID Centro de Formación:</strong>
-                                        {{ ambiente.idCentroDeFormacion }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </q-slide-transition>
                 </div>
             </div>
         </div>
 
-        <!-- Modal para agregar ambientes -->
         <div>
-            <q-dialog v-model="showModalAgregar">
-                <q-card class="custom-modal">
+            <q-dialog v-model="alert" persistent>
+                <q-card id="card">
                     <div style="display: flex;">
                         <q-card-section>
-                            <div class="text-h4">Registro</div>
+                            <div class="text-h4">Registro de instrumento</div>
                         </q-card-section>
                         <div style="margin-left: auto;    margin-bottom: auto;">
                             <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
                         </div>
                     </div>
-                    <q-card-section>
-                        <div class="text2">Agregar Ambiente</div>
-                        <q-input v-model="codigo" label="Codigo" />
-                        <q-input v-model="Nombre" label="Nombre" />
-                        <q-input v-model="Tipo" label="Tipo" />
-                        <q-input v-model="Descripcion" label="Descripcion" />
-                        <div>
-                            <q-select v-model="IdCentroFormacion" :options="opciones"
-                                label="Selecciona una Id de Centro de Formacion" />
-                        </div>
-                        <!-- inicio -->
-                        <q-card-section>
-                            <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
-                                prepend-icon="attach_file" @clear="limpiarCampo">
-                                <template v-slot:append>
-                                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                                </template>
-                            </q-input>
-                        </q-card-section>
-                        <!-- fin -->
+                    <q-card-section class="q-pt-none" id="card">
+                        <q-card flat bordered class="my-card">
+                            <q-card-section class="q-pa-md">
+                                <div class="q-gutter-md">
+                                    <q-input v-model="nombre" label="Nombre"
+                                        :rules="[(val) => !!val || 'Campo requerido']" />
+                                </div>
+                                <div class="q-gutter-md">
+                                    <q-input class="input" v-model="documento"
+                                        label="Archivo o enlace del diseño curricular"
+                                        :rules="[(val) => !!val || 'Campo requerido']" dense clearable
+                                        prepend-icon="attach_file" @clear="limpiarCampo">
+                                        <template v-slot:append>
+                                            <q-icon name="attach_file" style="cursor: pointer"
+                                                @click="abrirSelectorDeArchivos" />
+                                        </template>
+                                    </q-input>
+                                </div>
+                            </q-card-section>
+                            <q-card-section>
+                                <div role="alert"
+                                    style=" border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
+                                    v-if="check !== ''">
+                                    <div>
+                                        {{ check }}
+                                    </div>
+                                </div>
+                            </q-card-section>
+                        </q-card>
                     </q-card-section>
-                    <q-card-section>
-                        <q-btn @click="showModalAgregar = false" label="Cancelar" />
-                        <q-btn @click="agregarAmbiente()" color="primary" label="Agregar" />
-                    </q-card-section>
-                </q-card>
-            </q-dialog>
-        </div>
 
-        <!-- Modal para editar ambientes -->
-        <div>
-            <q-dialog v-model="showModalEdicion">
-                <q-card class="custom-modal">
-                    <q-card-section>
-                        <div class="text2">Editar Ambiente</div>
-                        <q-input v-model="codigo" label="Codigo" />
-                        <q-input v-model="Nombre" label="Nombre" />
-                        <q-input v-model="Tipo" label="Tipo" />
-                        <q-input v-model="Descripcion" label="Descripcion" />
-                        <div>
-                            <q-select v-model="IdCentroFormacion" :options="opciones"
-                                label="Selecciona una Id de Centro de Formacion" />
-                        </div>
-                        <!-- inicio -->
-                        <q-card-section>
-                            <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
-                                prepend-icon="attach_file" @clear="limpiarCampo">
-                                <template v-slot:append>
-                                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                                </template>
-                            </q-input>
-                        </q-card-section>
-                        <!-- fin -->
-                    </q-card-section>
-                    <q-card-section>
-                        <q-btn @click="showModalEdicion = false" label="Cancelar" />
-                        <q-btn @click="guardarCambios" color="primary" label="Guardar Cambios" />
-                    </q-card-section>
+                    <q-card-actions align="right">
+                        <q-btn flat label="Cerrar" @click="limpiarFormulario(), cerrar()" color="primary" v-close-popup />
+                        <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" />
+                        <q-btn flat label="Editar Proyecto" v-else @click="editar()" color="primary" />
+                    </q-card-actions>
                 </q-card>
             </q-dialog>
         </div>
     </div>
 </template>
-  
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useInstrumentosEvaluacionStore } from "../stores/InstrumentosEvaluacion";
-
-const StoreInstrumentos = useInstrumentosEvaluacionStore();
-let Instrumen = ref([]);
-let showModalAgregar = ref(false);
-let showModalEdicion = ref(false); // Variable para controlar el modal de edición
-let codigo = ref("");
-let Nombre = ref("");
-let Tipo = ref("");
-let Descripcion = ref("");
-let IdCentroFormacion = ref("");
-const archivoOEnlace = ref("");
+import { load } from "../routes/direccion.js"
+const useInstrumentos = useInstrumentosEvaluacionStore();
 const loading = ref(false);
+let Instrumentos = ref([]);
+let alert = ref(false);
+let check = ref("")
+let indice = ref(null);
+let bd = ref(false)
+let nombre = ref("");
+let documento = ref("")
 
-async function agregarAmbiente() {
+async function listarInstrumentos() {
+    load.value = true
+    let InstrumentosEvaluacion = await useInstrumentos.getInstrumentosEvalacion();
+    console.log(InstrumentosEvaluacion);
+    Instrumentos.value = InstrumentosEvaluacion.data.InstrumentosEvaluacion;
+    load.value = false
+}
+
+async function guardar() {
     loading.value = true;
-    let r = await StoreInstrumentos.addAmbientesFormacion({
-        nombre: Nombre.value,
-        codigo: codigo.value,
-        tipo: Tipo.value,
-        descripcion: Descripcion.value,
-        idCentroDeFormacion: IdCentroFormacion.value,
-        documentos: archivoOEnlace.value,
+    let r = await useInstrumentos.addInstrumentosEvaluacion({
+        nombre: nombre.value,
+        documento: documento.value,
     });
-    getAmbientesformacion();
-    /* console.log(Nombre.value, codigo.value, Tipo.value, Descripcion.value); */
+    console.log(r);
+    loading.value = false
+    alert.value = false
+    listarInstrumentos();
+    limpiarFormulario()
 }
 
-
-async function getAmbientesformacion() {
-    let Instrumento = await StoreInstrumentos.getInstrumentosEvalacion();
-    Instrumen.value = Instrumento.data.AmbientesFormacion;
+function limpiarFormulario() {
+    nombre.value = ""
+    documento.value = ""
+    alert.value = false
+    bd.value = false
 }
 
-const cardStates = ref({});
-const isRotated = ref({});
+const edito = (index) => {
+    let r = Instrumentos.value[index];
+    bd.value = true
+    indice.value = r._id;
+    alert.value = true;
+    nombre.value = r.nombre;
+    documento.value = r.documento;
+};
+
+const editar = async () => {
+    loading.value = true
+    let r = await useInstrumentos.editInstrumentosEvaluacion(indice.value, {
+        nombre: nombre.value,
+        documento: documento.value,
+    });
+    console.log(r);
+    bd.value = false
+    loading.value = false
+    listarInstrumentos()
+    limpiarFormulario()
+};
+
+async function activar(instrimentos) {
+    console.log(instrimentos.estado);
+    let r = instrimentos;
+    if (r.estado === true) {
+        r.estado = false;
+        console.log(r.estado, "resultado del if");
+    } else {
+        r.estado = true;
+        console.log(r.estado, "resultado del else");
+    }
+    let est = await useInstrumentos.activarInstrumentosEvaluacion(r._id);
+    console.log(est);
+}
+
+function cerrar() {
+    bd.value = false;
+    alert.value = false;
+}
+
+listarInstrumentos()
+
+function agregar() {
+    alert.value = true
+}
+
+onMounted(async () => {
+    await listarInstrumentos();
+});
+
 const toggleDetails = (index) => {
     // Cambia el estado de la card en el índice específico
     cardStates.value[index] = !cardStates.value[index];
     isRotated.value[index] = !isRotated.value[index];
 };
 
-const opciones = [
-    "001 Centro Agroturistico sede san gil",
-    "002 Centro Agroturistico sede socorro",
-];
+const limpiarCampo = ref()
+const cardStates = ref({});
+const isRotated = ref({});
 
 const abrirSelectorDeArchivos = () => {
     const fileInput = document.createElement("input");
@@ -193,8 +233,8 @@ const handleFileSelection = (event) => {
     const selectedFile = event.target.files[0];
     const selectedFileName = selectedFile ? selectedFile.name : "";
 
-    // Asignar el nombre del archivo al campo archivoOEnlace
-    archivoOEnlace.value = selectedFileName;
+    // Asignar el nombre del archivo al campo documento
+    documento.value = selectedFileName;
 
     // Buscar la opción que corresponde al nombre del archivo
     const selectedOption = opciones.find((option) =>
@@ -215,58 +255,6 @@ const handleFileSelection = (event) => {
 
     event.target.remove(); // Elimina el input de tipo file después de su uso
 };
-
-
-
-let idAmbienteEditando = ref(null);
-
-// Función para abrir el modal de edición con los datos del ambiente seleccionado
-const abrirModalEdicion = (index) => {
-    idAmbienteEditando.value = index;
-    const ambienteSeleccionado = ambientess.value[index];
-    codigo.value = ambienteSeleccionado.codigo;
-    Nombre.value = ambienteSeleccionado.nombre;
-    Tipo.value = ambienteSeleccionado.tipo;
-    Descripcion.value = ambienteSeleccionado.descripcion;
-    IdCentroFormacion.value = ambienteSeleccionado.idCentroDeFormacion;
-    archivoOEnlace.value = ambienteSeleccionado.documentos;
-    showModalEdicion.value = true;
-};
-
-const guardarCambios = async () => {
-    if (idAmbienteEditando.value !== null) {
-        const index = idAmbienteEditando.value;
-        const ambienteEditado = {
-            codigo: codigo.value,
-            nombre: Nombre.value,
-            tipo: Tipo.value,
-            descripcion: Descripcion.value,
-            idCentroDeFormacion: IdCentroFormacion.value,
-            documentos: archivoOEnlace.value,
-        };
-
-        // Llamar al método de la store para editar el ambiente en la base de datos
-        const response = await StoreAmbiente.editAmbientesFormacion(
-            ambientess.value[index]._id,
-            ambienteEditado
-        );
-
-        if (response.status === 200) {
-
-            ambientess.value[index] = ambienteEditado;
-            showModalEdicion.value = false;
-            idAmbienteEditando.value = null;
-        } else {
-
-            console.error('Error al guardar los cambios en el servidor');
-        }
-    }
-};
-
-onMounted(async () => {
-    await getAmbientesformacion();
-});
-//editAmbientesFormacion   StoreAmbiente
 </script>
 
 <style scoped>
@@ -293,20 +281,28 @@ onMounted(async () => {
 
 }
 
-.agrego {
-    display: inline-block;
-    margin: 0 10px;
-    margin-right: 20%;
-}
-
 .agregar {
     background-color: green;
+    width: 8%;
+    height: 20%;
+    border-radius: 8px;
+    margin-left: 90%;
+    color: white;
+    font-size: 150%;
     cursor: pointer;
-    margin-right: 20%;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .agregar:hover {
     transform: scale(1.05);
+    /* Aumenta el tamaño en un 5% */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    /* Agrega una sombra suave */
+}
+
+#card {
+    width: 35em;
+    max-width: 100%;
 }
 
 .card {
@@ -415,4 +411,5 @@ onMounted(async () => {
 .close-button:not(.active):before {
     animation-name: fadeOutX;
     opacity: 0;
-}</style>
+}
+</style>

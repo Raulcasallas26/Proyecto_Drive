@@ -7,7 +7,7 @@ const router = Router()
 
 router.get("/", httpInstrumentosEvaluacion.getInstrumentosEvaluacion)
 
-router.get("/:id", httpInstrumentosEvaluacion.getInstrumentosEvaluacionId)
+// router.get("/:id", httpInstrumentosEvaluacion.getInstrumentosEvaluacionId)
 
 router.post("/", [
   check("nombre", "el nombre es obligatorio",).notEmpty().trim().isString(),
@@ -17,6 +17,6 @@ router.post("/", [
 
 router.put("/:id", httpInstrumentosEvaluacion.putInstrumentosEvaluacion)
 
-// router.put("/estado/:id", httpUsuarios.putUsuariosEstado)
+router.put("/estado/:id", httpInstrumentosEvaluacion.putInstrumentosEvaluacionEstado)
 
 export default router

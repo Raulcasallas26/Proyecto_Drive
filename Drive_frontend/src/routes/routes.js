@@ -5,6 +5,7 @@ import usuarios from "../components/usuarios.vue"
 import ambientes from "../components/ambiente.vue"
 import programas from "../components/programas.vue"
 import proyectos from "../components/proyectos.vue"
+import centrosforma from "../components/centroforma.vue"
 import investigacion from "../components/investigacion.vue"
 import redConocimiento from "../components/redConocimiento.vue"
 import materialesApoyo from "../components/materialesApoyo.vue"
@@ -21,6 +22,7 @@ const routes=[
     {path:"/programas",component: programas},
     {path:"/ambientes",component: ambientes},
     {path:"/proyectos",component: proyectos},
+    {path:"/centroforma",component:centrosforma},
     {path:"/investigacion",component: investigacion},
     {path:"/redConocimento",component: redConocimiento},
     {path:"/materialesApoyo",component: materialesApoyo},
