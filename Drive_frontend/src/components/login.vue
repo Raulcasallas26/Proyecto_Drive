@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div style="flex: 2 1 400px;  ">
-                <div class="col-7" style="position: relative; height: 100vh; max-width: 80%; ">
+                <div class="col-7" style="position: relative; height: 100vh; max-width: 100%; ">
                     <div id="cart" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                         <q-card id="card" flat bordered class="my-card">
                             <q-card-section>
