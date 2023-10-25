@@ -16,6 +16,7 @@ import AmbientesFormacion from "../routes/AmbientesFormacion.js";
 import ProgramasFormacion from "../routes/ProgramasFormacion.js";
 import RegistroCalificado from "../routes/RegistroCalificado.js";
 import retroalimentacionRed from "../routes/RetroAlimentacionRed.js"
+import DesarrolloCurricular from "../routes/DesarrolloCurricular.js";
 import InstrumentrosEvaluacion from "../routes/InstrumentrosEvaluacion.js";
 
 import cors from "cors"
@@ -42,6 +43,7 @@ class Server {
         this.app.use('/AmbientesFormacion', AmbientesFormacion);
         this.app.use('/registroCalificado', RegistroCalificado);
         this.app.use('/retroalimentacionRed', retroalimentacionRed);
+        this.app.use('/desarrolloCurricular', DesarrolloCurricular);
         this.app.use('/InstrumentosEvaluacion', InstrumentrosEvaluacion);
     }
 

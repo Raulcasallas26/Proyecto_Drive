@@ -3,11 +3,9 @@
     <q-header elevated class="text-white" id="header">
       <q-toolbar>
         <q-avatar>
-          <img src="../src/img/logo_sena.png" style="filter: invert(1);" alt="">
+          <img src="../src/img/logo_sena.png" v-if="bd === false" style="filter: invert(1);" alt="">
         </q-avatar>
-        <!-- <q-btn v-if="!isInLoginComponent && isMobile" icon="menu" round dense @click="drawerRight = !drawerRight"
-          class="q-mr-md" style="background-color: rgba(26, 0, 128, 0.282); color: white" /> -->
-        <div>
+        <div >
           <q-btn-dropdown flat round dense v-if="!isInLoginComponent && isMobile" icon="menu">
             <q-list padding>
               <q-item clickable v-ripple id="btn" to="/home">
@@ -58,8 +56,6 @@
                 </q-item-section>
                 <q-item-section> proyectos </q-item-section>
               </q-item>
-
-
 
               <q-item clickable v-ripple to="/registroCalificado">
                 <q-item-section avatar>
@@ -121,7 +117,7 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer v-if="!isInLoginComponent && !isMobile" v-model="drawer" style="background-color: green" show-if-above
+    <q-drawer v-if="!isInLoginComponent && !isMobile" bd=true v-model="drawer" style="background-color: green" show-if-above
       :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100"
       :breakpoint="500" bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }" style="background-color: white">
@@ -240,6 +236,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 let drawer = ref(false)
 let miniState = ref(true)
+let bd = ref(false)
 let drawerRight = ref(false)
 const leftDrawerOpen = ref(false);
 const route = useRoute(); // Obtén la información de la ruta actual

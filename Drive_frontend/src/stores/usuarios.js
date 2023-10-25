@@ -2,14 +2,29 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
+import {Notify} from "quasar"
 export const useUsuariosStore = defineStore(
     "Usuarios", () => {
         const addUsuarios = async (info) => {
             try {
                 let res = await axios.post(`${urlBackend}/Usuarios`, info)
+                Notify.create({
+                    color:"positive",
+                    message:"Registro exitoso",
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return res
             } catch (error) {
-                console.log("hay un error en la post");
+                console.log(error.response.data.errors[0].msg);
+                Notify.create({
+                    color:"negative",
+                    message:error.response.data.errors[0].msg,
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return error
             }
         }

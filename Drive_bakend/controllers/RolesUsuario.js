@@ -1,18 +1,18 @@
 import RolesUsuariosModel from "../models/RolesUsuario.js"
 
 const httpRolesUsuarios = {
-    getRolesUsuarios: async ( req, res ) => {
+    getRolesUsuarios: async (req, res) => {
         try {
             const RolesUsuario = await RolesUsuariosModel.find({});
-            res.json({RolesUsuario });
+            res.json({ RolesUsuario });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al obtener los roles", error });
         }
     },
 
-    getRolesUsuariosId: async ( req, res ) => {
+    getRolesUsuariosId: async (req, res) => {
         const { id } = req.params;
-        
+
         try {
             const rol = await RolesUsuariosModel.findOne({ id });
             res.json({ rol });
@@ -21,12 +21,12 @@ const httpRolesUsuarios = {
         }
     },
 
-    postRolesUsuarios: async ( req, res ) => {
-        const { codigo, denominacion,  } = req.body;
+    postRolesUsuarios: async (req, res) => {
+        const { codigo, denominacion, } = req.body;
         const rol = new RolesUsuariosModel({
-           codigo,
-           denominacion,
-           
+            codigo,
+            denominacion,
+
         });
 
         try {
@@ -37,21 +37,21 @@ const httpRolesUsuarios = {
                 RolesUsuarios: nuevoRolesUsuarios
             });
         } catch (error) {
-            res.status(500).json({ mensaje:"Error al insertar el rol", error });
+            res.status(500).json({ mensaje: "Error al insertar el rol", error });
         }
     },
 
     putRolUsuarios: async (req, res) => {
         const { id } = req.params;
         const { denominacion, codigo } = req.body;
-    
+
         try {
             const RolesUsuariosActualizado = await RolesUsuariosModel.findOneAndUpdate(
                 { _id: id }, // Cambiado de 'id' a '_id' si estás usando el ID de MongoDB
                 { denominacion, codigo },
                 { new: true }
             );
-    
+
             if (RolesUsuariosActualizado) {
                 res.json({
                     mensaje: "Registro modificado exitosamente",
@@ -64,9 +64,9 @@ const httpRolesUsuarios = {
             res.status(500).json({ mensaje: "Error al actualizar el rol", error: error.message });
         }
     },
-    
+
     putRolesEstado: async (req, res) => {
-        const { id } = req.params  
+        const { id } = req.params
         const rol = await RolesUsuariosModel.findById(id)
         let Roles = null
         if (rol.estado) {
@@ -74,14 +74,14 @@ const httpRolesUsuarios = {
         } else {
             Roles = await RolesUsuariosModel.findByIdAndUpdate(id, { estado: true })
         }
-            Roles = req.Roles
+        Roles = req.Roles
         res.json({
             msj: "fue cambiado el estado",
             Roles,
-        }) 
+        })
     },
-    
-    
+
+
 }
 
 export default httpRolesUsuarios

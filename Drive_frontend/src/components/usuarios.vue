@@ -251,9 +251,7 @@ async function validarYGuardar() {
     } else if (password.value.trim() === "") {
         mostrarAlerta("La Contraseña es obligatoria");
     } else {
-        alert.value = false;
         guardar()
-
     }
 
 

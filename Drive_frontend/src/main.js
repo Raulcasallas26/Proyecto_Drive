@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { Quasar } from 'quasar'
+import { Quasar, Notify } from 'quasar'
 import { createPinia } from 'pinia'
 import { router } from "./routes/routes.js"
 
@@ -11,7 +11,9 @@ const pinia = createPinia()
 const app = createApp(App)
 
 app.use(Quasar, {
-  plugins: {}, 
+  plugins: {
+    Notify
+  }, 
 })
 app.use(router)
 app.use(pinia)

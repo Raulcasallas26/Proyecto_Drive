@@ -42,7 +42,8 @@
           <q-card flat bordered class="my-card">
             <q-card-section class="q-pa-md">
               <div class="q-gutter-md">
-                <q-input v-model="denominacion" label="Denominacion" :rules="[(val) => !!val || 'Campo requerido']" />
+                <q-select v-model="denominacion" :options="opciones" label="Selecciona una Denominacion "
+                  :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
               <div class="q-gutter-md">
                 <q-input v-model="codigo" label="Codigo" :rules="[(val) => !!val || 'Campo requerido']">
@@ -85,10 +86,14 @@ let check = ref("");
 let user = ref([]);
 let denominacion = ref("");
 let codigo = ref("");
-
 let loading = ref(false);
 let indice = ref(null);
 let r = ref("");
+let opciones = [
+  "Administrador",
+  "Gestor",
+  "Instructor"
+];
 
 let columns = [
   { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
@@ -121,28 +126,17 @@ async function validarYGuardar() {
 }
 async function guardar() {
   loading.value = true;
-  try {
-    const response = await useUsuario.addRolesUsuarios({
-      denominacion: denominacion.value,
-      codigo: codigo.value,
+  const response = await useUsuario.addRolesUsuarios({
+    denominacion: denominacion.value,
+    codigo: codigo.value,
 
-    });
+  });
+  loading.value = false;
+  console.log("Se guardó un nuevo rol usuario");
+  listarUsuarios();
+  limpiarFormulario();
+  alert.value = false;
 
-    if (response.status === 200) {
-      console.log("Se guardó un nuevo rol usuario");
-      listarUsuarios();
-      limpiarFormulario();
-      alert.value = false; // Cierra la alerta
-    } else {
-      console.error("Error al guardar el usuario");
-      // Puedes mostrar un mensaje de error aquí si es necesario
-    }
-  } catch (error) {
-    console.error("Error en la solicitud:", error);
-    // Puedes manejar errores de red u otros errores aquí si es necesario
-  } finally {
-    loading.value = false;
-  }
 }
 async function validaredit() {
 

@@ -163,7 +163,6 @@ async function validarYGuardar() {
   } else if (!version.value) {
     mostrarAlerta("La version es obligatoria");
   } else if (!niveldeformacion.value) {
-
     mostrarAlerta("el Nivel de formacion es oblogatorio");
   } else if (!archivoOEnlace.value) {
     mostrarAlerta("el Diseño curricular es oblogatorio");
