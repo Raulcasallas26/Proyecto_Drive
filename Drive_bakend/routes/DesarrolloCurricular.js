@@ -6,11 +6,11 @@ import { validarJWT } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
-router.get("/",[validarJWT], httpDesarrollo.getDesarrollo)
+router.get("/",[], httpDesarrollo.getDesarrollo)
 
 // router.get("/:id", httpDesarrollo.getDesarrolloId)
 
-router.post("/", [validarJWT ], httpDesarrollo.postDesarrollo)
+router.post("/", [ ], httpDesarrollo.postDesarrollo)
 
 router.put("/:id", httpDesarrollo.putDesarrollo) 
 

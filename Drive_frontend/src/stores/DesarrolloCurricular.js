@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
-export const useProyectosStore = defineStore(
+export const useDesarrolloCurricularStore = defineStore(
     "DesarrolloCurricular", () => {
-        const addProyectos = async (info) => {
+        const addDesarrolloCurricular = async (info) => {
             try {
                 let res = await axios.post(`${urlBackend}/desarrolloCurricular`, info)
                 return res
@@ -14,7 +14,7 @@ export const useProyectosStore = defineStore(
             }
         }
 
-        const getProyectos = async () => {
+        const getDesarrolloCurricular = async () => {
             try {
                 let res = await axios.get(`${urlBackend}/desarrolloCurricular`)
                 return res
@@ -23,7 +23,7 @@ export const useProyectosStore = defineStore(
                 return error
             }
         }
-        const editProyectos = async (id, info) => {
+        const editDesarrolloCurricular = async (id, info) => {
             try {
                 let res = await axios.put(`${urlBackend}/desarrolloCurricular/${id}`, info)
                 return res
@@ -32,7 +32,7 @@ export const useProyectosStore = defineStore(
                 return error
             }
         }
-        const activarProyectos = async (id) => {
+        const activarDesarrolloCurricular = async (id) => {
             try {
                 let res = await axios.put(`${urlBackend}/desarrolloCurricular/estado/${id}`)
                 return res.data
@@ -42,7 +42,7 @@ export const useProyectosStore = defineStore(
             }
         }
         return {
-            addProyectos, getProyectos, editProyectos, activarProyectos, 
+            addDesarrolloCurricular, getDesarrolloCurricular, editDesarrolloCurricular, activarDesarrolloCurricular, 
         }
     }
 )

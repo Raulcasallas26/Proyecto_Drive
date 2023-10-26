@@ -33,11 +33,16 @@
         </template>
       </q-table>
     </div>
-    <q-dialog v-model="alert">
+    <q-dialog v-model="alert" persistent>
       <q-card id="card">
-        <q-card-section>
-          <div class="text-h4">Registro</div>
-        </q-card-section>
+        <div style="display: flex;">
+          <q-card-section>
+            <div class="text-h4">Registro</div>
+          </q-card-section>
+          <div style="margin-left: auto;    margin-bottom: auto;">
+            <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
+          </div>
+        </div>
         <q-card-section class="q-pt-none" id="card">
           <q-card flat bordered class="my-card">
             <q-card-section class="q-pa-md">
@@ -81,7 +86,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useCentrosFormacionStore } from "../stores/CentrosFormacion.js";
-import {useLoginStore} from "../stores/login.js"
+import { useLoginStore } from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useUsuario = useCentrosFormacionStore();
 const useLogin = useLoginStore()
@@ -242,6 +247,30 @@ onMounted(() => {
 #card {
   width: 35em;
   max-width: 100%;
+}
+/* Aplica las transiciones y animaciones */
+.close-button {
+    animation-duration: 0.3s;
+    /* Duración de la animación */
+    animation-timing-function: ease;
+    /* Función de temporización (puedes ajustarla) */
+}
+
+/* Inicialmente, la "X" estará invisible */
+.close-button:before {
+    opacity: 0;
+}
+
+/* Cuando la "X" está activa, aplica la animación de entrada */
+.close-button.active:before {
+    animation-name: fadeInX;
+    opacity: 1;
+}
+
+/* Cuando la "X" está inactiva, aplica la animación de salida */
+.close-button:not(.active):before {
+    animation-name: fadeOutX;
+    opacity: 0;
 }
 </style>
   

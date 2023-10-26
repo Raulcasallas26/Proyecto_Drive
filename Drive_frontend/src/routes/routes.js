@@ -11,24 +11,51 @@ import redConocimiento from "../components/redConocimiento.vue"
 import materialesApoyo from "../components/materialesApoyo.vue"
 import registroCalificado from "../components/registroCalificado.vue";
 import retroalimentacionRed from "../components/retroalimentacionRed.vue"
+import desarrolloCurricular from "../components/DesarrolloCurricular.vue"
 import instrumentosEvaluacion from "../components/instrumentosEvaluacion.vue"
 import {createRouter, createWebHashHistory} from "vue-router"
+import { useLoginStore } from "../stores/login";
+
+const checkAuth = ()=>{
+    const useLogin = useLoginStore()
+    const token = useLogin.token
+    console.log(token);
+
+    if(!token) return false
+    return true
+}
+
+const auth = (to, from, next)=>{
+    if(checkAuth){
+        const useLogin = useLoginStore()
+        const role = useLogin.rol
+
+        if (!to.meta.rol.includes(role)){
+            useLogin.logout()
+            return next({name:"login"})
+        }
+        next()
+    }else{
+        next({name:"login"})
+    }
+}
 
 const routes=[
-    {path:"/",component:login},
-    {path:"/home",component: home},
-    {path:"/roles",component: roles},
-    {path:"/usuarios",component: usuarios},
-    {path:"/programas",component: programas},
-    {path:"/ambientes",component: ambientes},
-    {path:"/proyectos",component: proyectos},
-    {path:"/centroforma",component:centrosforma},
-    {path:"/investigacion",component: investigacion},
-    {path:"/redConocimento",component: redConocimiento},
-    {path:"/materialesApoyo",component: materialesApoyo},
-    {path:"/registroCalificado",component: registroCalificado},
-    {path:"/retroalimentacionRed",component: retroalimentacionRed},
-    {path:"/instrumentosEvaluacion",component: instrumentosEvaluacion},
+    {path:"/",component:login, name:"login"},
+    {path:"/home",component: home,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/roles",component: roles,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/usuarios",component: usuarios,meta:{rol:["Gestor", "Administrador", "Instructor"]} ,beforeEnter:auth},
+    {path:"/programas",component: programas,meta:{rol:["Admin"]}, beforeEnter:auth},
+    {path:"/ambientes",component: ambientes,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/proyectos",component: proyectos,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/centroforma",component:centrosforma,meta:{rol:["Gestor"]} ,beforeEnter:auth},
+    {path:"/investigacion",component: investigacion,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/redConocimento",component: redConocimiento,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/materialesApoyo",component: materialesApoyo,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/registroCalificado",component: registroCalificado,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/retroalimentacionRed",component: retroalimentacionRed,meta:{rol:["Gestor"]}, beforeEnter:auth},
+    {path:"/desarrolloCurricular",component: desarrolloCurricular,meta:{rol:["Gestor"]} ,beforeEnter:auth},
+    {path:"/instrumentosEvaluacion",component: instrumentosEvaluacion,meta:{rol:["Gestor"]} ,beforeEnter:auth},
 ]
 export const router = createRouter({
     history: createWebHashHistory(), 

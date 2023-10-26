@@ -3,10 +3,10 @@
     <q-header elevated class="text-white" id="header">
       <q-toolbar>
         <q-avatar>
-          <img src="../src/img/logo_sena.png" v-if="bd === false" style="filter: invert(1);" alt="">
+          <img src="../src/img/logo_sena.png" v-if="bd === false && !isMobile" style="filter: invert(1);" alt="">
         </q-avatar>
-        <div >
-          <q-btn-dropdown flat round dense v-if="!isInLoginComponent && isMobile" icon="menu">
+        <div>
+          <q-btn-dropdown flat round dense v-if="!isInLoginComponent && isMobile" icon="menu" :class="{ 'justify-left': bd === false && isMobile }">
             <q-list padding>
               <q-item clickable v-ripple id="btn" to="/home">
                 <q-item-section avatar>
@@ -64,6 +64,13 @@
                 <q-item-section> Registro Calificado </q-item-section>
               </q-item>
 
+              <q-item clickable v-ripple to="/desarrolloCurricular">
+                <q-item-section avatar>
+                  <q-icon
+                    name="img:https://img.freepik.com/vector-premium/diseno-educativo-desarrollo-curricular-aprendizaje-e-instruccion-vector-diseno-pluma_989823-28.jpg?w=2000" />
+                </q-item-section>
+                <q-item-section> Desarrollo Curricular </q-item-section>
+              </q-item>
 
               <q-item clickable v-ripple to="/roles">
                 <q-item-section avatar>
@@ -113,13 +120,13 @@
         </div>
         <q-toolbar-title>
         </q-toolbar-title>
-        <q-btn flat round dense to="/" v-if="!isInLoginComponent" icon="login">
+        <q-btn flat round dense v-if="!isInLoginComponent" icon="login" @click="useLogin.logout">
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer v-if="!isInLoginComponent && !isMobile" bd=true v-model="drawer" style="background-color: green" show-if-above
-      :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100"
-      :breakpoint="500" bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+    <q-drawer v-if="!isInLoginComponent && !isMobile" bd=true v-model="drawer" style="background-color: green"
+      show-if-above :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay
+      :max-width="100" :breakpoint="500" bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }" style="background-color: white">
         <q-list padding>
           <q-item clickable v-ripple id="btn" to="/home">
@@ -178,6 +185,13 @@
             <q-item-section> Registro Calificado </q-item-section>
           </q-item>
 
+          <q-item clickable v-ripple to="/desarrolloCurricular">
+            <q-item-section avatar>
+              <q-icon
+                name="img:https://img.freepik.com/vector-premium/diseno-educativo-desarrollo-curricular-aprendizaje-e-instruccion-vector-diseno-pluma_989823-28.jpg?w=2000" />
+            </q-item-section>
+            <q-item-section> Desarrollo Curricular </q-item-section>
+          </q-item>
 
           <q-item clickable v-ripple to="/roles">
             <q-item-section avatar>
@@ -234,9 +248,11 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useLoginStore } from './stores/login';
 let drawer = ref(false)
 let miniState = ref(true)
 let bd = ref(false)
+const useLogin = useLoginStore()
 let drawerRight = ref(false)
 const leftDrawerOpen = ref(false);
 const route = useRoute(); // Obtén la información de la ruta actual
@@ -271,13 +287,6 @@ watch(isMobile, (newValue) => {
   }
 });
 
-
-
-
-
-
-
-
 // Calcula si estás en el componente de inicio de sesión
 const isInLoginComponent = computed(() => {
   return route.path === '/'; // La ruta del componente Login
@@ -302,8 +311,6 @@ const toggleLeftDrawer = () => {
   width: 100%;
   max-width: 100%;
 }
-
-
 
 #text {
   font-size: 20px;

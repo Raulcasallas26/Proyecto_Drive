@@ -6,7 +6,7 @@ export const useCentrosFormacionStore = defineStore(
     "CentrosFormacion", () => { 
         const addCentrosFormacion = async (info) => {
             try {
-                let res = await axios.post(`${urlBackend}/CentrosFormmacion`, info)
+                let res = await axios.post(`${urlBackend}/CentrosFormmacion, info`)
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
@@ -14,11 +14,9 @@ export const useCentrosFormacionStore = defineStore(
             }
         } 
 
-        const getCentrosFormacion = async (token) => {
-            console.log(token);
+        const getCentrosFormacion = async () => {
             try {
-                let header = {headers:{"x-token":token}} 
-                let res = await axios.get(`${urlBackend}/CentrosFormmacion`,header)
+                let res = await axios.get(`${urlBackend}/CentrosFormmacion`)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");
@@ -36,7 +34,7 @@ export const useCentrosFormacionStore = defineStore(
         } 
         
         return {
-            addCentrosFormacion, getCentrosFormacion, editCentrosFormacion
+            addCentrosFormacion, getCentrosFormacion, editCentrosFormacion,  
         }
     }
 )

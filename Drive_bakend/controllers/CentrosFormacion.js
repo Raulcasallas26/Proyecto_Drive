@@ -23,13 +23,12 @@ const httpCentrosFormacion = {
 
     postCentrosFormacion: async ( req, res ) => {
         const { nombre, codigo, direccion  } = req.body;
-        const CentrosFormacion = new CentrosFormacionModel ({
+        try {
+            const CentrosFormacion = new CentrosFormacionModel ({ 
             nombre,
             codigo,
             direccion
         });
-
-        try {
             const nuevoCentrosFormacion = await CentrosFormacion.save();
 
             res.json({

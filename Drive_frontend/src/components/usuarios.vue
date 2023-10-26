@@ -6,7 +6,7 @@
         <div v-else>
             <q-table flat bordered title="Treats" :rows="user" :columns="columns" row-key="id" :filter="filter"
                 :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="10"
-                :virtual-scroll-sticky-size-start="10" :rows-per-page-options="[15]" @virtual-scroll="onScroll">
+                :virtual-scroll-sticky-size-start="10" :rows-per-page-options="[15]">
                 <template v-slot:top>
                     <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar"
                         @click="agregar()" />
@@ -20,7 +20,7 @@
                     </q-input>
                 </template>
                 <template v-slot:body-cell-perfil="props">
-                    <q-td :props="props" >
+                    <q-td :props="props">
                         <q-avatar @click="detalles(props)">
                             <img src="../img/perfil.png">
                         </q-avatar>
@@ -90,8 +90,8 @@
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === true">
-                                <q-input v-model="rolUsuario" label="Rol de Usuario"
-                                    :rules="[(val) => !!val || 'Campo requerido']" />
+                                <q-select :rules="[(val) => !!val || 'Campo requerido']" v-model="rolUsuario"
+                                    :options="opciones"  label="Selecciona un Rol" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === true">
                                 <q-input v-model="RedConocimiento" label="Ref de Conocimiento"
@@ -129,7 +129,7 @@
         </q-dialog>
 
 
-        <q-dialog v-model="detalle" >
+        <q-dialog v-model="detalle">
             <q-card id="card" style="background-color: rgba(255, 255, 255, 0.959);">
                 <div style="display: flex;">
                     <q-card-section>
@@ -143,19 +143,16 @@
                 <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card" style="border-radius: 10px;">
                         <q-card-section class="q-pa-md">
+                            <p><strong style="font-size:large; ">Rol:</strong> {{ r.rolUsuario }}</p>
+                            <p><strong style="font-size:large; ">Cedula:</strong> {{ r.cedula }}</p>
+                            <p><strong style="font-size:large; ">E-mail:</strong> {{ r.email }}</p>
                             <p><strong style="font-size:large; ">Nombre:</strong> {{ r.nombre }}</p>
                             <p><strong style="font-size:large; ">Apellido:</strong> {{ r.apellidos }}</p>
-                            <p><strong style="font-size:large; ">E-mail:</strong> {{ r.email }}</p>
                             <p><strong style="font-size:large; ">Telefono:</strong> {{ r.telefono }}</p>
-                            <p><strong style="font-size:large; ">Cedula:</strong> {{ r.cedula }}</p>
-                            <p><strong style="font-size:large; ">Perfil Profecional:</strong> {{ r.perfilProfesional }}</p>
                             <p><strong style="font-size:large; ">Curriculum:</strong> {{ r.curriculum }}</p>
-                            <p><strong style="font-size:large; ">Rol:</strong> {{ r.rolUsuario }}</p>
+                            <p><strong style="font-size:large; ">Perfil Profecional:</strong> {{ r.perfilProfesional }}</p>
                             <p><strong style="font-size:large; ">Red de Conocimiento:</strong> {{ r.RedConocimiento }}</p>
                         </q-card-section>
-                                <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
-                                <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito()">📝</q-btn>
-                            
                         <q-card-section>
                             <div role="alert"
                                 style=" border: 2px solid red; border-radius: 20px;  text-align: center;  background-color: rgba(255, 0, 0, 0.304);"
@@ -167,7 +164,6 @@
                         </q-card-section>
                     </q-card>
                 </q-card-section>
-
                 <q-card-actions align="right">
                     <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
                     <q-btn flat label="Editar Usuario" @click="validaredit" color="primary" />
@@ -179,9 +175,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUsuariosStore } from "../stores/usuarios.js";
-import {useLoginStore} from "../stores/login.js"
+import { useLoginStore } from "../stores/login.js"
+import { useRolesUsuariosStore } from "../stores/RolesUsuarios.js";
 import { load } from "../routes/direccion.js"
 const useUsuario = useUsuariosStore();
+const useRoles = useRolesUsuariosStore()
 const useLogin = useLoginStore()
 let alert = ref(false);
 let detalle = ref(false)
@@ -189,6 +187,7 @@ let bd = ref(false);
 let check = ref("");
 let isPwd = ref(true);
 let user = ref([]);
+let Rol = ref([])
 let nombre = ref("");
 let apellido = ref("");
 let email = ref("");
@@ -202,6 +201,7 @@ let RedConocimiento = ref("");
 let loading = ref(false);
 let indice = ref(null);
 let r = ref("");
+let opciones = ref([])
 
 const emailValido = ref(true); // Inicialmente se asume que el correo es válido
 
@@ -218,7 +218,7 @@ const validarEmail = (val) => {
         return true;
     }
 };
-
+// pinta la tabla principal
 let columns = [
     { name: "perfil", align: "center", label: "Perfil", field: "Perfil" },
     { name: "nombre", align: "center", label: "Nombre", field: "nombre" },
@@ -229,6 +229,19 @@ let columns = [
 ];
 const originalRows = [];
 const filter = ref("");
+
+async function listarRoles() {
+    load.value = true
+    console.log(useLogin.token);
+    let Roles = await useRoles.getRolesUsuarios(useLogin.token);
+    console.log(Roles);
+    Rol.value = Roles.data.RolesUsuario;
+    opciones.value = Rol.value.map(item => ({
+        value: item.denominacion,
+        label: item.denominacion,
+    }))
+    load.value = false
+}
 
 function mostrarAlerta(mensaje) {
     alert.value = true;
@@ -388,6 +401,7 @@ function agregar() {
 
 onMounted(() => {
     listarUsuarios();
+    listarRoles();
     limpiarFormulario();
 });
 </script>

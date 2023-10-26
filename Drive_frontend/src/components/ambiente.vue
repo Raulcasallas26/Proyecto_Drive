@@ -4,8 +4,7 @@
       <q-linear-progress ark rounded indeterminate color="green" />
     </div>
     <div v-else class="body" style="position: relative">
-      <q-btn style="background-color: green; color: white; " :disable="loading" label="Agregar"
-        @click="showModalAgregar = true" />
+      <q-btn style="background-color: green; color: white; " :disable="loading" label="Agregar" @click="agregar()" />
       <div style="margin-left: 5%" class="text-h4">Ambientes de formacion</div>
       <q-space />
       <q-input borderless dense debounce="300" style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
@@ -35,7 +34,7 @@
                   <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
                 </div>
               </button>
-              <button class="editar" @click="abrirModalEdicion(index)">
+              <button class="editar" @click="edito(index)">
                 <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Editar" class="arrow-icon" />
               </button>
             </div>
@@ -46,9 +45,13 @@
             </q-btn>
             <q-btn class="q-pa-r" color="orange" outline @click="activar(ambiente)" v-else>⚠ Ocupar</q-btn>
           </div>
-
           <q-slide-transition appear>
             <div v-show="cardStates[index]">
+              <button @click="toggleDetails(index)" class="rotate-button">
+                <div class="arrow-icon" :class="{ rotate: isRotated[index] }">
+                  <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
+                </div>
+              </button>
               <div class="bottom-half">
                 <div class="info">
                   <p>
@@ -74,108 +77,84 @@
       </div>
     </div>
 
-    <!-- Modal para agregar ambientes -->
-    <div>
-      <q-dialog v-model="showModalAgregar">
-        <q-card class="custom-modal">
+    <q-dialog v-model="modal" persistent>
+      <q-card id="card">
+        <div style="display: flex;">
           <q-card-section>
-            <div class="text2">Agregar Ambiente</div>
-            <q-input v-model="codigo" label="Codigo" :rules="[(val) => !!val || 'Campo requerido']" />
-            <q-input v-model="Nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
-            <q-input v-model="Tipo" label="Tipo" :rules="[(val) => !!val || 'Campo requerido']" />
-            <q-input v-model="Descripcion" label="Descripcion" :rules="[(val) => !!val || 'Campo requerido']" />
-            <div>
-              <q-select :rules="[(val) => !!val || 'Campo requerido']" v-model="IdCentroFormacion" :options="opciones"
-                label="Selecciona una Id de Centro de Formacion" />
-            </div>
-            <!-- inicio -->
-            <q-card-section>
-              <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined
-                :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
-                @clear="limpiarCampo">
-                <template v-slot:append>
-                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                </template>
-              </q-input>
-            </q-card-section>
-            <!-- fin -->
-            <div role="alert" style="
-                border: 2px solid red;
-                border-radius: 20px;
-                text-align: center;
-                background-color: rgba(255, 0, 0, 0.304);
-              " v-if="check !== ''">
-              <div>
-                {{ check }}
-              </div>
-            </div>
+            <div class="text-h4">Registro de Ambientes</div>
           </q-card-section>
-          <q-card-section>
-            <q-btn @click="showModalAgregar = false" label="Cancelar" />
-            <q-btn @click="validarYGuardar()" color="primary" label="Agregar" />
-          </q-card-section>
-        </q-card>
-      </q-dialog>
-    </div>
-
-    <!-- Modal para editar ambientes -->
-    <div>
-      <q-dialog v-model="showModalEdicion">
-        <q-card class="custom-modal">
-          <q-card-section>
-            <div class="text2">Editar Ambiente</div>
-            <q-input v-model="codigo" label="Codigo" :rules="[(val) => !!val || 'Campo requerido']" />
-            <q-input v-model="Nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
-            <q-input v-model="Tipo" label="Tipo" :rules="[(val) => !!val || 'Campo requerido']" />
-            <q-input v-model="Descripcion" label="Descripcion" :rules="[(val) => !!val || 'Campo requerido']" />
-            <div>
-              <q-select v-model="IdCentroFormacion" :options="opciones" :rules="[(val) => !!val || 'Campo requerido']"
-                label="Selecciona una Id de Centro de Formacion" />
-            </div>
-            <div class="q-gutter-md">
-              <q-input class="input" v-model="documento" label="Archivo o enlace del diseño curricular"
-                :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
-                @clear="limpiarCampo">
-                <template v-slot:append>
-                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                </template>
-              </q-input>
-            </div>
-          </q-card-section>
-          <div role="alert" style="
-              border: 2px solid red;
-              border-radius: 20px;
-              text-align: center;
-              background-color: rgba(255, 0, 0, 0.304);
-            " v-if="check !== ''">
-            <div>
-              {{ check }}
-            </div>
+          <div style="margin-left: auto;    margin-bottom: auto;">
+            <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
           </div>
-          <q-card-section>
-            <q-btn @click="showModalEdicion = false" label="Cancelar" />
-            <q-btn @click="validaredit()" color="primary" label="Guardar Cambios" />
-          </q-card-section>
-        </q-card>
-      </q-dialog>
-    </div>
+        </div>
+
+        <q-card-section class="q-pt-none" id="card">
+          <q-card flat bordered class="my-card">
+            <q-card-section class="q-pa-md">
+              <div class="q-gutter-md">
+                <q-input v-model="codigo" label="Codigo" :rules="[(val) => !!val || 'Campo requerido']" />
+              </div>
+              <div class="q-gutter-md">
+                <q-input v-model="Nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
+              </div>
+              <div class="q-gutter-md">
+                <q-input v-model="Tipo" label="Tipo" :rules="[(val) => !!val || 'Campo requerido']" />
+              </div>
+              <div class="q-gutter-md">
+                <q-input v-model="Descripcion" label="Descripcion" :rules="[(val) => !!val || 'Campo requerido']" />
+              </div>
+              <div class="q-gutter-md">
+                <q-select :rules="[(val) => !!val || 'Campo requerido']" v-model="IdCentroFormacion" :options="opciones"
+                  label="Selecciona una Id de Centro de Formacion" />
+              </div>
+              <div class="q-gutter-md">
+                <q-input class="input" v-model="documento" label="Archivo o enlace del diseño curricular"
+                  :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
+                  @clear="limpiarCampo">
+                  <template v-slot:append>
+                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
+                  </template>
+                </q-input>
+              </div>
+              <div></div>
+            </q-card-section>
+            <q-card-section>
+              <div role="alert"
+                style=" border: 2px solid red; border-radius: 20px;  text-align: center;  background-color: rgba(255, 0, 0, 0.304);"
+                v-if="check !== ''">
+                <div>
+                  {{ check }}
+                </div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+          <q-btn flat label="Guardar" v-if="bd === false" @click="validarYGuardar" color="primary" />
+          <q-btn flat label="Editar Ambiente" v-else @click="validaredit" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
-import {useLoginStore} from "../stores/login.js"
+import { useLoginStore } from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useambiente = useAmbientesFormacionStore();
 const useLogin = useLoginStore()
 let ambientess = ref([]);
-let showModalAgregar = ref(false);
-let showModalEdicion = ref(false); // Variable para controlar el modal de edición
+let modal = ref(false);
+let filter = ref("")
 let codigo = ref("");
 let Nombre = ref("");
 let check = ref("");
 let Tipo = ref("");
+let bd = ref(false)
 let Descripcion = ref("");
 let IdCentroFormacion = ref("");
 let archivoOEnlace = ref("");
@@ -199,7 +178,6 @@ async function validarYGuardar() {
   } else if (archivoOEnlace.value.trim() === "") {
     mostrarAlerta("el archivo es obligatorio");
   } else {
-    alert.value = false;
     agregarAmbiente();
   }
 }
@@ -214,9 +192,11 @@ async function agregarAmbiente() {
     documentos: archivoOEnlace.value,
   });
   getAmbientesformacion();
-  showModalAgregar.value = false
   loading.value = false
-  /* console.log(Nombre.value, codigo.value, Tipo.value, Descripcion.value); */
+}
+
+function limpiarFormulario() {
+  modal.value = false
 }
 
 async function activar(ambiente) {
@@ -293,7 +273,8 @@ const handleFileSelection = (event) => {
 let idAmbienteEditando = ref(null);
 
 // Función para abrir el modal de edición con los datos del ambiente seleccionado
-const abrirModalEdicion = (index) => {
+const edito = (index) => {
+  bd.value = true
   idAmbienteEditando.value = index;
   const ambienteSeleccionado = ambientess.value[index];
   codigo.value = ambienteSeleccionado.codigo;
@@ -302,7 +283,7 @@ const abrirModalEdicion = (index) => {
   Descripcion.value = ambienteSeleccionado.descripcion;
   IdCentroFormacion.value = ambienteSeleccionado.idCentroDeFormacion;
   archivoOEnlace.value = ambienteSeleccionado.documentos;
-  showModalEdicion.value = true;
+  modal.value = true;
 };
 async function validaredit() {
   if (codigo.value.trim() === "") {
@@ -349,6 +330,10 @@ const guardarCambios = async () => {
     }
   }
 };
+
+function agregar() {
+  modal.value = true
+}
 
 onMounted(async () => {
   await getAmbientesformacion();
@@ -449,5 +434,30 @@ onMounted(async () => {
 .rotate {
   transform: rotate(180deg);
   /* Gira 180 grados al hacer clic */
+}
+
+/* Aplica las transiciones y animaciones */
+.close-button {
+  animation-duration: 0.3s;
+  /* Duración de la animación */
+  animation-timing-function: ease;
+  /* Función de temporización (puedes ajustarla) */
+}
+
+/* Inicialmente, la "X" estará invisible */
+.close-button:before {
+  opacity: 0;
+}
+
+/* Cuando la "X" está activa, aplica la animación de entrada */
+.close-button.active:before {
+  animation-name: fadeInX;
+  opacity: 1;
+}
+
+/* Cuando la "X" está inactiva, aplica la animación de salida */
+.close-button:not(.active):before {
+  animation-name: fadeOutX;
+  opacity: 0;
 }
 </style>

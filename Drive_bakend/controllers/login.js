@@ -13,11 +13,11 @@ const inicioSesion={
             if (!poss) { 
                 return res.status(401).json({msj:"Credenciales invalidas"})
             }
-            const tockent = jwt.sign({userId:usuario._id},process.env.CLAVETOCK,{expiresIn:'1h'})
+            const tockent = jwt.sign({userId:usuario._id},process.env.CLAVETOCK,{expiresIn:'10h'})
             res.status(200).json({msj:"inicio de secion con exito",tockent,usuario})
         }
         catch (error){
-            res.status(500).json({msj:"Error en el servidor"})
+            res.status(500).json({msj:"Error en el servidor"}) 
         }
     }
 }
