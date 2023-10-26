@@ -10,16 +10,16 @@ const httpRolesUsuarios = {
         }
     },
 
-    getRolesUsuariosId: async (req, res) => {
-        const { id } = req.params;
+    // getRolesUsuariosId: async (req, res) => {
+    //     const { id } = req.params;
 
-        try {
-            const rol = await RolesUsuariosModel.findOne({ id });
-            res.json({ rol });
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al obtener la formacion", error })
-        }
-    },
+    //     try {
+    //         const rol = await RolesUsuariosModel.findOne({ id });
+    //         res.json({ rol });
+    //     } catch (error) {
+    //         res.status(500).json({ mensaje: "Error al obtener la formacion", error })
+    //     }
+    // },
 
     postRolesUsuarios: async (req, res) => {
         const { codigo, denominacion, } = req.body;

@@ -1,9 +1,10 @@
 import httpRegistroCalificado from "../controllers/RegistroCalificado.js"
 import { Router } from "express"
 import { check } from "express-validator"
+import { validarJWT } from "../Middlewares/validar-jwt.js"
 const router = Router()
 
-router.get("/", httpRegistroCalificado.getRegistroCalificado)
+router.get("/",[validarJWT], httpRegistroCalificado.getRegistroCalificado)
 
 // router.get("/:cedula", httpRegistroCalificado.getRegistroCalificadoId)
 

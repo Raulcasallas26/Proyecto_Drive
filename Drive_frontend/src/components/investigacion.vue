@@ -152,8 +152,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useInvestigacionStore } from "../stores/investigacion";
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useInvestigacion = useInvestigacionStore();
+const useLogin = useLoginStore()
 const loading = ref(false);
 let Invest = ref([]);
 let filter = ref("")
@@ -170,7 +172,8 @@ let programa = ref("")
 
 async function ListarInvestigaciones() {
     load.value = true
-    let investigacion = await useInvestigacion.getInvestigacion();
+    console.log(useLogin.token);
+    let investigacion = await useInvestigacion.getInvestigacion(useLogin.token);
     console.log(investigacion);
     Invest.value = investigacion.data.Investigaciones;
     console.log(Invest.value);

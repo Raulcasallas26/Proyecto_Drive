@@ -26,7 +26,7 @@
                 <q-item-section avatar>
                   <q-icon name="book" />
                 </q-item-section>
-                <q-item-section> Programas </q-item-section>
+                <q-item-section> Programas de Formacion </q-item-section>
               </q-item>
 
               <q-item clickable v-ripple to="/ambientes">
@@ -140,7 +140,7 @@
             <q-item-section avatar>
               <q-icon name="book" />
             </q-item-section>
-            <q-item-section> Programas </q-item-section>
+            <q-item-section> Programas de Formacion</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple to="/ambientes">

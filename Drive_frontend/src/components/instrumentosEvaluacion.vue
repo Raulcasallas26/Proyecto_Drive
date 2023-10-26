@@ -119,8 +119,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useInstrumentosEvaluacionStore } from "../stores/InstrumentosEvaluacion";
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useInstrumentos = useInstrumentosEvaluacionStore();
+const useLogin = useLoginStore()
 const loading = ref(false);
 let Instrumentos = ref([]);
 let alert = ref(false);
@@ -132,7 +134,8 @@ let documento = ref("")
 
 async function listarInstrumentos() {
     load.value = true
-    let InstrumentosEvaluacion = await useInstrumentos.getInstrumentosEvalacion();
+    console.log(useLogin.token);
+    let InstrumentosEvaluacion = await useInstrumentos.getInstrumentosEvalacion(useLogin.token);
     console.log(InstrumentosEvaluacion);
     Instrumentos.value = InstrumentosEvaluacion.data.InstrumentosEvaluacion;
     load.value = false

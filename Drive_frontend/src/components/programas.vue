@@ -107,8 +107,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useProgramasFormacionStore } from "../stores/programasformacion.js";
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useProgramas = useProgramasFormacionStore();
+const useLogin = useLoginStore()
 let proga = ref([]);
 let check = ref("");
 let bd = ref(false);
@@ -146,7 +148,8 @@ const loading = ref(false);
 
 async function obtenerformacion() {
   load.value = true
-  let programas = await useProgramas.getProgramasFormacion();
+  console.log(useLogin.token);
+  let programas = await useProgramas.getProgramasFormacion(useLogin.token);
   console.log(programas);
   proga.value = programas.data.ProgramasFormacion;
   load.value = false

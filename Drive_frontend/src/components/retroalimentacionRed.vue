@@ -156,8 +156,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRetroalimentacionRedStore } from "../stores/RetroalimentacionRed";
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useRetroalimentacion = useRetroalimentacionRedStore();
+const useLogin = useLoginStore()
 const loading = ref(false);
 let Retro = ref([]);
 let alert = ref(false);
@@ -175,7 +177,8 @@ let IdPrograma = ref("");
 
 async function Listarretroalimentacion() {
     load.value = true
-    let Retroalimentacion = await useRetroalimentacion.getRetroalimentacionRed();
+    console.log(useLogin.token);
+    let Retroalimentacion = await useRetroalimentacion.getRetroalimentacionRed(useLogin.token);
     console.log(Retroalimentacion);
     Retro.value = Retroalimentacion.data.RetroAlimentacionRed;
     load.value = false

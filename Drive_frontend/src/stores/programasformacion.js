@@ -14,9 +14,11 @@ export const useProgramasFormacionStore = defineStore(
             }
         }
 
-        const getProgramasFormacion = async () => {
+        const getProgramasFormacion = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/ProgramasFormacion`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/ProgramasFormacion`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

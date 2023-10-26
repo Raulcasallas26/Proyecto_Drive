@@ -6,7 +6,7 @@ export const useCentrosFormacionStore = defineStore(
     "CentrosFormacion", () => { 
         const addCentrosFormacion = async (info) => {
             try {
-                let res = await axios.post(`${urlBackend}/CentroFormacion`, info)
+                let res = await axios.post(`${urlBackend}/CentrosFormmacion`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
@@ -14,9 +14,11 @@ export const useCentrosFormacionStore = defineStore(
             }
         } 
 
-        const getCentrosFormacion = async () => {
+        const getCentrosFormacion = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/CentroFormacion`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/CentrosFormmacion`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");
@@ -25,35 +27,16 @@ export const useCentrosFormacionStore = defineStore(
         }
         const editCentrosFormacion = async (id, info) => {
             try {
-                let res = await axios.put(`${urlBackend}/CentroFormacion/${id}`, info)
+                let res = await axios.put(`${urlBackend}/CentrosFormmacion/${id}`, info)
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
                 return error
             }
         } 
-        const activarCentrosFormacion = async (id) => {
-            try {
-                const centro = await CentrosFormacionModel.findById(id);
-        
-                if (!centro) {
-                    return { mensaje: "Centro de formación no encontrado" };
-                }
-        
-                centro.estado = !centro.estado;
-        
-                await centro.save();
-        
-                const estadoMensaje = centro.estado ? "Activo" : "Inactivo";
-        
-                return { mensaje: `Estado de centro de formación modificado a ${estadoMensaje}`, centro };
-            } catch (error) {
-                return { mensaje: "Error al cambiar el estado del centro de formación", error: error.message };
-            }
-        }
         
         return {
-            addCentrosFormacion, getCentrosFormacion, editCentrosFormacion, activarCentrosFormacion, 
+            addCentrosFormacion, getCentrosFormacion, editCentrosFormacion
         }
     }
 )

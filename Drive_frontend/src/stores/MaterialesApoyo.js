@@ -14,9 +14,11 @@ export const useMaterialesApoyoStore = defineStore(
             }
         }
 
-        const getMaterialesApoyo = async () => {
+        const getMaterialesApoyo = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/MaterialesApoyo`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/MaterialesApoyo`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

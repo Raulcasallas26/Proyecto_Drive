@@ -4,9 +4,10 @@ import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
 export const useProyectosStore = defineStore(
     "Proyectos", () => {
-        const addProyectos = async (info) => {
+        const addProyectos = async (info,token) => {
             try {
-                let res = await axios.post(`${urlBackend}/Proyectos`, info)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.post(`${urlBackend}/Proyectos`, info, header)
                 return res
             } catch (error) {
                 console.log("hay un error en la post Programas");
@@ -25,7 +26,7 @@ export const useProyectosStore = defineStore(
                 return error
             }
         }
-        const editProyectos = async (id, info) => {
+        const editProyectos = async (id, info,header) => {
             try {
                 let res = await axios.put(`${urlBackend}/Proyectos/${id}`, info,header)
                 return res

@@ -2,14 +2,16 @@ import httpCiudades from "../controllers/Ciudades.js";
 import { Router } from "express";
 import {check} from "express-validator"
 import {validarResultados} from "../Middlewares/validaciones.js"
+import { validarJWT } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
-  router.get("/", httpCiudades.getCiudades)
+  router.get("/",[validarJWT], httpCiudades.getCiudades)
    
   router.get("/:id", httpCiudades.getCiudades)
   
   router.post("/", [
+    validarJWT,
     check("nombre","el nombre es obligatorio",).notEmpty().trim().isString(),
     check("CodigoDaneCiudad","el codigo dane de la cuidad es obligatorio").notEmpty().trim().isString(),
     check("region","la region es obligatoria").notEmpty().trim().isString(),

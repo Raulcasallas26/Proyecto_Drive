@@ -151,8 +151,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRegistroCalificadoStore } from "../stores/RegistroCalificado.js"
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useRegistroCalificado = useRegistroCalificadoStore()
+const useLogin = useLoginStore()
 let RegisCal = ref([]);
 let loading = ref(false)
 let alert = ref(false)
@@ -167,9 +169,12 @@ let fecha = ref("")
 let check = ref("")
 
 async function ListarRegistro() {
-    let Registro = await useRegistroCalificado.getRegistroCalificado();
+    load.value = true
+    console.log(useLogin.token);
+    let Registro = await useRegistroCalificado.getRegistroCalificado(useLogin.token);
     console.log(Registro);
     RegisCal.value = Registro.data.RegistroCalificado;
+    load.value = false
 }
 
 function edito(index) {

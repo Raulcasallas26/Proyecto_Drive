@@ -46,9 +46,9 @@
                     </div>
                     <div style="display: flex; justify-content: flex-end">
                         <q-btn id="boton-estado" class="q-pa-r" color="green" outline @click="activar(proyecto)"
-                            v-if="proyecto.estado === false">✅Activar
+                            v-if="proyecto.estado === false">✅
                         </q-btn>
-                        <q-btn class="q-pa-r" color="red" outline @click="activar(proyecto)" v-else>⚠ inactivar</q-btn>
+                        <q-btn class="q-pa-r" color="red" outline @click="activar(proyecto)" v-else>❌</q-btn>
                     </div>
                     <q-slide-transition appear>
                         <div v-show="cardStates[index]">

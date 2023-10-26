@@ -13,9 +13,11 @@ export const useRetroalimentacionRedStore = defineStore(
             }
         }
 
-        const getRetroalimentacionRed = async () => {
+        const getRetroalimentacionRed = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/retroalimentacionRed`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/retroalimentacionRed`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

@@ -14,9 +14,11 @@ export const useInvestigacionStore = defineStore(
             }
         }
 
-        const getInvestigacion = async () => {
+        const getInvestigacion = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/Investigacion`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/Investigacion`,header)
                 return res 
             } catch (error) {
                 console.log("hay un error en el get");

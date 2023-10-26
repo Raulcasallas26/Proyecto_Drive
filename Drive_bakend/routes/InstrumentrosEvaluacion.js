@@ -2,14 +2,16 @@ import httpInstrumentosEvaluacion from "../controllers/InstrumentosEvaluacion.js
 import { Router } from "express";
 import { check } from "express-validator"
 import { validarResultados } from "../Middlewares/validaciones.js"
+import { validarJWT } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
-router.get("/", httpInstrumentosEvaluacion.getInstrumentosEvaluacion)
+router.get("/",[validarJWT], httpInstrumentosEvaluacion.getInstrumentosEvaluacion)
 
 // router.get("/:id", httpInstrumentosEvaluacion.getInstrumentosEvaluacionId)
 
 router.post("/", [
+  validarJWT,
   check("nombre", "el nombre es obligatorio",).notEmpty().trim().isString(),
   check("documento", "el docuemnto es obligatorio").notEmpty().trim().isString(),
   validarResultados

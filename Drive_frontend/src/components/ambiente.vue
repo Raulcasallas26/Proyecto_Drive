@@ -165,8 +165,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useambiente = useAmbientesFormacionStore();
+const useLogin = useLoginStore()
 let ambientess = ref([]);
 let showModalAgregar = ref(false);
 let showModalEdicion = ref(false); // Variable para controlar el modal de edición
@@ -234,7 +236,8 @@ async function activar(ambiente) {
 
 async function getAmbientesformacion() {
   load.value = true
-  let Formacion = await useambiente.getAmbientesFormacion();
+  console.log(useLogin.token);
+  let Formacion = await useambiente.getAmbientesFormacion(useLogin.token);
   ambientess.value = Formacion.data.AmbientesFormacion;
   load.value = false
 }

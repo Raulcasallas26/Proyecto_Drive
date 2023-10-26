@@ -79,7 +79,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRolesUsuariosStore } from "../stores/RolesUsuarios.js";
+import {useLoginStore} from "../stores/login.js"
+import { load } from "../routes/direccion.js"
 const useUsuario = useRolesUsuariosStore();
+const useLogin = useLoginStore()
 let alert = ref(false);
 let bd = ref(false);
 let check = ref("");
@@ -201,9 +204,12 @@ function limpiarFormulario() {
 
 listarUsuarios();
 async function listarUsuarios() {
-  let usuarios = await useUsuario.getRolesUsuarios();
+  load.value = true
+  console.log(useLogin.token);
+  let usuarios = await useUsuario.getRolesUsuarios(useLogin.token);
   console.log(usuarios);
   user.value = usuarios.data.RolesUsuario;
+  load.value = false
 }
 
 function agregar() {

@@ -83,9 +83,9 @@
           </q-card-section>
           <q-card-section>
             <q-btn @click="() => {
-                showModalAgregar = false;
-                limpiarFormulario();
-              }
+              showModalAgregar = false;
+              limpiarFormulario();
+            }
               " label="Cancelar" />
 
             <q-btn @click="validarYGuardar()" color="primary" label="Agregar" />
@@ -133,9 +133,9 @@
           </q-card-section>
           <q-card-section>
             <q-btn @click="() => {
-                showModalEdicion = false;
-                limpiarFormulario();
-              }
+              showModalEdicion = false;
+              limpiarFormulario();
+            }
               " label="Cancelar" />
             <q-btn @click="validaredit()" color="primary" label="Guardar Cambios" />
           </q-card-section>
@@ -163,8 +163,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useMaterialesApoyoStore } from "../stores/MaterialesApoyo.js";
-
+import { useLoginStore } from "../stores/login.js"
+import { load } from "../routes/direccion.js"
 const Storemateriales = useMaterialesApoyoStore();
+const useLogin = useLoginStore()
 let ambientess = ref([]);
 let showModalAgregar = ref(false);
 let showModalEdicion = ref(false); // Variable para controlar el modal de edición
@@ -220,37 +222,13 @@ async function agregarAmbiente() {
   showModalAgregar = false;
 
 }
-/* async function agregarAmbiente() { 
-    loading.value = true;
-    try {
-        const r = await Storemateriales.addMaterialesApoyo({
-            id: codigo.value,
-            nombre: Nombre.value,
-            documento: Tipo.value,
-            descripccion: Descripcion.value,
-            documentos: archivoOEnlace.value,
-        });
-
-        if (r.status === 200) {
-            getMaterialesApoyo();
-            showModalAgregar = false;
-        } else {
-            // Manejo de errores del servidor
-            const data = await r.json(); // Si el servidor devuelve un mensaje de error JSON
-            errorMessage.value = data.message; // Establece el mensaje de error
-        }
-    } catch (error) {
-        // Manejo de errores de red o cualquier otro error
-        console.error('Error en la solicitud:', error);
-        errorMessage.value = 'Hubo un error en la solicitud: ' + error.message;
-    } finally {
-        loading.value = false;
-    }
-} */
 
 async function getMaterialesApoyo() {
-  let Formacion = await Storemateriales.getMaterialesApoyo();
+  load.value = true
+  console.log(useLogin.token);
+  let Formacion = await Storemateriales.getMaterialesApoyo(useLogin.token);
   ambientess.value = Formacion.data.MaterialesApoyo;
+  load.value = false
 }
 /*    <p><strong>Código:</strong> {{ ambiente.codigo }}</p> */
 const cardStates = ref({});

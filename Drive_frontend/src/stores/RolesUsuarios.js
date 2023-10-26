@@ -14,9 +14,11 @@ export const useRolesUsuariosStore = defineStore(
             }
         }
 
-        const getRolesUsuarios = async () => {
+        const getRolesUsuarios = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/RolesUsuarios`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/RolesUsuarios`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

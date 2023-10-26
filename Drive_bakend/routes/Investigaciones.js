@@ -1,14 +1,15 @@
 import httpInvestigaciones from "../controllers/Investigaciones.js"
 import { Router } from "express"
 import { check } from "express-validator"
+import { validarJWT } from "../Middlewares/validar-jwt.js"
 // import validarResultados from "../validaciones/validaciones.js"
 const router = Router()
 
-router.get("/", httpInvestigaciones.getInvestigaciones)
+router.get("/",[validarJWT], httpInvestigaciones.getInvestigaciones)
 
 // router.get("/:cedula", httpInvestigaciones.getInvestigacionesId)
 
-router.post("/", [], httpInvestigaciones.postInvestigaciones)
+router.post("/", [validarJWT], httpInvestigaciones.postInvestigaciones)
 
 router.put("/:id", httpInvestigaciones.putInvestigaciones)
 

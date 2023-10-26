@@ -14,9 +14,11 @@ export const useRegistroCalificadoStore = defineStore(
             }
         }
 
-        const getRegistroCalificado = async () => {
+        const getRegistroCalificado = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/registroCalificado`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/registroCalificado`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

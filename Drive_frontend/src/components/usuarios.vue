@@ -179,10 +179,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUsuariosStore } from "../stores/usuarios.js";
-
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useUsuario = useUsuariosStore();
-
+const useLogin = useLoginStore()
 let alert = ref(false);
 let detalle = ref(false)
 let bd = ref(false);
@@ -374,7 +374,8 @@ function limpiarFormulario() {
 listarUsuarios();
 async function listarUsuarios() {
     load.value = true
-    let usuarios = await useUsuario.getUsuarios();
+    console.log(useLogin.token);
+    let usuarios = await useUsuario.getUsuarios(useLogin.token);
     console.log(usuarios);
     user.value = usuarios.data.Usuarios;
     load.value = false

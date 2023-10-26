@@ -81,7 +81,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useCentrosFormacionStore } from "../stores/CentrosFormacion.js";
+import {useLoginStore} from "../stores/login.js"
+import { load } from "../routes/direccion.js"
 const useUsuario = useCentrosFormacionStore();
+const useLogin = useLoginStore()
 let alert = ref(false);
 let bd = ref(false);
 let check = ref("");
@@ -219,9 +222,12 @@ function limpiarFormulario() {
 
 listarUsuarios();
 async function listarUsuarios() {
-  let centros = await useUsuario.getCentrosFormacion();
+  load.value = true
+  console.log(useLogin.token);
+  let centros = await useUsuario.getCentrosFormacion(useLogin.token);
   console.log(centros);
   user.value = centros.data.CentrosFormacion;
+  load.value = false
 }
 
 function agregar() {

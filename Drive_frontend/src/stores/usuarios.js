@@ -29,9 +29,11 @@ export const useUsuariosStore = defineStore(
             }
         }
 
-        const getUsuarios = async () => {
+        const getUsuarios = async (token) => {
+            console.log();
             try {
-                let res = await axios.get(`${urlBackend}/Usuarios`)
+                let header = {headers:{"x-token":token}}
+                let res = await axios.get(`${urlBackend}/Usuarios`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

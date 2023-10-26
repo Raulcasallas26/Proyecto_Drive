@@ -74,7 +74,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRedesConocimientoStore } from "../stores/RedesConocimiento.js";
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
+const useRedes = useRedesConocimientoStore();
+const useLogin = useLoginStore()
 let red = ref([]);
 let alert = ref(false)
 let check = ref("")
@@ -83,7 +86,7 @@ let bd = ref(false)
 let indice = ref(null)
 let codigo = ref("");
 let denominacion = ref("");
-const useRedes = useRedesConocimientoStore();
+
 let columns = [
     { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
     { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion", },
@@ -95,7 +98,8 @@ const filter = ref("");
 
 async function obtenerredes() {
     load.value = true
-    let redes = await useRedes.getRedesConocimiento();
+    console.log(useLogin.token);
+    let redes = await useRedes.getRedesConocimiento(useLogin.token);
     console.log(redes);
     red.value = redes.data.RedesConocimiento;
     console.log(redes.data);

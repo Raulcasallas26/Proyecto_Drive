@@ -14,9 +14,11 @@ export const useRedesConocimientoStore = defineStore(
             }
         }
 
-        const getRedesConocimiento = async () => {
+        const getRedesConocimiento = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/RedesConocimiento`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/RedesConocimiento`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

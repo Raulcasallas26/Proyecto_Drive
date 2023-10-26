@@ -2,14 +2,16 @@ import httpAmbientesFormacion from "../controllers/AmbientesFormacion.js";
 import { Router } from "express";
 import {check} from "express-validator"
 import {validarResultados} from "../Middlewares/validaciones.js"
+import { validarJWT } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
-  router.get("/", httpAmbientesFormacion.getAmbientesFormacion)
+  router.get("/",[validarJWT], httpAmbientesFormacion.getAmbientesFormacion)
    
   router.get("/:id", httpAmbientesFormacion.getAmbientesFormacionId)
   
   router.post("/", [
+    validarJWT,
     check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
     check("nombre","el nombre es obligatorio",).notEmpty().trim().isString(),
     check("tipo","el tipo es obligatorio").notEmpty().trim().isString(),
