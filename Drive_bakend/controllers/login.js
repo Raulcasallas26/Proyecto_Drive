@@ -7,11 +7,11 @@ const inicioSesion={
         try{
             const usuario = await Instructores.findOne({cedula})
             if (!usuario) {
-                return res.status(401).json({msj:"esta mal la cedula"})
+                return res.status(401).json({msj:"Credenciales invalidas"})
             }
             const poss = await bcrypt.compare(password,usuario.password)
             if (!poss) { 
-                return res.status(401).json({msj:"esta mal la contraseña"})
+                return res.status(401).json({msj:"Credenciales invalidas"})
             }
             const tockent = jwt.sign({userId:usuario._id},process.env.CLAVETOCK,{expiresIn:'1h'})
             res.status(200).json({msj:"inicio de secion con exito",tockent,usuario})

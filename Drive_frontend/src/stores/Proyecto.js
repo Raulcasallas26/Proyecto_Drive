@@ -14,9 +14,11 @@ export const useProyectosStore = defineStore(
             }
         }
 
-        const getProyectos = async () => {
+        const getProyectos = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/Proyectos`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/Proyectos`,header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get Programas");
@@ -25,7 +27,7 @@ export const useProyectosStore = defineStore(
         }
         const editProyectos = async (id, info) => {
             try {
-                let res = await axios.put(`${urlBackend}/Proyectos/${id}`, info)
+                let res = await axios.put(`${urlBackend}/Proyectos/${id}`, info,header)
                 return res
             } catch (error) {
                 console.log("hay un error en editProgramas");

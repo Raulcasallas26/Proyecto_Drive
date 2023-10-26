@@ -3,13 +3,15 @@ import { Router } from "express";
 import { check } from "express-validator"
 import { validarResultados } from "../Middlewares/validaciones.js"
 import validarUnicos from "./validar.js"
+import { validarJWT } from "../Middlewares/validar-jwt.js";
 const router = Router()
 
 router.get("/", httpUsuarios.getUsuarios), 
 
 // router.get("/:id", httpUsuarios.getUsuariosId)
 
-router.post("/", [
+router.post("/", [ 
+  validarJWT,
   check("nombre", "El nombre es obligatorio").notEmpty().trim().isString(),
   check("apellidos", "el apellido es obligatorio",).notEmpty().trim().isString(),
   check("cedula", "el numero de identificacion es obligatorio").notEmpty().trim().isNumeric(),

@@ -1,7 +1,0 @@
-<div v-if="load == true" style="margin-top: 5px;">
-            <q-linear-progress ark rounded indeterminate color="green" />
-        </div>
-
-
-        
-import { load } from "../routes/direccion.js"

@@ -39,7 +39,6 @@
                         <q-btn class="q-mx-sm" color="green" outline @click="activar(props)"
                             v-if="props.row.estado == false">✅</q-btn>
                         <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
-                        
                         <q-btn class="q-mx-sm" outline @click="detalles(props)">👁️‍🗨️</q-btn>
                     </q-td>
                 </template>
@@ -180,8 +179,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUsuariosStore } from "../stores/usuarios.js";
+
 import { load } from "../routes/direccion.js"
 const useUsuario = useUsuariosStore();
+
 let alert = ref(false);
 let detalle = ref(false)
 let bd = ref(false);

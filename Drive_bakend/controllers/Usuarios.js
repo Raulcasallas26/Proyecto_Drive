@@ -1,6 +1,7 @@
 import UsuariosModel from "../models/Usuarios.js"
 import bcrypt from "bcrypt"
 
+
 const httpUsuarios = {
     getUsuarios: async (req, res) => {
         try {

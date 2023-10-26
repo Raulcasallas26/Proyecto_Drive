@@ -161,8 +161,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useProyectosStore } from "../stores/Proyecto.js";
+import {useLoginStore} from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useProyecto = useProyectosStore();
+const useLogin = useLoginStore()
 const loading = ref(false);
 let Program = ref([]);
 let alert = ref(false);
@@ -181,7 +183,8 @@ let opcionesPrograma = ref([])
 
 async function ListarProyectos() {
     load.value = true
-    let Proyectos = await useProyecto.getProyectos();
+    console.log(useLogin.token);
+    let Proyectos = await useProyecto.getProyectos(useLogin.token);
     console.log(Proyectos);
     Program.value = Proyectos.data.Proyecto;
     console.log(Program.value[0].fecha);

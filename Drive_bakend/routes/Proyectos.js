@@ -2,10 +2,11 @@ import httpProyecto from "../controllers/Proyecto.js";
 import { Router } from "express";
 import { check } from "express-validator"
 import { validarResultados } from "../Middlewares/validaciones.js"
+import { validarJWT } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
-router.get("/", httpProyecto.getProyecto)
+router.get("/",[validarJWT], httpProyecto.getProyecto)
 
 // router.get("/:id", httpProyecto.getProyectoId)
 

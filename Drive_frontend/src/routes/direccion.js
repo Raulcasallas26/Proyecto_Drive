@@ -8,4 +8,6 @@ const urlBackend= "http://localhost:3500"
 //loading de esperar mientrar cargan las tablas de las paginas
 let load = ref( false )
 
+let rolUser = ref ()
+
 export{urlBackend, load }
