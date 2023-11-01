@@ -2,14 +2,30 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
-export const useRolesUsuariosStore = defineStore(
+import { Notify } from "quasar";
+export const useRolesUsuariosStore = defineStore( 
     "RolesUsuarios", () => {
         const addRolesUsuarios = async (info) => {
             try {
-                let res = await axios.post(`${urlBackend}/RolesUsuarios`, info)
+                let res = await axios.post(`${urlBackend}/RolesUsuarios`, info )
+                Notify.create({
+                    color:"positive",
+                    message:"Registro exitoso",
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return res 
             } catch (error) {
-                console.log("hay un error en la post");
+                console.log(error);
+                console.log(error.response.data.errors[0].msg);
+                Notify.create({
+                    color:"negative",
+                    message:error.response.data.errors[0].msg,
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return error
             }
         }

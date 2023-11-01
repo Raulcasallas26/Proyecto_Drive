@@ -6,7 +6,8 @@
           <img src="../src/img/logo_sena.png" v-if="bd === false && !isMobile" style="filter: invert(1);" alt="">
         </q-avatar>
         <div>
-          <q-btn-dropdown flat round dense v-if="!isInLoginComponent && isMobile" icon="menu" :class="{ 'justify-left': bd === false && isMobile }">
+          <q-btn-dropdown flat round dense v-if="!isInLoginComponent && isMobile" icon="menu"
+            :class="{ 'justify-left': bd === false && isMobile }">
             <q-list padding>
               <q-item clickable v-ripple id="btn" to="/home">
                 <q-item-section avatar>
@@ -70,6 +71,13 @@
                     name="img:https://img.freepik.com/vector-premium/diseno-educativo-desarrollo-curricular-aprendizaje-e-instruccion-vector-diseno-pluma_989823-28.jpg?w=2000" />
                 </q-item-section>
                 <q-item-section> Desarrollo Curricular </q-item-section>
+              </q-item>
+
+              <q-item clickable v-ripple to="/guias">
+                <q-item-section avatar>
+                  <q-icon name="img:https://cdn-icons-png.flaticon.com/512/4345/4345535.png" />
+                </q-item-section>
+                <q-item-section>Guias de Aprendizaje</q-item-section>
               </q-item>
 
               <q-item clickable v-ripple to="/roles">
@@ -136,7 +144,7 @@
             <q-item-section>Inicio </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/usuarios">
+          <q-item clickable v-if="ron === 0 || ron === 2 " v-ripple to="/usuarios">
             <q-item-section avatar>
               <q-icon name="people" />
             </q-item-section>
@@ -191,6 +199,13 @@
                 name="img:https://img.freepik.com/vector-premium/diseno-educativo-desarrollo-curricular-aprendizaje-e-instruccion-vector-diseno-pluma_989823-28.jpg?w=2000" />
             </q-item-section>
             <q-item-section> Desarrollo Curricular </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/guias">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/4345/4345535.png" />
+            </q-item-section>
+            <q-item-section>Guias de Aprendizaje</q-item-section>
           </q-item>
 
           <q-item clickable v-ripple to="/roles">
@@ -248,10 +263,12 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useLoginStore } from './stores/login';
+import { useLoginStore } from './stores/login.js';
 let drawer = ref(false)
 let miniState = ref(true)
 let bd = ref(false)
+let ron = ref()
+let nota = ref(false)
 const useLogin = useLoginStore()
 let drawerRight = ref(false)
 const leftDrawerOpen = ref(false);
@@ -262,6 +279,48 @@ const windowWidth = ref(window.innerWidth);
 const isMobile = computed(() => {
   return windowWidth.value < 600;
 });
+
+
+function ValidarRol() {
+  console.log("Recibiendo el rol: " + useLogin.rol);
+  if (useLogin.rol === "Administrador") {
+    ron.value = 1;
+    console.log("El rol está en  " + ron.value +"  "+ useLogin.rol);
+  } else if (useLogin.rol === "Gestor") {
+    ron.value = 2;
+    console.log("El rol está en  " + ron.value +"  " + useLogin.rol);
+  } else if (ron.value === 2) {
+    return route.path === '/programas';
+  } else if (useLogin.rol === "Instructor") {
+    ron.value = 3;
+    console.log("El rol está en  " + ron.value +"  " + useLogin.rol);
+  } else if (useLogin.rol === "Super") {
+    ron.value = 0;
+    console.log("El rol está en  " + ron.value +"  " + useLogin.rol);
+  }
+  
+}
+
+
+
+
+// Función para ejecutar el ciclo de ValidarRol automáticamente
+function ejecutarCiclo() {
+  const intervalId = setInterval(() => {
+    if (useLogin.rol === ""  ) {
+      ValidarRol();
+      console.log(ron.value);
+    } else {
+      clearInterval(intervalId);
+      ejecutarCiclo(); // Reiniciar el ciclo si useLogin.rol todavía está vacío
+    }
+  }, 1000); // Ejecutar cada 1 segundo
+
+}
+
+ejecutarCiclo();
+
+
 
 // Función para abrir/cerrar el menú lateral
 const toggleDrawer = () => {
@@ -275,6 +334,7 @@ window.addEventListener('resize', () => {
 
 // Cierra el menú lateral cuando se carga la página en dispositivos móviles
 onMounted(() => {
+  console.log(ValidarRol());
   if (isMobile.value) {
     drawer.value = false;
   }

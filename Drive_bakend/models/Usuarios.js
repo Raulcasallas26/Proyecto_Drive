@@ -5,12 +5,12 @@ const UsuariosSchema = new mongoose.Schema({
     apellidos:{type:String, require: true},
     cedula:{type:Number, require: true, unique:true},
     telefono:{type:Number, require: true},
-    email:{type:String, require: true, unique:true},
+    email:{type:String, require: true, unique:true}, 
     password:{type:String, require: true},
     perfilProfesional:{type:String, require: true},
     curriculum:{type:String, require: true}, 
     estado:{type: Boolean, default: true, require: true},
-    RolUsuario:{type:String},
+    RolUsuario:{type:Object},
     RedConocimiento:{type:String}
 }) 
 

@@ -5,14 +5,12 @@ import bcrypt from "bcrypt"
 const httpUsuarios = {
     getUsuarios: async (req, res) => {
         try {
-            const Usuarios = await UsuariosModel.find().populate("RolUsuario")
+            const Usuarios = await UsuariosModel.find({})
             res.status(200).json({ Usuarios });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al obtener los Usuarios", error })
         }
     },
-
-
 
     // getUsuariosId: async (req, res) => {
     //     const { id } = req.params;

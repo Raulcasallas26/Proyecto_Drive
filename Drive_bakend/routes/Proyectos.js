@@ -10,7 +10,7 @@ router.get("/",[validarJWT], httpProyecto.getProyecto)
 
 // router.get("/:id", httpProyecto.getProyectoId)
 
-router.post("/", [validarJWT ], httpProyecto.postProyecto)
+router.post("/",[], httpProyecto.postProyecto, [validarJWT])
 
 router.put("/:id", httpProyecto.putProyecto) 
 

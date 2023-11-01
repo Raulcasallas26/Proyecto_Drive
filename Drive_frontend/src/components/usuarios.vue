@@ -1,4 +1,4 @@
-<template>
+<template >
     <div class="q-pa-md">
         <div v-if="load == true">
             <q-linear-progress ark rounded indeterminate color="green" />
@@ -91,10 +91,10 @@
                             </div>
                             <div class="q-gutter-md" v-if="bd === true">
                                 <q-select :rules="[(val) => !!val || 'Campo requerido']" v-model="rolUsuario"
-                                    :options="opciones"  label="Selecciona un Rol" />
+                                    :options="opciones" label="Selecciona un Rol" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === true">
-                                <q-input v-model="RedConocimiento" label="Ref de Conocimiento"
+                                <q-input v-model="RedConocimiento" label="Ret de Conocimiento"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === false">
@@ -143,7 +143,7 @@
                 <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card" style="border-radius: 10px;">
                         <q-card-section class="q-pa-md">
-                            <p><strong style="font-size:large; ">Rol:</strong> {{ r.rolUsuario }}</p>
+                            <p><strong style="font-size:large; ">Rol:</strong> {{ r.RolUsuario }}</p>
                             <p><strong style="font-size:large; ">Cedula:</strong> {{ r.cedula }}</p>
                             <p><strong style="font-size:large; ">E-mail:</strong> {{ r.email }}</p>
                             <p><strong style="font-size:large; ">Nombre:</strong> {{ r.nombre }}</p>
@@ -166,7 +166,6 @@
                 </q-card-section>
                 <q-card-actions align="right">
                     <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
-                    <q-btn flat label="Editar Usuario" @click="validaredit" color="primary" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -230,9 +229,16 @@ let columns = [
 const originalRows = [];
 const filter = ref("");
 
+async function listarUsuarios() {
+    load.value = true
+    let usuarios = await useUsuario.getUsuarios(useLogin.token);
+    console.log(usuarios);
+    user.value = usuarios.data.Usuarios;
+    load.value = false
+}
+
 async function listarRoles() {
     load.value = true
-    console.log(useLogin.token);
     let Roles = await useRoles.getRolesUsuarios(useLogin.token);
     console.log(Roles);
     Rol.value = Roles.data.RolesUsuario;
@@ -323,22 +329,26 @@ function edito(props) {
     bd.value = true;
     alert.value = true;
     indice.value = r.value._id;
-    nombre.value = r.value.nombre;
-    apellido.value = r.value.apellidos;
     email.value = r.value.email;
-    telefono.value = r.value.telefono;
     cedula.value = r.value.cedula;
+    nombre.value = r.value.nombre;
+    telefono.value = r.value.telefono;
+    apellido.value = r.value.apellidos;
+    curriculum.value = r.value.curriculum
+    rolUsuario.value = r.value.RolUsuario
+    RedConocimiento.value = r.value.RedConocimiento
     perfilProfesional.value = r.value.perfilProfesional
+
 }
 
 function detalles(props) {
     r.value = props.row;
     detalle.value = true;
+    email.value = r.value.email;
+    cedula.value = r.value.cedula;
     nombre.value = r.value.nombre;
     apellido.value = r.value.apellidos;
-    email.value = r.value.email;
     telefono.value = r.value.telefono;
-    cedula.value = r.value.cedula;
 }
 
 
@@ -346,11 +356,16 @@ async function editarUser() {
     loading.value = true;
     console.log("hola estoy editando");
     let r = await useUsuario.editUsuarios(indice.value, {
-        nombre: nombre.value,
-        apellidos: apellido.value,
         email: email.value,
-        telefono: telefono.value,
         cedula: cedula.value,
+        nombre: nombre.value,
+        telefono: telefono.value,
+        apellidos: apellido.value,
+        curriculum: curriculum.value,
+        RolUsuario: rolUsuario.value.value,
+        RedConocimiento: RedConocimiento.value,
+        perfilProfesional: perfilProfesional.value
+
     });
     console.log(r);
     bd.value = false;
@@ -380,19 +395,13 @@ function limpiarFormulario() {
     telefono.value = "";
     cedula.value = "";
     password.value = "";
+    rolUsuario.value = "";
     alert.value = false;
     bd.value = false;
 }
 
 listarUsuarios();
-async function listarUsuarios() {
-    load.value = true
-    console.log(useLogin.token);
-    let usuarios = await useUsuario.getUsuarios(useLogin.token);
-    console.log(usuarios);
-    user.value = usuarios.data.Usuarios;
-    load.value = false
-}
+
 
 function agregar() {
     alert.value = true;
@@ -400,6 +409,7 @@ function agregar() {
 
 
 onMounted(() => {
+    console.log("El rol del usuario", rolUser.value);
     listarUsuarios();
     listarRoles();
     limpiarFormulario();

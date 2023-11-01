@@ -12,11 +12,13 @@ export const useGuiasAprendizStore = defineStore(
                 console.log("hay un error en la post");
                 return error
             }
-        }
+        } 
 
-        const getGuiasAprendiz = async () => {
+        const getGuiasAprendiz = async (token) => {
+            console.log(token);
             try {
-                let res = await axios.get(`${urlBackend}/GuiasAprendiz`)
+                let header = {headers:{"x-token":token}} 
+                let res = await axios.get(`${urlBackend}/GuiasAprendiz`, header)
                 return res
             } catch (error) {
                 console.log("hay un error en el get");

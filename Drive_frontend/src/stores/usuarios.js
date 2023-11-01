@@ -6,7 +6,7 @@ import {Notify} from "quasar"
 export const useUsuariosStore = defineStore(
     "Usuarios", () => {
         const addUsuarios = async (info) => {
-            try {
+            try { 
                 let res = await axios.post(`${urlBackend}/Usuarios`, info)
                 Notify.create({
                     color:"positive",

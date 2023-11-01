@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import {useRouter} from "vue-router"
+
 import { ref } from "vue"
 export const useLoginStore = defineStore(
     "login", () => {
@@ -10,24 +11,24 @@ export const useLoginStore = defineStore(
         let rol = ref("")
         let router = useRouter()
 
+
+// "Gestor"
+
         const validar = async (cedula, password) => {
             try {
-                loading.value = (true)
                 const info = {
                     cedula,
                     password
                 }
                 const res = await axios.post(`${urlBackend}/login`, info)
                 token.value = res.data.tockent
-                rol.value= "Gestor"
+                rol.value= res.data.usuario.RolUsuario
                 return res
             } catch (error) {
-                loading.value = (true)
                 console.log("error en la peticion inicio sesion");
                 console.log(error);
                 return res
             }
-            loading.value = (false)
         }
 
         const logout= ()=>{
@@ -36,7 +37,7 @@ export const useLoginStore = defineStore(
             router.push("/")
         }
         return {
-            validar, token, logout,rol
+            validar, token, logout, rol
         }
     },
     {

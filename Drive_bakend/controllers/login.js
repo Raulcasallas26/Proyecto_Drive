@@ -13,7 +13,8 @@ const inicioSesion={
             if (!poss) { 
                 return res.status(401).json({msj:"Credenciales invalidas"})
             }
-            const tockent = jwt.sign({userId:usuario._id},process.env.CLAVETOCK,{expiresIn:'10h'})
+            const tockent = jwt.sign({userId:usuario._id},process.env.CLAVETOCK,{expiresIn:'1h'})
+            console.log("Togen generado por primera vez", tockent);
             res.status(200).json({msj:"inicio de secion con exito",tockent,usuario})
         }
         catch (error){

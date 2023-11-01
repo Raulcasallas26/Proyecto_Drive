@@ -6,12 +6,11 @@ import { validarJWT } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
-router.get("/",[validarJWT], httpRolesUsuarios.getRolesUsuarios)
+router.get("/",[validarJWT], httpRolesUsuarios.getRolesUsuarios) 
 
 // router.get("/:id", httpRolesUsuarios.getRolesUsuariosId)
 
 router.post("/", [
-  validarJWT,
   check("denominacion", "La denominacion es un campo requerido").notEmpty().trim().isString(),
   check("codigo", "El Codigo es un campo requerido").notEmpty().trim().isString(),
   validarResultados

@@ -3,7 +3,7 @@ import RolesUsuariosModel from "../models/RolesUsuario.js"
 const httpRolesUsuarios = {
     getRolesUsuarios: async (req, res) => {
         try {
-            const RolesUsuario = await RolesUsuariosModel.find({});
+            const RolesUsuario = await RolesUsuariosModel.find();
             res.json({ RolesUsuario });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al obtener los roles", error });
@@ -23,18 +23,15 @@ const httpRolesUsuarios = {
 
     postRolesUsuarios: async (req, res) => {
         const { codigo, denominacion, } = req.body;
-        const rol = new RolesUsuariosModel({
-            codigo,
-            denominacion,
-
-        });
-
         try {
-            const nuevoRolesUsuarios = await rol.save();
-
+            const rol = new RolesUsuariosModel({
+                codigo,
+                denominacion,
+            });
+            await rol.save();
             res.json({
                 mensaje: "Un rol insertado!!",
-                RolesUsuarios: nuevoRolesUsuarios
+                rol
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar el rol", error });

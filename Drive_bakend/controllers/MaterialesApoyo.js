@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs";
 const httpMaterialesApoyo = {
   getMaterialesApoyo: async (req, res) => {
     try {
-      const MaterialesApoyo = await MaterialesApoyoModel.find({});
+      const MaterialesApoyo = await MaterialesApoyoModel.find();
       res.json({ MaterialesApoyo });
     } catch (error) {
       res

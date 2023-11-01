@@ -255,7 +255,6 @@ async function Login() {
     try {
         loading.value = true
         r = await useLogin.validar(cedula.value, password.value)
-        console.log("objeto general");
         console.log(r);
         resp = r.status
         console.log("estado");

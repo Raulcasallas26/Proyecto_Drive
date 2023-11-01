@@ -5,8 +5,8 @@ import bcryptjs from "bcryptjs"
 const httpGuiasAprendiz = {
     getGuiasAprendiz: async (req, res) => {
         try {
-            const GuiasAprendiz = await GuiasAprendizModel.find({});
-            res.json({ GuiasAprendiz });
+            const GuiasAprendiz = await GuiasAprendizModel.find({})
+            res.json( GuiasAprendiz );
         } catch (error) {
             res.status(500).json({ mensaje: "Error al obtener infotmacion de las guias del aprendiz", error })
         }
@@ -23,14 +23,15 @@ const httpGuiasAprendiz = {
     },
 
     postGuiasAprendiz: async (req, res) => {
-        const { codigo, nombre, fase, documento, idInstrumentosEvaluacion, idMaterialApoyo } = req.body;
+        const { codigo, nombre, fase, documento, idInstrumentosEvaluacion, idMaterialApoyo, estado } = req.body;
         const GuiasAprendiz = new GuiasAprendizModel({
             codigo,
-            nombre,
+            nombre, 
             fase,
             documento,
             idInstrumentosEvaluacion,
-            idMaterialApoyo
+            idMaterialApoyo,
+            estado
         });
 
         try {

@@ -3,8 +3,8 @@
     <div>
       <q-table flat bordered title="Treats" :rows="user" :columns="columns" row-key="id" :filter="filter"
         :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="10"
-        :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
-        @virtual-scroll="onScroll">
+        :virtual-scroll-sticky-size-start="10"  :rows-per-page-options="[15]"
+        >
         <template v-slot:top>
           <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar" @click="alert = true" />
           <div style="margin-left: 5%" class="text-h4">Roles de Usuarios</div>
@@ -112,7 +112,6 @@ const originalRows = [];
 const filter = ref("");
 const rowCount = ref(10);
 const rows = ref([...originalRows]);
-console.log(indice.value);
 
 function mostrarAlerta(mensaje) {
   alert.value = true;
@@ -129,17 +128,15 @@ async function validarYGuardar() {
     guardar()
 
   }
-
-
 }
 async function guardar() {
   loading.value = true;
   const response = await useUsuario.addRolesUsuarios({
     denominacion: denominacion.value,
     codigo: codigo.value,
-
   }); 
   loading.value = false;
+  console.log(response);
   console.log("Se guardó un nuevo rol usuario");
   listarUsuarios();
   limpiarFormulario();
@@ -147,7 +144,6 @@ async function guardar() {
 
 }
 async function validaredit() {
-
   if (!denominacion.value) {
     mostrarAlerta("El nombre es obligatorio");
   } else if (!codigo.value) {

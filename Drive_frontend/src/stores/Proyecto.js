@@ -4,10 +4,11 @@ import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
 export const useProyectosStore = defineStore(
     "Proyectos", () => {
-        const addProyectos = async (info,token) => {
+        const addProyectos = async (info) => {
             try {
-                let header = {headers:{"x-token":token}} 
-                let res = await axios.post(`${urlBackend}/Proyectos`, info, header)
+                let res = await axios.post(`${urlBackend}/Proyectos`, info)
+                console.log("Estoy en el post de la tienda");
+                console.log(res);
                 return res
             } catch (error) {
                 console.log("hay un error en la post Programas");
@@ -16,7 +17,6 @@ export const useProyectosStore = defineStore(
         }
 
         const getProyectos = async (token) => {
-            console.log(token);
             try {
                 let header = {headers:{"x-token":token}} 
                 let res = await axios.get(`${urlBackend}/Proyectos`,header)

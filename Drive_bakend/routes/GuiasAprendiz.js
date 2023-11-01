@@ -7,7 +7,7 @@ import { validarJWT } from "../Middlewares/validar-jwt.js";
 const router = Router()
 
   router.get("/",[validarJWT], httpGuiasAprendiz.getGuiasAprendiz)
-   
+  
   router.get("/:id", httpGuiasAprendiz.getGuiasAprendizId)
   
   router.post("/", [

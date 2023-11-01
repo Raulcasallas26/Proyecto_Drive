@@ -180,19 +180,21 @@ let programa = ref("")
 let documento = ref("")
 let IdPrograma = ref("");
 let opcionesPrograma = ref([])
+let tok = ref(useLogin.token)
+
+console.log(tok.value);
 
 async function ListarProyectos() {
     load.value = true
-    console.log(useLogin.token);
     let Proyectos = await useProyecto.getProyectos(useLogin.token);
     console.log(Proyectos);
     Program.value = Proyectos.data.Proyecto;
-    console.log(Program.value[0].fecha);
     load.value = false
 }
 
 async function guardar() {
     loading.value = true;
+    console.log(tok.value);
     let r = await useProyecto.addProyectos({
         codigo: codigo.value,
         nombre: nombre.value,

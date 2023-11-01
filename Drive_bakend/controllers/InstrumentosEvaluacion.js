@@ -3,10 +3,10 @@ import bcryptjs from "bcryptjs"
 
 
 const httpInstrumentosEvaluacion = {
-    getInstrumentosEvaluacion: async (req, res) => {
+    getInstrumentosEvaluacion: async (req, res) => { 
         try {
-            const InstrumentosEvaluacion = await InstrumentoEvaluacionModel.find({});
-            res.json({ InstrumentosEvaluacion });
+            const InstrumentosEvaluacion = await InstrumentoEvaluacionModel.find();
+            res.json( {InstrumentosEvaluacion});
         } catch (error) {
             res.status(500).json({ mensaje: "Error al obtener infotmacion de instrumentos de evaluacion", error })
         }

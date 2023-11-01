@@ -7,11 +7,9 @@ import { validarJWT } from "../Middlewares/validar-jwt.js";
 const router = Router()
 
 router.get("/",[validarJWT], httpUsuarios.getUsuarios), 
-console.log(validarJWT);
 // router.get("/:id", httpUsuarios.getUsuariosId)
 
 router.post("/", [ 
-  validarJWT,
   check("nombre", "El nombre es obligatorio").notEmpty().trim().isString(),
   check("apellidos", "el apellido es obligatorio",).notEmpty().trim().isString(),
   check("cedula", "el numero de identificacion es obligatorio").notEmpty().trim().isNumeric(),
@@ -25,8 +23,8 @@ router.post("/", [
   // check("curriculum", "el curriculum es obligatorio").notEmpty().trim().isString(),
   // check("idRolUsuario", "el rol de usuario es obligatorio").notEmpty().trim().isString(),
   // check("idRedConocimiento", "la red de conocimiento es obligatoria").notEmpty().trim().isString(),
-  validarResultados
-], httpUsuarios.postUsuarios)
+  validarResultados,
+], httpUsuarios.postUsuarios, [])
 
 router.put("/:id", httpUsuarios.putUsuarios)
 
