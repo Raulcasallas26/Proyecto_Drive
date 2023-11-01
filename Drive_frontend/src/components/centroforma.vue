@@ -62,7 +62,7 @@
               <div role="alert" style="
                     border: 2px solid red;
                     border-radius: 20px;
-                    text-align: center;
+                   text-align: center;
                     background-color: rgba(255, 0, 0, 0.304);
                   " v-if="check !== ''">
                 <div>
@@ -88,7 +88,7 @@ import { ref, onMounted } from "vue";
 import { useCentrosFormacionStore } from "../stores/CentrosFormacion.js";
 import { useLoginStore } from "../stores/login.js"
 import { load } from "../routes/direccion.js"
-const useUsuario = useCentrosFormacionStore();
+const useCentros = useCentrosFormacionStore();
 const useLogin = useLoginStore()
 let alert = ref(false);
 let bd = ref(false);
@@ -107,6 +107,7 @@ let columns = [
   { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
   { name: "nombre", align: "center", label: "Nombre", field: "nombre" },
   { name: "direccion", align: "center", label: "Direccion", field: "direccion" },
+  { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
 ];
 const originalRows = [];
@@ -138,7 +139,7 @@ async function validarYGuardar() {
 async function guardar() {
   loading.value = true;
   try {
-    const response = await useUsuario.addCentrosFormacion({
+    const response = await useCentros.addCentrosFormacion({
       nombre: nombre.value,
       codigo: codigo.value,
       direccion: direccion.value,
@@ -179,7 +180,7 @@ async function validaredit() {
 async function editarUser() {
   loading.value = true;
   console.log("hola estoy editando");
-  let r = await useUsuario.editCentrosFormacion(indice.value, {
+  let r = await useCentros.editCentrosFormacion(indice.value, {
     nombre: nombre.value,
     codigo: codigo.value,
     direccion: direccion.value,
@@ -201,7 +202,7 @@ async function activar(props) {
     r.value.estado = true;
     console.log(r.value.estado, "resultado del else condicion");
   }
-  let est = await useUsuario.activarCentrosFormacion(r.value._id);
+  let est = await useCentros.activarCentrosFormacion(r.value._id);
   console.log(est);
 }
 
@@ -225,21 +226,33 @@ function limpiarFormulario() {
   alert.value = false;
 }
 
-listarUsuarios();
+listarUsuarios(useLogin, user, load);
 async function listarUsuarios() {
-  load.value = true
+  load.value = true;
   console.log(useLogin.token);
-  let centros = await useUsuario.getCentrosFormacion(useLogin.token);
-  console.log(centros);
-  user.value = centros.data.CentrosFormacion;
-  load.value = false
+
+  try {
+    let centros = await useCentros.getCentrosFormacion(useLogin.token);
+
+    if (centros && centros.data && centros.data.CentrosFormacion) {
+      console.log(centros);
+      user.value = centros.data.CentrosFormacion;
+    } else {
+      console.error("La respuesta no contiene los datos esperados.");
+    }
+  } catch (error) {
+    console.error("Error al obtener los centros de formación:", error);
+  }
+
+  load.value = false;
 }
+
 
 function agregar() {
   alert.value = true;
 }
 onMounted(() => {
-  listarUsuarios();
+  listarUsuarios(useLogin, user, load);
   limpiarFormulario();
 });
 </script>
@@ -248,29 +261,29 @@ onMounted(() => {
   width: 35em;
   max-width: 100%;
 }
+
 /* Aplica las transiciones y animaciones */
 .close-button {
-    animation-duration: 0.3s;
-    /* Duración de la animación */
-    animation-timing-function: ease;
-    /* Función de temporización (puedes ajustarla) */
+  animation-duration: 0.3s;
+  /* Duración de la animación */
+  animation-timing-function: ease;
+  /* Función de temporización (puedes ajustarla) */
 }
 
 /* Inicialmente, la "X" estará invisible */
 .close-button:before {
-    opacity: 0;
+  opacity: 0;
 }
 
 /* Cuando la "X" está activa, aplica la animación de entrada */
 .close-button.active:before {
-    animation-name: fadeInX;
-    opacity: 1;
+  animation-name: fadeInX;
+  opacity: 1;
 }
 
 /* Cuando la "X" está inactiva, aplica la animación de salida */
 .close-button:not(.active):before {
-    animation-name: fadeOutX;
-    opacity: 0;
+  animation-name: fadeOutX;
+  opacity: 0;
 }
 </style>
-  

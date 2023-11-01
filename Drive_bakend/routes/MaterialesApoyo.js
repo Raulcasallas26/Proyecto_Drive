@@ -11,7 +11,6 @@ router.get("/",[validarJWT], httpMaterialesApoyo.getMaterialesApoyo)
 router.get("/:id", httpMaterialesApoyo.getMaterialesApoyoId)
 
 router.post("/", [
-  validarJWT,
   check("nombre", "el nombre es obligatorio",).notEmpty().trim().isString(),
   check("documento", "el docuemnto es obligatorio").notEmpty().trim().isString(),
   validarResultados

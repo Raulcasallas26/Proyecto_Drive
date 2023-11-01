@@ -7,9 +7,23 @@ export const useAmbientesFormacionStore = defineStore(
         const addAmbientesFormacion = async (info) => {
             try {
                 let res = await axios.post(`${urlBackend}/AmbientesFormacion`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Registro exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.message,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }

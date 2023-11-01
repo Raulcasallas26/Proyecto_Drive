@@ -62,8 +62,24 @@ const httpCentrosFormacion = {
         } catch (error) {
             res.status(500).json({ mensaje: "Error al actualizar el centro", error: error.message });
         }
-    }
-    
+    },
+
+    PutactivarCentrosFormacion: async (req, res) => {
+        const { id } = req.params
+        const cent = await CentrosFormacionModel.findById(id)
+        let centro = null
+        if (cent.estado) {
+            centro = await CentrosFormacionModel.findByIdAndUpdate(id, { estado: false })
+        } else {
+            centro = await CentrosFormacionModel.findByIdAndUpdate(id, { estado: true })
+        }
+        const centroAutenticado = req.centro
+        res.json({
+            msj: "fue cambiado el estado",
+            centro,
+            centroAutenticado
+        })
+    },
     
 }
 

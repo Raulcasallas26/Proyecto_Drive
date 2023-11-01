@@ -7,9 +7,9 @@ const router = Router()
 
 router.get("/",[validarJWT], httpRetroAlimentacionRed.getRetroAlimentacionRed)
 
-router.get("/:cedula", httpRetroAlimentacionRed.getRetroAlimentacionRedId)
+// router.get("/:cedula", httpRetroAlimentacionRed.getRetroAlimentacionRedId)
 
-router.post("/", [validarJWT], httpRetroAlimentacionRed.postRetroAlimentacionRed)
+router.post("/", [], httpRetroAlimentacionRed.postRetroAlimentacionRed)
 
 router.put("/:id", httpRetroAlimentacionRed.putRetroAlimentacionRed)
 

@@ -3,70 +3,74 @@
         <div v-if="load == true" style="margin-top: 5px;">
             <q-linear-progress ark rounded indeterminate color="green" />
         </div>
-        <div v-else class="body">
-            <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
-            <div style="margin-left: 5%;" class="text-h4">Desarrollo Curricular</div>
-            <q-space />
-        </div>
-        <div>
-            <div v-for="(Desar, index) in desarrolloCur" :key="index">
-                <div class="q-pa-md row items-start q-gutter-md" id="cart">
-                    <q-card class="my-card" flat bordered>
-                        <div class="q-pa-md row items-start q-gutter-md">
-                            <q-card class="my-card" id="card" flat bordered>
-                                <h5>{{   }}</h5>
-                                <q-list>
+        <div v-else>
+            <div class="body">
+                <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
+                    @click="agregar()" />
+                <div style="margin-left: 5%;" class="text-h4">Desarrollo Curricular</div>
+                <q-space />
+            </div>
+            <div>
+                <div v-for="(Desar, index) in desarrolloCur" :key="index">
+                    <div class="q-pa-md row items-start q-gutter-md" id="cart">
+                        <q-card class="my-card" flat bordered>
+                            <div class="q-pa-md row items-start q-gutter-md">
+                                <q-card class="my-card" id="card" flat bordered>
+                                    <h5>{{ }}</h5>
+                                    <q-list>
 
-                                    <q-item >
-                                        <q-item-section avatar>
-                                            <q-icon color="primary" name="keyboard_arrow_right" />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label>Gias de Aprendizaje</q-item-label>
-                                            <q-item-label caption>{{ Desar.guiasAprendizaje }}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
+                                        <q-item>
+                                            <q-item-section avatar>
+                                                <q-icon color="primary" name="keyboard_arrow_right" />
+                                            </q-item-section>
+                                            <q-item-section>
+                                                <q-item-label>Gias de Aprendizaje</q-item-label>
+                                                <q-item-label caption>{{ Desar.guiasAprendizaje }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
 
-                                    <q-item >
-                                        <q-item-section avatar>
-                                            <q-icon color="primary" name="keyboard_arrow_right" />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label>Matirz de Correlacion</q-item-label>
-                                            <q-item-label caption>{{ Desar.matrizCorrelacion }}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
+                                        <q-item>
+                                            <q-item-section avatar>
+                                                <q-icon color="primary" name="keyboard_arrow_right" />
+                                            </q-item-section>
+                                            <q-item-section>
+                                                <q-item-label>Matirz de Correlacion</q-item-label>
+                                                <q-item-label caption>{{ Desar.matrizCorrelacion }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
 
-                                    <q-item >
-                                        <q-item-section avatar>
-                                            <q-icon color="primary" name="keyboard_arrow_right" />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label>Proyecto Formativo</q-item-label>
-                                            <q-item-label caption>{{ Desar.proyectoFormativo }}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
+                                        <q-item>
+                                            <q-item-section avatar>
+                                                <q-icon color="primary" name="keyboard_arrow_right" />
+                                            </q-item-section>
+                                            <q-item-section>
+                                                <q-item-label>Proyecto Formativo</q-item-label>
+                                                <q-item-label caption>{{ Desar.proyectoFormativo }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
 
-                                    <q-item >
-                                        <q-item-section avatar>
-                                            <q-icon color="primary" name="keyboard_arrow_right" />
-                                        </q-item-section>
-                                        <q-item-section>
-                                            <q-item-label>Planeacion Pedagogica</q-item-label>
-                                            <q-item-label caption>{{ Desar.planeacionPedagogica }}</q-item-label>
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </q-card>
-                        </div>
-                        <q-card-actions>
-                            <q-btn label="Descargar" icon="download" color="green" @click="open('right')" />
-                            <q-btn label="Editar" @click="edito(index)" icon="edit" color="primary" outline />
-                        </q-card-actions>
-                    </q-card>
+                                        <q-item>
+                                            <q-item-section avatar>
+                                                <q-icon color="primary" name="keyboard_arrow_right" />
+                                            </q-item-section>
+                                            <q-item-section>
+                                                <q-item-label>Planeacion Pedagogica</q-item-label>
+                                                <q-item-label caption>{{ Desar.planeacionPedagogica }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
+                                    </q-list>
+                                </q-card>
+                            </div>
+                            <q-card-actions>
+                                <q-btn label="Descargar" icon="download" color="green" @click="open('right')" />
+                                <q-btn label="Editar" @click="edito(index)" icon="edit" color="primary" outline />
+                            </q-card-actions>
+                        </q-card>
+                    </div>
                 </div>
             </div>
         </div>
+
 
         <div>
             <q-dialog v-model="alert" persistent>
@@ -135,7 +139,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useDesarrolloCurricularStore } from "../stores/DesarrolloCurricular.js"
-import {useLoginStore} from "../stores/login.js"
+import { useLoginStore } from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useDesarrolloCurricular = useDesarrolloCurricularStore()
 const useLogin = useLoginStore()

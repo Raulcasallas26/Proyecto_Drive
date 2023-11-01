@@ -226,6 +226,8 @@ let columns = [
     { name: "estado", label: "Estado", align: "center", field: "estado" },
     { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
 ];
+
+
 const originalRows = [];
 const filter = ref("");
 
@@ -319,6 +321,7 @@ async function validaredit() {
         // Todos los campos están completos y válidos, guarda los datos
         console.log("paso validacion");
         await editarUser()
+        limpiarFormulario();
         // Cierra el modal
     }
 
@@ -372,7 +375,6 @@ async function editarUser() {
     loading.value = false;
     console.log("limpiando datos");
     listarUsuarios();
-    limpiarFormulario();
 }
 
 async function activar(props) {
@@ -396,7 +398,6 @@ function limpiarFormulario() {
     cedula.value = "";
     password.value = "";
     rolUsuario.value = "";
-    alert.value = false;
     bd.value = false;
 }
 
@@ -409,7 +410,6 @@ function agregar() {
 
 
 onMounted(() => {
-    console.log("El rol del usuario", rolUser.value);
     listarUsuarios();
     listarRoles();
     limpiarFormulario();

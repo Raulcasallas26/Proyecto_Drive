@@ -9,7 +9,7 @@
         :virtual-scroll-sticky-size-start="20" :rows-per-page-options="[15]">>
         <template v-slot:top>
           <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar" @click="alert = true" />
-          <div style="margin-left: 5%" class="text-h4">Programas</div>
+          <div style="margin-left: 5%" class="text-h4">Programas De Formacion</div>
           <q-space />
           <q-input borderless dense debounce="300" color="primary" v-model="filter"
             style="border-radius: 10px; border: grey solid 0.5px; padding: 5px">
@@ -64,10 +64,10 @@
                 <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona un nivel de formacion "
                   :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
-              <div>
+              <!-- <div>
                 <q-select v-model="redDeConocimientoSeleccionada" :options="opcionesRedDeConocimiento"
                   label="Red de Conocimiento" :rules="[(val) => !!val || 'Campo requerido']" />
-              </div>
+              </div> -->
               <q-card-section>
                 <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular"
                   :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"

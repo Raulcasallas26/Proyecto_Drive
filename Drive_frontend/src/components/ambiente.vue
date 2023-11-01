@@ -323,7 +323,6 @@ const guardarCambios = async () => {
 
     if (response.status === 200) {
       ambientess.value[index] = ambienteEditado;
-      showModalEdicion.value = false;
       idAmbienteEditando.value = null;
     } else {
       console.error("Error al guardar los cambios en el servidor");

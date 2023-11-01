@@ -11,7 +11,6 @@ const router = Router()
   router.get("/:id", httpGuiasAprendiz.getGuiasAprendizId)
   
   router.post("/", [
-    validarJWT,
     check("codigo","el codigo es obligatorio",).notEmpty().trim().isString(),
     check("nombre","el nombre es obligatorio").notEmpty().trim().isString(),
     check("fase","la fase es obligatoria").notEmpty().trim().isString(),

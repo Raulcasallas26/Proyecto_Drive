@@ -49,7 +49,15 @@ const httpAmbientesFormacion = {
     putAmbientesFormacion: async (req, res) => {
         const { id } = req.params;
         const { codigo, nombre, tipo, descripcion, documentos, idCentroDeFormacion } = req.body;
-        const AmbientesFormacion = await AmbientesFormacionModel.findByIdAndUpdate(id, { codigo, nombre, tipo, descripcion, documentos, idCentroDeFormacion }, { new: true })
+        const AmbientesFormacion = await AmbientesFormacionModel.findByIdAndUpdate(id,
+            {
+                codigo,
+                nombre,
+                tipo,
+                descripcion,
+                documentos,
+                idCentroDeFormacion
+            }, { new: true })
         res.json({
             msg: "ok",
             AmbientesFormacion
@@ -57,7 +65,7 @@ const httpAmbientesFormacion = {
     },
 
     putAmbientesFormacionEstado: async (req, res) => {
-        const { id } = req.params  
+        const { id } = req.params
         const formacion = await AmbientesFormacionModel.findById(id)
         let Amnbiente = null
         if (formacion.estado) {
@@ -70,7 +78,7 @@ const httpAmbientesFormacion = {
             msj: "fue cambiado el estado",
             Amnbiente,
             AmnbienteAutenticado
-        }) 
+        })
     },
 }
 

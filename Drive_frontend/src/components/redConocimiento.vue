@@ -6,8 +6,7 @@
         <div v-else>
             <q-table class="tabla" flat bordered title="Treats" :rows="red" :columns="columns" row-key="id" :filter="filter"
                 :loading="loading" able-header-class="" virtual-scroll :virtual-scroll-item-size="10"
-                :virtual-scroll-sticky-size-start="10" :pagination="pagination" :rows-per-page-options="[15]"
-                @virtual-scroll="onScroll">
+                :virtual-scroll-sticky-size-start="10" :rows-per-page-options="[15]">
                 <template v-slot:top>
                     <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar" @click="agregar()" />
                     <div style="margin-left: 5%;" class="text-h4">Redes de Conocimiento</div>
@@ -35,7 +34,7 @@
                         <q-card-section>
                             <div class="text-h4">Registro de Red de Conocimiento</div>
                         </q-card-section>
-                        <div style="margin-left: auto;    margin-bottom: auto;">
+                        <div style="margin-left: auto; margin-bottom: auto;">
                             <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
                         </div>
                     </div>
@@ -111,13 +110,11 @@ async function guardar() {
     let r = await useRedes.addRedesConocimiento({
         denominacion: denominacion.value,
         codigo: codigo.value,
-
     });
     console.log(r);
     loading.value = false;
     obtenerredes();
     limpiarFormulario();
-    alert.value = false;
 }
 
 async function editarRed() {

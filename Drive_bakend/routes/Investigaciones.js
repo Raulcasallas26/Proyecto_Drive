@@ -9,7 +9,7 @@ router.get("/",[validarJWT], httpInvestigaciones.getInvestigaciones)
 
 // router.get("/:cedula", httpInvestigaciones.getInvestigacionesId)
 
-router.post("/", [validarJWT], httpInvestigaciones.postInvestigaciones)
+router.post("/", [], httpInvestigaciones.postInvestigaciones)
 
 router.put("/:id", httpInvestigaciones.putInvestigaciones)
 

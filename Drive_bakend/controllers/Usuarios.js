@@ -14,7 +14,7 @@ const httpUsuarios = {
 
     // getUsuariosId: async (req, res) => {
     //     const { id } = req.params;
-    //     try {
+    //     try { 
     //         const instructor = await InstrutoresModel.findOne({ id });
     //         res.json({ instructor })
     //     } catch (error) {
@@ -36,7 +36,7 @@ const httpUsuarios = {
             perfilProfesional,
             curriculum,
             estado,
-            RolUsuario,
+            RolUsuario, 
             RedConocimiento
         });
 

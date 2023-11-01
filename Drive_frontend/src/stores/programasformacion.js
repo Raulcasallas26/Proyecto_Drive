@@ -2,14 +2,29 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
+import {Notify} from "quasar"
 export const useProgramasFormacionStore = defineStore(
     "ProgramasFormacion", () => {
         const addProgramasFormacion = async (info) => {
             try {
                 let res = await axios.post(`${urlBackend}/ProgramasFormacion`, info)
+                Notify.create({
+                    color:"positive",
+                    message:"Registro de programa exitoso",
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
+                Notify.create({
+                    color:"negative",
+                    message:error.response.data.message,
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return error
             }
         }
@@ -27,9 +42,23 @@ export const useProgramasFormacionStore = defineStore(
         const editProgramasFormacion = async (id, info) => {
             try {
                 let res = await axios.put(`${urlBackend}/ProgramasFormacion/${id}`, info)
+                Notify.create({
+                    color:"positive",
+                    message:"Edicion de programa exitoso",
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
+                Notify.create({
+                    color:"negative",
+                    message:error.response.data.message,
+                    icon:"check",
+                    position:"top",
+                    timeout:3000
+                })
                 return error
             }
         }

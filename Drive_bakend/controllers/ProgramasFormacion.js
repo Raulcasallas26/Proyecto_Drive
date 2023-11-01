@@ -1,4 +1,4 @@
-import ProgramasFormacionModel from "../models/ProgramasFormacion.js ";
+import ProgramasFormacionModel from "../models/ProgramasFormacion.js";
 
 const httpProgramasFormacion = {
     getProgramasFormacion: async (req, res) => {
@@ -41,9 +41,7 @@ const httpProgramasFormacion = {
                 ProgramasFormacion,
             });
         } catch (error) {
-            res
-                .status(500)
-                .json({ mensaje: "Error al insertar la formacion", error });
+            res.status(500).json({ mensaje: "Error al insertar la formacion", error });
         }
     },
 

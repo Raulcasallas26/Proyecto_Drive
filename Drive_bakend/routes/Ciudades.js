@@ -11,7 +11,6 @@ const router = Router()
   router.get("/:id", httpCiudades.getCiudades)
   
   router.post("/", [
-    validarJWT,
     check("nombre","el nombre es obligatorio",).notEmpty().trim().isString(),
     check("CodigoDaneCiudad","el codigo dane de la cuidad es obligatorio").notEmpty().trim().isString(),
     check("region","la region es obligatoria").notEmpty().trim().isString(),

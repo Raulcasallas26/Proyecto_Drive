@@ -1,54 +1,60 @@
 <template>
   <div class="card-container">
-    <div class="body" style="position: relative">
-      <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
-        @click="showModalAgregar = true" />
-      <div style="margin-left: 5%" class="text-h4">Materiales de Apoyo</div>
-      <q-space />
-      <q-input borderless dense debounce="300" style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
-        color="primary" v-model="filter">
-        <template v-slot:append>
-          <q-icon name="search" />
-        </template>
-      </q-input>
+    <div class="clas" v-if="load == true" style="margin-top: 5px;">
+      <q-linear-progress ark rounded indeterminate color="green" />
     </div>
-    <div>
-      <!-- Itera a través de los ambientes y muestra cada uno en un card -->
-      <div v-for="(ambiente, index) in ambientess" :key="index">
-        <div class="card">
-          <div class="top-half">
-            <div class="info">
-              <p><strong>Código:</strong> {{ ambiente.codigo }}</p>
-              <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
-              <p><strong>Tipo:</strong> {{ ambiente.documento }}</p>
-            </div>
-            <div class="buttons">
-              <button @click="toggleDetails(index)" class="rotate-button">
-                <div class="arrow-icon" :class="{ rotate: isRotated[index] }">
-                  <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
-                </div>
-              </button>
-              <button class="editar" @click="abrirModalEdicion(index)">
-                <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Editar" class="arrow-icon" />
-              </button>
-            </div>
-          </div>
-
-          <q-slide-transition appear>
-            <div v-show="cardStates[index]">
-              <div class="bottom-half">
-                <div class="info">
-                  <p>
-                    <strong>Descripción:</strong> {{ ambiente.descripccion }}
-                  </p>
-                  <p><strong>Documentos:</strong> {{ ambiente.documentos }}</p>
-                </div>
+    <div v-else>
+      <div class="body" style="position: relative">
+        <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
+          @click="showModalAgregar = true" />
+        <div style="margin-left: 5%" class="text-h4">Materiales de Apoyo</div>
+        <q-space />
+        <q-input borderless dense debounce="300" style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
+          color="primary" v-model="filter">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
+      <div>
+        <!-- Itera a través de los ambientes y muestra cada uno en un card -->
+        <div v-for="(ambiente, index) in ambientess" :key="index">
+          <div class="card">
+            <div class="top-half">
+              <div class="info">
+                <p><strong>Código:</strong> {{ ambiente.codigo }}</p>
+                <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
+                <p><strong>Tipo:</strong> {{ ambiente.documento }}</p>
+              </div>
+              <div class="buttons">
+                <button @click="toggleDetails(index)" class="rotate-button">
+                  <div class="arrow-icon" :class="{ rotate: isRotated[index] }">
+                    <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
+                  </div>
+                </button>
+                <button class="editar" @click="abrirModalEdicion(index)">
+                  <img src="https://cdn-icons-png.flaticon.com/512/650/650143.png" alt="Editar" class="arrow-icon" />
+                </button>
               </div>
             </div>
-          </q-slide-transition>
+
+            <q-slide-transition appear>
+              <div v-show="cardStates[index]">
+                <div class="bottom-half">
+                  <div class="info">
+                    <p>
+                      <strong>Descripción:</strong> {{ ambiente.descripccion }}
+                    </p>
+                    <p><strong>Documentos:</strong> {{ ambiente.documentos }}</p>
+                  </div>
+                </div>
+              </div>
+            </q-slide-transition>
+          </div>
         </div>
       </div>
     </div>
+
     <!-- Modal para agregar ambientes -->
     <div>
       <q-dialog v-model="showModalAgregar">
@@ -385,6 +391,7 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
 }
+
 
 .text {
   font-size: 500%;
