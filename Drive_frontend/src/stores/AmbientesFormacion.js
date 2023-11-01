@@ -15,7 +15,6 @@ export const useAmbientesFormacionStore = defineStore(
         }
 
         const getAmbientesFormacion = async (token) => {
-            console.log(token);
             try {
                 let header = {headers:{"x-token":token}} 
                 let res = await axios.get(`${urlBackend}/AmbientesFormacion`,header)

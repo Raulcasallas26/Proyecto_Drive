@@ -30,7 +30,6 @@ export const useUsuariosStore = defineStore(
         }
 
         const getUsuarios = async (token) => {
-            console.log();
             try {
                 let header = {headers:{"x-token":token}}
                 let res = await axios.get(`${urlBackend}/Usuarios`,header)

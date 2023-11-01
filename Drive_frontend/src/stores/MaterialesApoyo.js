@@ -15,7 +15,6 @@ export const useMaterialesApoyoStore = defineStore(
         }
 
         const getMaterialesApoyo = async (token) => {
-            console.log(token);
             try {
                 let header = {headers:{"x-token":token}} 
                 let res = await axios.get(`${urlBackend}/MaterialesApoyo`,header)

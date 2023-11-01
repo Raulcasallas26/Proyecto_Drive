@@ -10,119 +10,119 @@
             :class="{ 'justify-left': bd === false && isMobile }">
             <q-list padding>
               <q-item clickable v-ripple id="btn" to="/home">
-                <q-item-section avatar>
-                  <q-icon name="home" />
-                </q-item-section>
-                <q-item-section>Inicio </q-item-section>
-              </q-item>
+            <q-item-section avatar>
+              <q-icon name="home" />
+            </q-item-section>
+            <q-item-section>Inicio </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/usuarios">
-                <q-item-section avatar>
-                  <q-icon name="people" />
-                </q-item-section>
-                <q-item-section> Usuarios</q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor' " v-ripple to="/usuarios">
+            <q-item-section avatar>
+              <q-icon name="people" />
+            </q-item-section>
+            <q-item-section> Usuarios</q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/programas">
-                <q-item-section avatar>
-                  <q-icon name="book" />
-                </q-item-section>
-                <q-item-section> Programas de Formacion </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Instructor' || useLogin.rol === 'Gestor' " v-ripple to="/programas">
+            <q-item-section avatar>
+              <q-icon name="book" />
+            </q-item-section>
+            <q-item-section> Programas de Formacion</q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/ambientes">
-                <q-item-section avatar>
-                  <q-icon name="dashboard" />
-                </q-item-section>
-                <q-item-section> Ambientes </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor' " v-ripple to="/ambientes">
+            <q-item-section avatar>
+              <q-icon name="dashboard" />
+            </q-item-section>
+            <q-item-section> Ambientes </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/materialesApoyo">
-                <q-item-section avatar>
-                  <q-icon name="img:https://cdn-icons-png.flaticon.com/512/1556/1556328.png" />
-                </q-item-section>
-                <q-item-section>Materiales de apoyo</q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/materialesApoyo">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/1556/1556328.png" />
+            </q-item-section>
+            <q-item-section>Materiales de apoyo</q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/redConocimento">
-                <q-item-section avatar>
-                  <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
-                </q-item-section>
-                <q-item-section> Red de Conocimiento </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' " v-ripple to="/redConocimento">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
+            </q-item-section>
+            <q-item-section> Red de Conocimiento </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/proyectos">
-                <q-item-section avatar>
-                  <q-icon name="schema" />
-                </q-item-section>
-                <q-item-section> proyectos </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/proyectos">
+            <q-item-section avatar>
+              <q-icon name="schema" />
+            </q-item-section>
+            <q-item-section> proyectos </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/registroCalificado">
-                <q-item-section avatar>
-                  <q-icon name="img:https://cdn-icons-png.flaticon.com/128/4933/4933054.png" />
-                </q-item-section>
-                <q-item-section> Registro Calificado </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/registroCalificado">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/128/4933/4933054.png" />
+            </q-item-section>
+            <q-item-section> Registro Calificado </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/desarrolloCurricular">
-                <q-item-section avatar>
-                  <q-icon
-                    name="img:https://img.freepik.com/vector-premium/diseno-educativo-desarrollo-curricular-aprendizaje-e-instruccion-vector-diseno-pluma_989823-28.jpg?w=2000" />
-                </q-item-section>
-                <q-item-section> Desarrollo Curricular </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/desarrolloCurricular">
+            <q-item-section avatar>
+              <q-icon
+                name="img:https://img.freepik.com/vector-premium/diseno-educativo-desarrollo-curricular-aprendizaje-e-instruccion-vector-diseno-pluma_989823-28.jpg?w=2000" />
+            </q-item-section>
+            <q-item-section> Desarrollo Curricular </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/guias">
-                <q-item-section avatar>
-                  <q-icon name="img:https://cdn-icons-png.flaticon.com/512/4345/4345535.png" />
-                </q-item-section>
-                <q-item-section>Guias de Aprendizaje</q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor'" v-ripple to="/guias">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/4345/4345535.png" />
+            </q-item-section>
+            <q-item-section>Guias de Aprendizaje</q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/roles">
-                <q-item-section avatar>
-                  <q-icon
-                    name="img:https://icons.veryicon.com/png/o/education-technology/data-exchange/role-management-13.png" />
-                </q-item-section>
-                <q-item-section> Roles de Usuario</q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' " v-ripple to="/roles">
+            <q-item-section avatar>
+              <q-icon
+                name="img:https://icons.veryicon.com/png/o/education-technology/data-exchange/role-management-13.png" />
+            </q-item-section>
+            <q-item-section> Roles de Usuario</q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/retroalimentacionRed">
-                <q-item-section avatar>
-                  <q-icon name="img:https://cdn-icons-png.flaticon.com/128/943/943424.png" />
-                </q-item-section>
-                <q-item-section> Retroalimentacion de Red </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor'" v-ripple to="/retroalimentacionRed">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/128/943/943424.png" />
+            </q-item-section>
+            <q-item-section> Retroalimentacion de Red </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/investigacion">
-                <q-item-section avatar>
-                  <q-icon name="search" />
-                </q-item-section>
-                <q-item-section> Investigacion </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/investigacion">
+            <q-item-section avatar>
+              <q-icon name="search" />
+            </q-item-section>
+            <q-item-section> Investigacion </q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/centroforma">
-                <q-item-section avatar>
-                  <q-icon name="school" />
-                </q-item-section>
-                <q-item-section>Centros de Formacion</q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' " v-ripple to="/centroforma">
+            <q-item-section avatar>
+              <q-icon name="school" />
+            </q-item-section>
+            <q-item-section>Centros de Formacion</q-item-section>
+          </q-item>
 
-              <q-item clickable v-ripple to="/instrumentosEvaluacion">
-                <q-item-section avatar>
-                  <q-icon name="quiz" />
-                </q-item-section>
-                <q-item-section> Instrumentos de Evaluacion </q-item-section>
-              </q-item>
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor'" v-ripple to="/instrumentosEvaluacion">
+            <q-item-section avatar>
+              <q-icon name="quiz" />
+            </q-item-section>
+            <q-item-section> Instrumentos de Evaluacion </q-item-section>
+          </q-item>
 
-              <q-separator />
-              <q-item clickable v-ripple to="/">
-                <q-item-section avatar>
-                  <q-icon name="login" />
-                </q-item-section>
-                <q-item-section> Salir </q-item-section>
-              </q-item>
+          <q-separator />
+          <q-item clickable v-ripple @click="useLogin.logout">
+            <q-item-section avatar>
+              <q-icon name="login" />
+            </q-item-section>
+            <q-item-section> Salir </q-item-section>
+          </q-item>
             </q-list>
           </q-btn-dropdown>
         </div>
@@ -144,56 +144,56 @@
             <q-item-section>Inicio </q-item-section>
           </q-item>
 
-          <q-item clickable v-if="ron === 0 || ron === 2 " v-ripple to="/usuarios">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor' " v-ripple to="/usuarios">
             <q-item-section avatar>
               <q-icon name="people" />
             </q-item-section>
             <q-item-section> Usuarios</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/programas">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Instructor' || useLogin.rol === 'Gestor' " v-ripple to="/programas">
             <q-item-section avatar>
               <q-icon name="book" />
             </q-item-section>
             <q-item-section> Programas de Formacion</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/ambientes">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor' " v-ripple to="/ambientes">
             <q-item-section avatar>
               <q-icon name="dashboard" />
             </q-item-section>
             <q-item-section> Ambientes </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/materialesApoyo">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/materialesApoyo">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/512/1556/1556328.png" />
             </q-item-section>
             <q-item-section>Materiales de apoyo</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/redConocimento">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' " v-ripple to="/redConocimento">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/512/207/207233.png" />
             </q-item-section>
             <q-item-section> Red de Conocimiento </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/proyectos">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/proyectos">
             <q-item-section avatar>
               <q-icon name="schema" />
             </q-item-section>
             <q-item-section> proyectos </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/registroCalificado">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/registroCalificado">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/128/4933/4933054.png" />
             </q-item-section>
             <q-item-section> Registro Calificado </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/desarrolloCurricular">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/desarrolloCurricular">
             <q-item-section avatar>
               <q-icon
                 name="img:https://img.freepik.com/vector-premium/diseno-educativo-desarrollo-curricular-aprendizaje-e-instruccion-vector-diseno-pluma_989823-28.jpg?w=2000" />
@@ -201,14 +201,14 @@
             <q-item-section> Desarrollo Curricular </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/guias">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor'" v-ripple to="/guias">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/512/4345/4345535.png" />
             </q-item-section>
             <q-item-section>Guias de Aprendizaje</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/roles">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' " v-ripple to="/roles">
             <q-item-section avatar>
               <q-icon
                 name="img:https://icons.veryicon.com/png/o/education-technology/data-exchange/role-management-13.png" />
@@ -216,28 +216,28 @@
             <q-item-section> Roles de Usuario</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/retroalimentacionRed">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor'" v-ripple to="/retroalimentacionRed">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/128/943/943424.png" />
             </q-item-section>
             <q-item-section> Retroalimentacion de Red </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/investigacion">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor' " v-ripple to="/investigacion">
             <q-item-section avatar>
               <q-icon name="search" />
             </q-item-section>
             <q-item-section> Investigacion </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/centroforma">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' " v-ripple to="/centroforma">
             <q-item-section avatar>
               <q-icon name="school" />
             </q-item-section>
             <q-item-section>Centros de Formacion</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/instrumentosEvaluacion">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Gestor'" v-ripple to="/instrumentosEvaluacion">
             <q-item-section avatar>
               <q-icon name="quiz" />
             </q-item-section>
@@ -245,7 +245,7 @@
           </q-item>
 
           <q-separator />
-          <q-item clickable v-ripple to="/">
+          <q-item clickable v-ripple @click="useLogin.logout">
             <q-item-section avatar>
               <q-icon name="login" />
             </q-item-section>
@@ -267,7 +267,6 @@ import { useLoginStore } from './stores/login.js';
 let drawer = ref(false)
 let miniState = ref(true)
 let bd = ref(false)
-let ron = ref()
 let nota = ref(false)
 const useLogin = useLoginStore()
 let drawerRight = ref(false)
@@ -279,48 +278,6 @@ const windowWidth = ref(window.innerWidth);
 const isMobile = computed(() => {
   return windowWidth.value < 600;
 });
-
-
-function ValidarRol() {
-  console.log("Recibiendo el rol: " + useLogin.rol);
-  if (useLogin.rol === "Administrador") {
-    ron.value = 1;
-    console.log("El rol está en  " + ron.value +"  "+ useLogin.rol);
-  } else if (useLogin.rol === "Gestor") {
-    ron.value = 2;
-    console.log("El rol está en  " + ron.value +"  " + useLogin.rol);
-  } else if (ron.value === 2) {
-    return route.path === '/programas';
-  } else if (useLogin.rol === "Instructor") {
-    ron.value = 3;
-    console.log("El rol está en  " + ron.value +"  " + useLogin.rol);
-  } else if (useLogin.rol === "Super") {
-    ron.value = 0;
-    console.log("El rol está en  " + ron.value +"  " + useLogin.rol);
-  }
-  
-}
-
-
-
-
-// Función para ejecutar el ciclo de ValidarRol automáticamente
-function ejecutarCiclo() {
-  const intervalId = setInterval(() => {
-    if (useLogin.rol === ""  ) {
-      ValidarRol();
-      console.log(ron.value);
-    } else {
-      clearInterval(intervalId);
-      ejecutarCiclo(); // Reiniciar el ciclo si useLogin.rol todavía está vacío
-    }
-  }, 1000); // Ejecutar cada 1 segundo
-
-}
-
-ejecutarCiclo();
-
-
 
 // Función para abrir/cerrar el menú lateral
 const toggleDrawer = () => {
@@ -334,7 +291,6 @@ window.addEventListener('resize', () => {
 
 // Cierra el menú lateral cuando se carga la página en dispositivos móviles
 onMounted(() => {
-  console.log(ValidarRol());
   if (isMobile.value) {
     drawer.value = false;
   }

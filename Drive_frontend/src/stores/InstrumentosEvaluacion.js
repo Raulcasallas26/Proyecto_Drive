@@ -16,7 +16,6 @@ export const useInstrumentosEvaluacionStore = defineStore(
         }
 
         const getInstrumentosEvalacion = async (token) => {
-            console.log();
             try {
                 let header = {headers:{"x-token":token}} 
                 let res = await axios.get(`${urlBackend}/InstrumentosEvaluacion`,header)

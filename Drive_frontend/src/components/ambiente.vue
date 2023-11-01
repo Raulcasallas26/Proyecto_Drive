@@ -108,7 +108,7 @@
                   label="Selecciona una Id de Centro de Formacion" />
               </div>
               <div class="q-gutter-md">
-                <q-input class="input" v-model="documento" label="Archivo o enlace del diseño curricular"
+                <q-input class="input" v-model="archivoOEnlace" label="Archivo o el documento "
                   :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
                   @clear="limpiarCampo">
                   <template v-slot:append>

@@ -31,7 +31,6 @@ export const useRolesUsuariosStore = defineStore(
         }
 
         const getRolesUsuarios = async (token) => {
-            console.log(token);
             try {
                 let header = {headers:{"x-token":token}} 
                 let res = await axios.get(`${urlBackend}/RolesUsuarios`,header)

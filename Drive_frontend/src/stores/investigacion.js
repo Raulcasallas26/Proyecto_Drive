@@ -15,7 +15,6 @@ export const useInvestigacionStore = defineStore(
         }
 
         const getInvestigacion = async (token) => {
-            console.log(token);
             try {
                 let header = {headers:{"x-token":token}} 
                 let res = await axios.get(`${urlBackend}/Investigacion`,header)
