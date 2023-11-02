@@ -2,7 +2,7 @@ import httpGuiasAprendiz from "../controllers/GuiasAprendiz.js";
 import { Router } from "express";
 import {check} from "express-validator"
 import {validarResultados} from "../Middlewares/validaciones.js"
-import { validarJWT } from "../Middlewares/validar-jwt.js";
+import { validarJWT, sinTokenMiddleware } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
@@ -11,6 +11,7 @@ const router = Router()
   router.get("/:id", httpGuiasAprendiz.getGuiasAprendizId)
   
   router.post("/", [
+    sinTokenMiddleware,
     check("codigo","el codigo es obligatorio",).notEmpty().trim().isString(),
     check("nombre","el nombre es obligatorio").notEmpty().trim().isString(),
     check("fase","la fase es obligatoria").notEmpty().trim().isString(),
@@ -20,6 +21,6 @@ const router = Router()
     validarResultados    
   ], httpGuiasAprendiz.postGuiasAprendiz)
   
-  router.put("/:id",httpGuiasAprendiz.putGuiasAprendiz)
+  router.put("/:id", httpGuiasAprendiz.putGuiasAprendiz)
   
   export default router

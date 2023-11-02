@@ -205,6 +205,10 @@ const editar = async () => {
     alert.value = false
 };
 
+function agregar() {
+    alert.value = true
+}
+
 ListarRegistro()
 
 function limpiarFormulario() {

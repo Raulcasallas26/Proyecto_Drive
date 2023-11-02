@@ -16,6 +16,10 @@ const router = Router()
     validarResultados
   ], httpRedesConocimiento.postRedesConocimiento)
   
-  router.put("/:id", httpRedesConocimiento.putRedesConocimiento)
+  router.put("/:id",[
+    check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
+    check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
+    validarResultados
+  ], httpRedesConocimiento.putRedesConocimiento)
   
   export default router

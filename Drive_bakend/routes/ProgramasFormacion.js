@@ -12,11 +12,23 @@ const router = Router()
   
   router.post("/", [
     check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
-    check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
+    check("codigo", "El codigo es un campo obligatorio").notEmpty().trim().trim().isString(),
+    check("version","la version es un campo obligatorio").notEmpty().trim().isString(),
+    check("estado","el estado es un campo obligatorio").notEmpty().trim().isString(),
+    check("niveldeformacion","el nivel de formacion es un campo obligatorio").notEmpty().trim().isString(),
+    check("archovoOenlace","el archivo o enlace es un campo obligatorio").notEmpty().trim().isString(),
     validarResultados
   ], httpProgramasFormacion.postProgramasFormacion)
   
-  router.put("/:id", httpProgramasFormacion.putProgramasFormacion)
+  router.put("/:id",[
+    check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
+    check("codigo", "El codigo es un campo obligatorio").notEmpty().trim().trim().isString(),
+    check("version","la version es un campo obligatorio").notEmpty().trim().isString(),
+    check("estado","el estado es un campo obligatorio").notEmpty().trim().isString(),
+    check("niveldeformacion","el nivel de formacion es un campo obligatorio").notEmpty().trim().isString(),
+    check("archovoOenlace","el archivo o enlace es un campo obligatorio").notEmpty().trim().isString(),
+    validarResultados
+  ], httpProgramasFormacion.putProgramasFormacion)
   
   router.put("/estado/:id",httpProgramasFormacion.putProgramaEstado)
   

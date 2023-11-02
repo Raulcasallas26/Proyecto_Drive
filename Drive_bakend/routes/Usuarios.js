@@ -19,10 +19,6 @@ router.post("/", [
   check("email", "Formato de E-mail no valido").isEmail(),
   check("email").custom(validarUnicos.validaremail),
   check("password", "la contraseña es obligatoria").notEmpty().trim().isString(),
-  // check("perfilProfesional", "el perfil profecional es obligatorio").notEmpty().trim().isString(),
-  // check("curriculum", "el curriculum es obligatorio").notEmpty().trim().isString(),
-  // check("idRolUsuario", "el rol de usuario es obligatorio").notEmpty().trim().isString(),
-  // check("idRedConocimiento", "la red de conocimiento es obligatoria").notEmpty().trim().isString(),
   validarResultados,
 ], httpUsuarios.postUsuarios)
 

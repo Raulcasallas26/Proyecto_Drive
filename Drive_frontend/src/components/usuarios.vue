@@ -154,13 +154,6 @@
                             <p><strong style="font-size:large; ">Red de Conocimiento:</strong> {{ r.RedConocimiento }}</p>
                         </q-card-section>
                         <q-card-section>
-                            <div role="alert"
-                                style=" border: 2px solid red; border-radius: 20px;  text-align: center;  background-color: rgba(255, 0, 0, 0.304);"
-                                v-if="check !== ''">
-                                <div>
-                                    {{ check }}
-                                </div>
-                            </div>
                         </q-card-section>
                     </q-card>
                 </q-card-section>
@@ -399,6 +392,7 @@ function limpiarFormulario() {
     password.value = "";
     rolUsuario.value = "";
     bd.value = false;
+    check.value = ""
 }
 
 listarUsuarios();

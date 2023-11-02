@@ -11,11 +11,21 @@ router.get("/",[validarJWT], httpMaterialesApoyo.getMaterialesApoyo)
 router.get("/:id", httpMaterialesApoyo.getMaterialesApoyoId)
 
 router.post("/", [
-  check("nombre", "el nombre es obligatorio",).notEmpty().trim().isString(),
-  check("documento", "el docuemnto es obligatorio").notEmpty().trim().isString(),
+  check("codigo","el codigo es un campo obligatorio").notEmpty().trim().isString(),
+  check("nombre", "el nombre es un campo obligatorio").notEmpty().trim().isString(),
+  check("documento", "el docuemnto es un campo obligatorio").notEmpty().trim().isString(),
+  check("descripccion","la descripcion es un campo obligatorio").notEmpty().trim().isString(),
+  check("documentos","los documentos es un campo obligatorio").notEmpty().trim().isString(),
   validarResultados
 ], httpMaterialesApoyo.postMaterialesApoyo)
 
-router.put("/:id", httpMaterialesApoyo.putMaterialesApoyo)
+router.put("/:id",[
+  check("codigo","el codigo es un campo obligatorio").notEmpty().trim().isString(),
+  check("nombre", "el nombre es un campo obligatorio").notEmpty().trim().isString(),
+  check("documento", "el docuemnto es un campo obligatorio").notEmpty().trim().isString(),
+  check("descripccion","la descripcion es un campo obligatorio").notEmpty().trim().isString(),
+  check("documentos","los documentos es un campo obligatorio").notEmpty().trim().isString(),
+  validarResultados
+], httpMaterialesApoyo.putMaterialesApoyo)
 
 export default router 

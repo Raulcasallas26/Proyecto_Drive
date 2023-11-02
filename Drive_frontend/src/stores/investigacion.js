@@ -7,9 +7,23 @@ export const useInvestigacionStore = defineStore(
         const addInvestigacion = async (info) => {
             try {
                 let res = await axios.post(`${urlBackend}/Investigacion`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Registro de la Investigación exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.errors[0].msg,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }
@@ -27,9 +41,23 @@ export const useInvestigacionStore = defineStore(
         const editInvestigacion = async (id, info) => {
             try {
                 let res = await axios.put(`${urlBackend}/Investigacion/${id}`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Edicion de la Investigación exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.errors[0].msg,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }

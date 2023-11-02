@@ -10,9 +10,23 @@ router.get("/",[validarJWT], httpDesarrollo.getDesarrollo)
 
 // router.get("/:id", httpDesarrollo.getDesarrolloId)
 
-router.post("/", [ ], httpDesarrollo.postDesarrollo)
+router.post("/", [ 
+    check("guasAprendizaje","las guias de aprendizaje es un campo obligatorio").notEmpty().trim().isString(),
+    check("matrizCorrelacion","la matriz correlacion es un campo obligatorio").notEmpty().trim().isString(),
+    check("proyectoFormativo","el proyecto formativo es un campo obligatorio").notEmpty().trim().isString(),
+    check("planeacionPedagogica","la planeacion pedagogica es un campo obligatoria").notEmpty().trim().isString(),
+    check("estado","el estado es un campo obligatorio").notEmpty().trim().isString(),
+    validarResultados
+    ], httpDesarrollo.postDesarrollo)
 
-router.put("/:id", httpDesarrollo.putDesarrollo) 
+router.put("/:id",[ 
+    check("guasAprendizaje","las guias de aprendizaje es un campo obligatorio").notEmpty().trim().isString(),
+    check("matrizCorrelacion","la matriz correlacion es un campo obligatorio").notEmpty().trim().isString(),
+    check("proyectoFormativo","el proyecto formativo es un campo obligatorio").notEmpty().trim().isString(),
+    check("planeacionPedagogica","la planeacion pedagogica es un campo obligatoria").notEmpty().trim().isString(),
+    check("estado","el estado es un campo obligatorio").notEmpty().trim().isString(),
+    validarResultados
+    ], httpDesarrollo.putDesarrollo) 
 
 router.put("/estado/:id", httpDesarrollo.putDesarrolloEstado)
 

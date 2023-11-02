@@ -9,7 +9,7 @@ export const useAmbientesFormacionStore = defineStore(
                 let res = await axios.post(`${urlBackend}/AmbientesFormacion`, info)
                 Notify.create({
                     color: "positive",
-                    message: "Registro exitoso",
+                    message: "Registro de Ambiente exitoso",
                     icon: "check",
                     position: "top",
                     timeout: 3000
@@ -19,7 +19,7 @@ export const useAmbientesFormacionStore = defineStore(
                 console.log("hay un error en la post");
                 Notify.create({
                     color: "negative",
-                    message: error.response.data.message,
+                    message: error.response.data.errors[0].msg,
                     icon: "check",
                     position: "top",
                     timeout: 3000
@@ -41,9 +41,23 @@ export const useAmbientesFormacionStore = defineStore(
         const editAmbientesFormacion = async (id, info) => {
             try {
                 let res = await axios.put(`${urlBackend}/AmbientesFormacion/${id}`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Edicion de Ambiente exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.errors[0].msg,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }

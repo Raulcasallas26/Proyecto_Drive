@@ -8,9 +8,23 @@ export const useInstrumentosEvaluacionStore = defineStore(
             console.log("hola estoy en addIntrumentos");
             try {
                 let res = await axios.post(`${urlBackend}/InstrumentosEvaluacion`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Registro del Instrumento de Evaluacion exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.errors[0].msg,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }
@@ -28,9 +42,23 @@ export const useInstrumentosEvaluacionStore = defineStore(
         const editInstrumentosEvaluacion = async (id, info) => {
             try {
                 let res = await axios.put(`${urlBackend}/InstrumentosEvaluacion/${id}`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Edicion del instrumento de evaluacion exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en edirUsers");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.errors[0].msg,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }

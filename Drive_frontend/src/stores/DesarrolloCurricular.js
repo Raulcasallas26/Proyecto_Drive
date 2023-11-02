@@ -7,9 +7,23 @@ export const useDesarrolloCurricularStore = defineStore(
         const addDesarrolloCurricular = async (info) => {
             try {
                 let res = await axios.post(`${urlBackend}/desarrolloCurricular`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Registro del Desarrollo Curricular exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en la post DesarrolloCurricular");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.errors[0].msg,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }
@@ -26,9 +40,23 @@ export const useDesarrolloCurricularStore = defineStore(
         const editDesarrolloCurricular = async (id, info) => {
             try {
                 let res = await axios.put(`${urlBackend}/desarrolloCurricular/${id}`, info)
+                Notify.create({
+                    color: "positive",
+                    message: "Edicion del desarrollo curricular exitoso",
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return res
             } catch (error) {
                 console.log("hay un error en editDesarrolloCurricular");
+                Notify.create({
+                    color: "negative",
+                    message: error.response.data.errors[0].msg,
+                    icon: "check",
+                    position: "top",
+                    timeout: 3000
+                })
                 return error
             }
         }

@@ -16,7 +16,11 @@ router.post("/", [
   validarResultados
 ], httpRolesUsuarios.postRolesUsuarios)
 
-router.put("/:id", httpRolesUsuarios.putRolUsuarios)
+router.put("/:id", [
+  check("denominacion", "La denominacion es un campo requerido").notEmpty().trim().isString(),
+  check("codigo", "El Codigo es un campo requerido").notEmpty().trim().isString(),
+  validarResultados
+], httpRolesUsuarios.putRolUsuarios)
 
 router.put("/estado/:id", httpRolesUsuarios.putRolesEstado)
 
