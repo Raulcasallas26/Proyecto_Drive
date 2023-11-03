@@ -25,17 +25,17 @@ const httpProgramasFormacion = {
     postProgramasFormacion: async (req, res) => {
         const { denominacion, codigo, version, estado, niveldeformacion, archivoOEnlace } =
             req.body;
-        try {
-            const ProgramasFormacion = new ProgramasFormacionModel({
-                denominacion,
-                codigo,
-                version,
-                estado,
-                niveldeformacion,
-                archivoOEnlace,
-            });
-            await ProgramasFormacion.save();
 
+        const ProgramasFormacion = new ProgramasFormacionModel({
+            denominacion,
+            codigo,
+            version,
+            estado,
+            niveldeformacion,
+            archivoOEnlace,
+        });
+        try {
+            await ProgramasFormacion.save();
             res.json({
                 mensaje: "Una formacion insertada!!",
                 ProgramasFormacion,
@@ -51,7 +51,14 @@ const httpProgramasFormacion = {
             req.body;
         const programas = await ProgramasFormacionModel.findByIdAndUpdate(
             id,
-            { denominacion, codigo, version, estado, niveldeformacion, archivoOEnlace },
+            {
+                denominacion,
+                codigo,
+                version,
+                estado,
+                niveldeformacion,
+                archivoOEnlace
+            },
             { new: true }
         );
         res.json({

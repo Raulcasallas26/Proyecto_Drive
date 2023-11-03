@@ -17,7 +17,7 @@
                 <q-item-section>Inicio </q-item-section>
               </q-item>
 
-              <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor'"
+              <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' "
                 v-ripple to="/usuarios">
                 <q-item-section avatar>
                   <q-icon name="people" />

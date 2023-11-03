@@ -1,8 +1,8 @@
 <template>
   <div class="card-container">
     <div v-if="load == true" style="margin-top: 5px;">
-            <q-linear-progress ark rounded indeterminate color="green" />
-        </div>
+      <q-linear-progress ark rounded indeterminate color="green" />
+    </div>
     <div v-else>
       <q-table class="tabla" flat bordered title="Treats" :rows="proga" :columns="columns" row-key="id" :filter="filter"
         :loading="loading" table-header-class="" virtual-scroll :virtual-scroll-item-size="20"
@@ -42,7 +42,8 @@
       <q-card id="card">
         <div style="display: flex;">
           <q-card-section>
-            <div class="text-h4">Registro de Programas</div>
+            <div class="text-h4" v-if="bd === false">Registrar Programa</div>
+            <div class="text-h4" v-else>Editar Programa</div>
           </q-card-section>
           <div style="margin-left: auto;    margin-bottom: auto;">
             <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
@@ -69,7 +70,7 @@
                   label="Red de Conocimiento" :rules="[(val) => !!val || 'Campo requerido']" />
               </div> -->
               <q-card-section>
-                <q-input class="input" v-model="archivoOEnlace" label="Archivo o enlace del diseño curricular"
+                <q-input v-model="archivoOEnlace" class="input" label="Archivo o enlace del diseño curricular"
                   :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
                   @clear="limpiarCampo">
                   <template v-slot:append>
@@ -106,7 +107,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useProgramasFormacionStore } from "../stores/programasformacion.js";
-import {useLoginStore} from "../stores/login.js"
+import { useLoginStore } from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useProgramas = useProgramasFormacionStore();
 const useLogin = useLoginStore()
@@ -132,12 +133,7 @@ let opciones = [
 
 let columns = [
   { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-  {
-    name: "denominacion",
-    label: "Denominacion",
-    align: "center",
-    field: "denominacion",
-  },
+  { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion", },
   { name: "version", label: "Version", align: "center", field: "version" },
   { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
@@ -147,7 +143,6 @@ const loading = ref(false);
 
 async function obtenerformacion() {
   load.value = true
-  console.log(useLogin.token);
   let programas = await useProgramas.getProgramasFormacion(useLogin.token);
   console.log(programas);
   proga.value = programas.data.ProgramasFormacion;
@@ -169,24 +164,39 @@ async function validarYGuardar() {
   } else if (!archivoOEnlace.value) {
     mostrarAlerta("el Diseño curricular es oblogatorio");
   } else {
-    alert.value = false;
     guardar();
   }
 }
+
 async function guardar() {
   loading.value = true;
-  let res = await useProgramas.addProgramasFormacion({
-    denominacion: denominacion.value,
-    codigo: codigo.value,
-    version: version.value,
-    niveldeformacion: niveldeformacion.value,
-    archivoOEnlace: archivoOEnlace.value,
-  });
-  console.log(res);
-  console.log("se guardo un nuevo programa");
-  loading.value = false;
-  obtenerformacion();
-  limpiarFormulario();
+  try {
+    let res = await useProgramas.addProgramasFormacion({
+      denominacion: denominacion.value,
+      codigo: codigo.value,
+      version: version.value,
+      niveldeformacion: niveldeformacion.value,
+      archivoOEnlace: archivoOEnlace.value,
+    });
+
+    if (res.status === 200) {
+      console.log(res);
+      console.log("Se guardó un nuevo Programa");
+      alert.value = false;
+      obtenerformacion();
+      limpiarFormulario();
+      // Cierra la alerta
+    } else {
+      console.log(res);
+      console.error("Error al guardar el programa");
+      // Puedes mostrar un mensaje de error aquí si es necesario
+    }
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    // Puedes manejar errores de red u otros errores aquí si es necesario
+  } finally {
+    loading.value = false;
+  }
 }
 
 async function activar(props) {
@@ -213,27 +223,39 @@ async function validareditar() {
   } else if (!archivoOEnlace.value) {
     mostrarAlerta("el Diseño curricular es oblogatorio");
   } else {
-    alert.value = false;
     editarPrograma();
   }
 }
+
 async function editarPrograma() {
   loading.value = true;
-  console.log(indice.value);
-  let res = await useProgramas.editProgramasFormacion(indice.value, {
-    denominacion: denominacion.value,
-    codigo: codigo.value,
-    version: version.value,
-    niveldeformacion: niveldeformacion.value,
-    archivoOEnlace: archivoOEnlace.value,
-  });
-  console.log(indice.value);
-  console.log(res);
-  bd.value = false;
-  loading.value = false;
-  obtenerformacion();
-  limpiarFormulario();
+  try {
+    let res = await useProgramas.editProgramasFormacion(indice.value, {
+      denominacion: denominacion.value,
+      codigo: codigo.value,
+      version: version.value,
+      niveldeformacion: niveldeformacion.value,
+      archivoOEnlace: archivoOEnlace.value,
+    });
+    if (res.status === 200) {
+      console.log("Se guardó un nuevo usuario");
+      alert.value = false;
+      bd.value = false;
+      obtenerformacion();
+      limpiarFormulario();
+      // Cierra la alerta
+    } else {
+      console.error("Error al guardar el usuario");
+      // Puedes mostrar un mensaje de error aquí si es necesario
+    }
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    // Puedes manejar errores de red u otros errores aquí si es necesario
+  } finally {
+    loading.value = false;
+  }
 }
+
 
 function edito(props) {
   alert.value = true;
@@ -249,12 +271,14 @@ function edito(props) {
 }
 
 function limpiarFormulario() {
+  console.log("limpiando formulario");
   denominacion.value = "";
   codigo.value = "";
   version.value = "";
   opciones.value = "";
   niveldeformacion.value = "";
   archivoOEnlace.value = "";
+  check.value = ""
   alert.value = false
   bd.value = false
 }
@@ -285,9 +309,7 @@ function cerrar() {
 }
 
 // Función para limpiar el campo
-const limpiarCampo = () => {
-  archivoOEnlace.value = "";
-};
+
 
 //fin
 onMounted(() => {
@@ -309,8 +331,8 @@ onMounted(() => {
 }
 
 #card {
-    width: 35em;
-    max-width: 100%;
+  width: 35em;
+  max-width: 100%;
 }
 
 .text {
@@ -379,4 +401,5 @@ onMounted(() => {
 .close-button:not(.active):before {
   animation-name: fadeOutX;
   opacity: 0;
-}</style>
+}
+</style>

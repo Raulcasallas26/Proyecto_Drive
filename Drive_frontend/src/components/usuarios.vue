@@ -48,10 +48,11 @@
             <q-card id="card">
                 <div style="display: flex;">
                     <q-card-section>
-                        <div class="text-h4">Registro de Usiarios</div>
+                        <div class="text-h4" v-if="bd === false"> Registro Usuarios</div>
+                        <div class="text-h4" v-else> Editar Usuarios</div>
                     </q-card-section>
                     <div style="margin-left: auto;    margin-bottom: auto;">
-                        <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" />
+                        <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" v-close-popup />
                     </div>
                 </div>
 
@@ -78,6 +79,10 @@
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md">
+                                <q-select v-model="rolUsuario" :rules="[(val) => !!val || 'Campo requerido']"
+                                    :options="opciones" label="Selecciona un Rol" />
+                            </div>
+                            <div class="q-gutter-md">
                                 <q-input v-model.number="cedula" type="number" label="Cedula"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
@@ -90,14 +95,10 @@
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === true">
-                                <q-select :rules="[(val) => !!val || 'Campo requerido']" v-model="rolUsuario"
-                                    :options="opciones" label="Selecciona un Rol" />
-                            </div>
-                            <div class="q-gutter-md" v-if="bd === true">
                                 <q-input v-model="RedConocimiento" label="Ret de Conocimiento"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
-                            <div class="q-gutter-md" v-if="bd === false">
+                            <div class="q-gutter-md" v-if="bd !== true">
                                 <q-input v-model="password" :type="isPwd ? 'password' : 'text'" label="Ingresar password"
                                     :rules="[(val) => !!val || 'Campo requerido']">
                                     <template v-slot:append>
@@ -260,6 +261,8 @@ async function validarYGuardar() {
         mostrarAlerta("Escriba correctamente el su E-mail");
     } else if (!telefono.value) {
         mostrarAlerta("El Teléfono es obligatorio");
+    } else if (!rolUsuario.value) {
+        mostrarAlerta("Rol del usrario es obligatorio");
     } else if (!cedula.value) {
         mostrarAlerta("La Cédula es obligatoria");
         console.log(cedula.value);
@@ -278,16 +281,18 @@ async function guardar() {
             nombre: nombre.value,
             apellidos: apellido.value,
             email: email.value,
-            telefono: telefono.value,
             cedula: cedula.value,
+            telefono: telefono.value,
+            RolUsuario: rolUsuario.value,
             password: password.value,
         });
 
         if (response.status === 200) {
             console.log("Se guardó un nuevo usuario");
+            alert.value = false;
             listarUsuarios();
             limpiarFormulario();
-            alert.value = false; // Cierra la alerta
+             // Cierra la alerta
         } else {
             console.error("Error al guardar el usuario");
             // Puedes mostrar un mensaje de error aquí si es necesario
@@ -300,21 +305,31 @@ async function guardar() {
     }
 }
 async function validaredit() {
-
-    if (!nombre.value) {
-        mostrarAlerta("El nombre es obligatorio");
-    } else if (!email.value) {
-        mostrarAlerta("El correo electrónico es obligatorio");
+    validarEmail()
+    if (nombre.value.trim() === "") {
+        mostrarAlerta("El Nombre es obligatorio");
+    } else if (apellido.value.trim() === "") {
+        mostrarAlerta("El Apellido es obligatorio");
+    } else if (email.value.trim() === "") {
+        mostrarAlerta("El Correo Electrónico es obligatorio");
+    } else if (emailValido.value === true) {
+        mostrarAlerta("Escriba correctamente el su E-mail");
     } else if (!telefono.value) {
-        mostrarAlerta("El teléfono es obligatorio");
+        mostrarAlerta("El Teléfono es obligatorio");
+    } else if (!rolUsuario.value) {
+        mostrarAlerta("Rol del usrario es obligatorio");
     } else if (!cedula.value) {
-        mostrarAlerta("La cédula es obligatoria");
-        console.log(cedula.value);
-    } else {
+        mostrarAlerta("La Cédula es obligatoria");
+    } else if (!perfilProfesional.value) {
+        mostrarAlerta("El perfil profecional del usuario es obligatorio")
+    } else if (!curriculum.value) {
+        mostrarAlerta("El curriculum es obligatorio");
+    } else if (!RedConocimiento.value) {
+        mostrarAlerta("La Red de conocimineto es obligatorio");
+    } else  {
         // Todos los campos están completos y válidos, guarda los datos
         console.log("paso validacion");
-        await editarUser()
-        limpiarFormulario();
+        editarUser()
         // Cierra el modal
     }
 
@@ -334,8 +349,8 @@ function edito(props) {
     rolUsuario.value = r.value.RolUsuario
     RedConocimiento.value = r.value.RedConocimiento
     perfilProfesional.value = r.value.perfilProfesional
-
 }
+
 
 function detalles(props) {
     r.value = props.row;
@@ -351,23 +366,36 @@ function detalles(props) {
 async function editarUser() {
     loading.value = true;
     console.log("hola estoy editando");
-    let r = await useUsuario.editUsuarios(indice.value, {
-        email: email.value,
-        cedula: cedula.value,
-        nombre: nombre.value,
-        telefono: telefono.value,
-        apellidos: apellido.value,
-        curriculum: curriculum.value,
-        RolUsuario: rolUsuario.value.value,
-        RedConocimiento: RedConocimiento.value,
-        perfilProfesional: perfilProfesional.value
-
-    });
-    console.log(r);
-    bd.value = false;
-    loading.value = false;
-    console.log("limpiando datos");
-    listarUsuarios();
+    try {
+        let r = await useUsuario.editUsuarios(indice.value, {
+            email: email.value,
+            cedula: cedula.value,
+            nombre: nombre.value,
+            telefono: telefono.value,
+            apellidos: apellido.value,
+            curriculum: curriculum.value,
+            RolUsuario: rolUsuario.value,
+            RedConocimiento: RedConocimiento.value,
+            perfilProfesional: perfilProfesional.value
+        });
+        console.log("se insertaron los datos");
+        if (r.status === 200) {
+            console.log(r);
+            console.log("Se edito el usuario con exito");
+            listarUsuarios();
+            limpiarFormulario();
+            alert.value = false; // Cierra la alerta
+        } else {
+            console.error("Error al editar el usuario");
+            // Puedes mostrar un mensaje de error aquí si es necesario
+        }
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        console.log(error);
+        // Puedes manejar errores de red u otros errores aquí si es necesario
+    } finally {
+        loading.value = false;
+    }
 }
 
 async function activar(props) {

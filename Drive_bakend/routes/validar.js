@@ -1,4 +1,5 @@
 import Usuario from "../models/Usuarios.js";
+import ProgramasFormacion from "../models/ProgramasFormacion.js";
 const validarUnicos = {
 
     validarCedula : async (cedula) => {
@@ -11,6 +12,12 @@ const validarUnicos = {
         const numemail = await Usuario.findOne({ email })
         if (numemail) {
             throw new Error(`El E-mail ${ email } ya existe`)
+        }
+    },
+    validarprogramaFormacion : async (codigo) => {
+        const codigos = await ProgramasFormacion.findOne({codigo})
+        if (codigos) {
+            throw new Error(`El Codigo ${codigo} ya existe`)
         }
     }
 }
