@@ -167,7 +167,6 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { Notify } from "quasar"
 import { useUsuariosStore } from "../stores/usuarios.js";
 import { useLoginStore } from "../stores/login.js"
 import { useRolesUsuariosStore } from "../stores/RolesUsuarios.js";
@@ -293,7 +292,7 @@ async function guardar() {
             alert.value = false;
             listarUsuarios();
             limpiarFormulario();
-            // Cierra la alerta
+             // Cierra la alerta
         } else {
             console.error("Error al guardar el usuario");
             // Puedes mostrar un mensaje de error aquí si es necesario
@@ -327,7 +326,7 @@ async function validaredit() {
         mostrarAlerta("El curriculum es obligatorio");
     } else if (!RedConocimiento.value) {
         mostrarAlerta("La Red de conocimineto es obligatorio");
-    } else {
+    } else  {
         // Todos los campos están completos y válidos, guarda los datos
         console.log("paso validacion");
         editarUser()
@@ -404,24 +403,9 @@ async function activar(props) {
     if (r.value.estado === true) {
         r.value.estado = false;
         console.log(r.value.estado, "resultado del if condicion");
-        Notify.create({
-            color: "negative",
-            message: "El usuario fue Desactivado",
-            icon: "check",
-            position: "top",
-            timeout: 3000
-        })
-        console.log("el estado es inactivo");
     } else {
         r.value.estado = true;
         console.log(r.value.estado, "resultado del else condicion");
-        Notify.create({
-            color: "positive",
-            message: "El usuario fue Activado",
-            icon: "check",
-            position: "top",
-            timeout: 3000
-        })
     }
     let est = await useUsuario.activarUsuarios(r.value._id);
     console.log(est);

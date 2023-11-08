@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose; // Importa el objeto Schema de mongoose
 
-const nivFormacionSchema = new mongoose.Schema({
-    id: {type: String, unique: true},
-    denominacion: { type: String, required: true }
-})
+const nivFormacionSchema = new Schema({
+    codigo: { type: String, unique: true }, 
+    denominacion: { type: String, required: true },
+    estado: { type: Boolean, default: true }, 
+});
 
-export default mongoose("NivFormacion", nivFormacionSchema);
+const NivFormacion = mongoose.model("NivFormacion", nivFormacionSchema); // Crea el modelo utilizando mongoose.model
+
+export default NivFormacion;

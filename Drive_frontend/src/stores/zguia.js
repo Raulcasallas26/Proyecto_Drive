@@ -2,22 +2,22 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
-export const useDesarrolloCurricularStore = defineStore(
-    "DesarrolloCurricular", () => {
-        const addDesarrolloCurricular = async (info) => {
+import { Notify } from "quasar"
+export const useUsuariosStore = defineStore(
+    "Usuarios", () => {
+        const addUsuarios = async (info) => {
             try {
-                let res = await axios.post(`${urlBackend}/desarrolloCurricular`, info)
+                let res = await axios.post(`${urlBackend}/Usuarios`, info)
                 Notify.create({
                     color: "positive",
-                    message: "Registro del Desarrollo Curricular exitoso",
+                    message: "Registro de usuario exitoso",
                     icon: "check",
                     position: "top",
                     timeout: 3000
                 })
                 return res
             } catch (error) {
-                console.log("hay un error en la post DesarrolloCurricular");
-                console.log(error);
+                console.log(error.response.data.errors[0].msg);
                 Notify.create({
                     color: "negative",
                     message: error.response.data.errors[0].msg,
@@ -29,31 +29,29 @@ export const useDesarrolloCurricularStore = defineStore(
             }
         }
 
-        const getDesarrolloCurricular = async (token) => {
+        const getUsuarios = async (token) => {
             try {
-                let header = {headers:{"x-token":token}}
-                let res = await axios.get(`${urlBackend}/desarrolloCurricular`,header)
+                let header = { headers: { "x-token": token } }
+                let res = await axios.get(`${urlBackend}/Usuarios`, header)
                 return res
             } catch (error) {
-                console.log(error);
-                console.log("hay un error en el get DesarrolloCurricular");
+                console.log("hay un error en el get");
                 return error
             }
         }
-        const editDesarrolloCurricular = async (id, info) => {
+        const editUsuarios = async (id, info) => {
             try {
-                let res = await axios.put(`${urlBackend}/desarrolloCurricular/${id}`, info)
+                let res = await axios.put(`${urlBackend}/Usuarios/${id}`, info)
                 Notify.create({
                     color: "positive",
-                    message: "Edicion del desarrollo curricular exitoso",
+                    message: "Edicion de usuario exitoso",
                     icon: "check",
                     position: "top",
                     timeout: 3000
                 })
                 return res
             } catch (error) {
-                console.log("hay un error en editDesarrolloCurricular");
-                console.log(error);
+                console.log("hay un error en edirUsers");
                 Notify.create({
                     color: "negative",
                     message: error.response.data.errors[0].msg,
@@ -64,17 +62,17 @@ export const useDesarrolloCurricularStore = defineStore(
                 return error
             }
         }
-        const activarDesarrolloCurricular = async (id) => {
+        const activarUsuarios = async (id) => {
             try {
-                let res = await axios.put(`${urlBackend}/desarrolloCurricular/estado/${id}`)
+                let res = await axios.put(`${urlBackend}/Usuarios/estado/${id}`)
                 return res.data
             } catch (error) {
-                console.log("hay un error en activarDesarrolloCurricular");
+                console.log("hay un error en activarUser");
                 return error
             }
         }
         return {
-            addDesarrolloCurricular, getDesarrolloCurricular, editDesarrolloCurricular, activarDesarrolloCurricular, 
+            addUsuarios, getUsuarios, editUsuarios, activarUsuarios,
         }
     }
 )

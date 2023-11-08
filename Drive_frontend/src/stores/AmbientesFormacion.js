@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import { ref } from "vue"
+import { Notify } from "quasar"
 export const useAmbientesFormacionStore = defineStore(
     "AmbientesFormacion", () => {
         const addAmbientesFormacion = async (info) => {
@@ -17,6 +18,7 @@ export const useAmbientesFormacionStore = defineStore(
                 return res
             } catch (error) {
                 console.log("hay un error en la post");
+                console.log(error);
                 Notify.create({
                     color: "negative",
                     message: error.response.data.errors[0].msg,

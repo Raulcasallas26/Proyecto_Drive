@@ -22,6 +22,7 @@ const router = Router()
   router.put("/:id",[
     check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
     check("codigo", "El codigo es un campo obligatorio").notEmpty().trim().trim().isString(),
+    check("codigo").custom(validarUnicos.validarprogramaFormacion), 
     check("version","la version es un campo obligatorio").notEmpty().trim().isString(),
     check("niveldeformacion","el nivel de formacion es un campo obligatorio").notEmpty().trim().isString(),
     validarResultados

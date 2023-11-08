@@ -10,7 +10,7 @@
                 <template v-slot:top>
                     <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar"
                         @click="agregar()" />
-                    <div style="margin-left: 5%" class="text-h4">Usuarios</div>
+                    <div style="margin-left: 5%" class="text-h4">Instructores</div>
                     <q-space />
                     <q-input borderless dense debounce="300" color="primary" v-model="filter"
                         style="border-radius: 10px; border: grey solid 0.5px; padding: 5px">
@@ -39,7 +39,7 @@
                         <q-btn class="q-mx-sm" color="green" outline @click="activar(props)"
                             v-if="props.row.estado == false">✅</q-btn>
                         <q-btn class="q-mx-sm" color="red" outline @click="activar(props)" v-else>❌</q-btn>
-                        <q-btn class="q-mx-sm" outline @click="detalles(props)">👁️‍🗨️</q-btn>
+                        <q-btn class="q-mx-sm" outline @click="detalles(props)">👁‍🗨</q-btn>
                     </q-td>
                 </template>
             </q-table>
@@ -48,8 +48,8 @@
             <q-card id="card">
                 <div style="display: flex;">
                     <q-card-section>
-                        <div class="text-h4" v-if="bd === false"> Registro Usuarios</div>
-                        <div class="text-h4" v-else> Editar Usuarios</div>
+                        <div class="text-h4" v-if="bd === false"> Registro Instructores</div>
+                        <div class="text-h4" v-else> Editar Instructores</div>
                     </q-card-section>
                     <div style="margin-left: auto;    margin-bottom: auto;">
                         <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" v-close-popup />
@@ -78,10 +78,7 @@
                                 <q-input v-model.number="telefono" type="number" label="Telefono"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
-                            <div class="q-gutter-md">
-                                <q-select v-model="rolUsuario" :rules="[(val) => !!val || 'Campo requerido']"
-                                    :options="opciones" label="Selecciona un Rol" />
-                            </div>
+
                             <div class="q-gutter-md">
                                 <q-input v-model.number="cedula" type="number" label="Cedula"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
@@ -227,11 +224,15 @@ const originalRows = [];
 const filter = ref("");
 
 async function listarUsuarios() {
-    load.value = true
+    load.value = true;
     let usuarios = await useUsuario.getUsuarios(useLogin.token);
     console.log(usuarios);
-    user.value = usuarios.data.Usuarios;
-    load.value = false
+
+    // Filtrar usuarios por rol
+    let usuariosFiltrados = usuarios.data.Usuarios.filter(usuario => usuario.RolUsuario === "Instructor");
+
+    user.value = usuariosFiltrados;
+    load.value = false;
 }
 
 async function listarRoles() {
@@ -262,8 +263,6 @@ async function validarYGuardar() {
         mostrarAlerta("Escriba correctamente el su E-mail");
     } else if (!telefono.value) {
         mostrarAlerta("El Teléfono es obligatorio");
-    } else if (!rolUsuario.value) {
-        mostrarAlerta("Rol del usrario es obligatorio");
     } else if (!cedula.value) {
         mostrarAlerta("La Cédula es obligatoria");
         console.log(cedula.value);
@@ -284,7 +283,7 @@ async function guardar() {
             email: email.value,
             cedula: cedula.value,
             telefono: telefono.value,
-            RolUsuario: rolUsuario.value.value,
+            RolUsuario: "Instructor",
             password: password.value,
         });
 
@@ -375,7 +374,7 @@ async function editarUser() {
             telefono: telefono.value,
             apellidos: apellido.value,
             curriculum: curriculum.value,
-            RolUsuario: rolUsuario.value.value,
+            RolUsuario: rolUsuario.value,
             RedConocimiento: RedConocimiento.value,
             perfilProfesional: perfilProfesional.value
         });
@@ -411,7 +410,6 @@ async function activar(props) {
             position: "top",
             timeout: 3000
         })
-        console.log("el estado es inactivo");
     } else {
         r.value.estado = true;
         console.log(r.value.estado, "resultado del else condicion");

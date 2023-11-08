@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { urlBackend } from '../routes/direccion.js'
 import {useRouter} from "vue-router"
-
 import { ref } from "vue"
 export const useLoginStore = defineStore(
     "login", () => {
@@ -10,7 +9,7 @@ export const useLoginStore = defineStore(
         let token = ref("")
         let rol = ref("")
         let router = useRouter()
-
+        let datos = ref("")
 
 // "Gestor"
 
@@ -21,6 +20,7 @@ export const useLoginStore = defineStore(
                     password
                 }
                 const res = await axios.post(`${urlBackend}/login`, info)
+                datos.value = res.data.usuario
                 token.value = res.data.tockent
                 rol.value= res.data.usuario.RolUsuario
                 return res
@@ -31,6 +31,7 @@ export const useLoginStore = defineStore(
             }
         }
 
+        console.log(datos);
         const logout= ()=>{
             token.value=""
             rol.value=""
