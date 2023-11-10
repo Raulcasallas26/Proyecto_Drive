@@ -82,6 +82,18 @@
                                 <q-select v-model="rolUsuario" :rules="[(val) => !!val || 'Campo requerido']"
                                     :options="opciones" label="Selecciona un Rol" />
                             </div>
+                            <div class="q-gutter-md" >
+                                <input type="file" @change="subir_curriculum">
+                                <!-- <q-input class="input" v-model="curriculum"
+                                        label="Archivo o enlace del diseño curricular"
+                                        :rules="[(val) => !!val || 'Campo requerido']" dense clearable
+                                        prepend-icon="attach_file" @clear="limpiarCampo">
+                                        <template v-slot:append>
+                                            <q-icon name="attach_file" style="cursor: pointer"
+                                                @click="abrirSelectorDeArchivos" />
+                                        </template>
+                                    </q-input> -->
+                            </div>
                             <div class="q-gutter-md">
                                 <q-input v-model.number="cedula" type="number" label="Cedula"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
@@ -90,12 +102,9 @@
                                 <q-input v-model="perfilProfesional" label="Perfil Profecional"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
+                            
                             <div class="q-gutter-md" v-if="bd === true">
-                                <q-input v-model="curriculum" label="Curriculum"
-                                    :rules="[(val) => !!val || 'Campo requerido']" />
-                            </div>
-                            <div class="q-gutter-md" v-if="bd === true">
-                                <q-input v-model="RedConocimiento" label="Ret de Conocimiento"
+                                <q-input v-model="RedConocimiento" label="Ret de Conocimiento" 
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd !== true">
@@ -150,7 +159,7 @@
                             <p><strong style="font-size:large; ">Nombre:</strong> {{ r.nombre }}</p>
                             <p><strong style="font-size:large; ">Apellido:</strong> {{ r.apellidos }}</p>
                             <p><strong style="font-size:large; ">Telefono:</strong> {{ r.telefono }}</p>
-                            <p><strong style="font-size:large; ">Curriculum:</strong> {{ r.curriculum }}</p>
+                            <p><strong style="font-size:large; ">Curriculum:</strong > <a :href="r.curriculum" target="_blank">{{ r.curriculum }}</a> </p>
                             <p><strong style="font-size:large; ">Perfil Profecional:</strong> {{ r.perfilProfesional }}</p>
                             <p><strong style="font-size:large; ">Red de Conocimiento:</strong> {{ r.RedConocimiento }}</p>
                         </q-card-section>
@@ -189,7 +198,7 @@ let telefono = ref("");
 let cedula = ref("");
 let password = ref("");
 let perfilProfesional = ref("");
-let curriculum = ref("");
+let curriculum = ref(null);
 let rolUsuario = ref("");
 let RedConocimiento = ref("");
 let loading = ref(false);
@@ -212,6 +221,11 @@ const validarEmail = (val) => {
         return true;
     }
 };
+
+function subir_curriculum(event){
+    curriculum.value= event.target.files[0]
+    console.log(curriculum.value);
+}
 // pinta la tabla principal
 let columns = [
     { name: "perfil", align: "center", label: "Perfil", field: "Perfil" },
@@ -283,6 +297,7 @@ async function guardar() {
             apellidos: apellido.value,
             email: email.value,
             cedula: cedula.value,
+            curriculum: curriculum.value,
             telefono: telefono.value,
             RolUsuario: rolUsuario.value.value,
             password: password.value,
@@ -433,6 +448,7 @@ function limpiarFormulario() {
     email.value = "";
     telefono.value = "";
     cedula.value = "";
+    curriculum.value = "";
     password.value = "";
     rolUsuario.value = "";
     bd.value = false;
@@ -452,6 +468,46 @@ onMounted(() => {
     listarRoles();
     limpiarFormulario();
 });
+
+
+const limpiarCampo = ref()
+
+const abrirSelectorDeArchivos = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.style.display = "none";
+    fileInput.addEventListener("change", handleFileSelection);
+    document.body.appendChild(fileInput);
+    fileInput.click();
+};
+
+// Función para manejar la selección de archivos
+const handleFileSelection = (event) => {
+    const selectedFile = event.target.files[0];
+    const selectedFileName = selectedFile ? selectedFile.name : "";
+
+    // Asignar el nombre del archivo al campo curriculum
+    curriculum.value = selectedFileName;
+
+    // Buscar la opción que corresponde al nombre del archivo
+    const selectedOption = opciones.find((option) =>
+        option.includes(selectedFileName)
+    );
+
+    if (selectedOption) {
+        // Enviar el texto correspondiente a la opción seleccionada
+        const textoDeOpcion = selectedOption;
+        // Aquí puedes hacer lo que necesites con textoDeOpcion
+        alert(`Texto de la opción seleccionada: ${textoDeOpcion}`);
+    } else {
+        // Manejar el caso en que no se encuentre una opción correspondiente
+        alert(
+            "No se encontró una opción correspondiente al archivo seleccionado."
+        );
+    }
+
+    event.target.remove(); // Elimina el input de tipo file después de su uso
+};
 </script>
 <style scoped>
 #card {

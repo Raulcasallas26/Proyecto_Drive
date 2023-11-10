@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 const PoryectoSchema = new mongoose.Schema({
-    nombre:{type:String},
-    codigo:{type:String},
-    descripcion:{type:String},
+    nombre:{type:String, require:true},
+    codigo:{type:String, require:true},
+    descripcion:{type:String, require:true},
     fecha:{type:Date, default: Date.now},  
-    version:{type:String},
-    documento:{type:String},
-    IdPrograma:{type:String},
+    version:{type:String, require:true},
+    documento:{type:String, require:true},
+    IdPrograma:{type:String, require:true},
     estado:{type: Boolean, default: true}
 }) 
 

@@ -6,7 +6,7 @@ import {validarResultados} from "../Middlewares/validaciones.js"
 import { validarJWT } from "../Middlewares/validar-jwt.js";
 const router = Router()
 
-  router.get("/",[validarJWT], httpProgramasFormacion.getProgramasFormacion)
+  router.get("/", httpProgramasFormacion.getProgramasFormacion)
   
   // router.get("/:id", httpProgramasFormacion.getProgramasFormacionId)
   

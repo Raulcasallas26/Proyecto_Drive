@@ -10,7 +10,7 @@ router.get("/",[validarJWT], httpUsuarios.getUsuarios),
 // router.get("/:id", httpUsuarios.getUsuariosId)
 
 router.post("/", [ 
-  check("nombre", "El nombre es obligatorio").notEmpty().trim().isString(),
+  check("nombre", "El nombre es obligatorio").trim().not().isEmpty(),
   check("apellidos", "el apellido es obligatorio",).notEmpty().trim().isString(),
   check("cedula", "el numero de cedula es obligatorio").notEmpty().trim().isNumeric(),
   check("cedula").custom(validarUnicos.validarCedula),
@@ -24,10 +24,10 @@ router.post("/", [
 router.put("/:id", [
   check("nombre", "El nombre es obligatorio").notEmpty().trim().isString(),
 check("apellidos", "El apellido es obligatorio",).notEmpty().trim().isString(),
-check("cedula", "El numero de cedula es obligatorio").notEmpty().trim().isNumeric(),
-check("telefono", "El telefono es obligatorio").notEmpty().trim().isNumeric(),
-check("email", "El correo es obligatorio").notEmpty().trim().isString(),
-check("email", "Formato de E-mail no valido").isEmail(),
+check("cedula", "El numero de cedula es obligatorio").trim().not().isEmpty(),
+check("telefono", "El telefono es obligatorio").trim().not().isEmpty(),
+check("email", "El correo es obligatorio").trim().not().isEmpty(),
+// check("email", "Formato de E-mail no valido").isEmail(),
 check("perfilProfesional", "El perfil profecional es obligatorio").notEmpty().trim().isString(),
 check("curriculum", "El curriculum es obligatorio").notEmpty().trim().isString(),
 check("RolUsuario", "El rol del usuario es obligatorio").notEmpty().trim().isString(),
