@@ -1,5 +1,7 @@
 import UsuariosModel from "../models/Usuarios.js"
 import bcrypt from "bcrypt"
+import url from "url"
+import path from "path"
 import { v2 as cloudinary } from "cloudinary"
 
 
@@ -135,7 +137,7 @@ const httpUsuarios = {
                 updatedData.curriculum = result.url;
             };
 
-           
+        
             const buscarUsuario = await UsuariosModel.findByIdAndUpdate(
                 { _id: id },
                 { $set: updatedData },
@@ -143,6 +145,7 @@ const httpUsuarios = {
             );
             res.status(201).json(buscarUsuario);
         } catch (error) {
+            console.log(error);
             return res.status(500).json({ error: error.message });
         }
     },
