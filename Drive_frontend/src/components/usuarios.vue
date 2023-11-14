@@ -83,8 +83,8 @@
                                     :options="opciones" label="Selecciona un Rol" />
                             </div>
                             <div class="q-gutter-md">
-                                <input type="file" @change="subir_curriculum">
-                                <!-- <q-input class="input" v-model="curriculum"
+                                <input type="file" @change="subir_curriculum" >
+                                <!-- <q-input class="input" type="file" @change="subir_curriculum" 
                                         label="Archivo o enlace del diseño curricular"
                                         :rules="[(val) => !!val || 'Campo requerido']" dense clearable
                                         prepend-icon="attach_file" @clear="limpiarCampo">
