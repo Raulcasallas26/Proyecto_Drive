@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR lff">
-    <q-header elevated class="text-white" id="header">
+    <q-header elevated class="text-white interFaz" id="header" :style="{ 'background-color': colors }">
       <q-toolbar>
         <q-avatar v-if="bd === false && !isMobile">
           <img src="../src/img/logo_sena.png" v-if="bd === false && !isMobile" style="filter: invert(1);" alt="">
@@ -25,13 +25,11 @@
               </q-item>
 
               <q-item clickable v-ripple to="/niveles">
-            <q-item-section avatar>
-              <q-icon
-                name="img:https://th.bing.com/th/id/OIG.PrebEAn_CQD4FAxQMKQ1?pid=ImgGn&w=1024&h=1024&rs=1"
-              />
-            </q-item-section>
-            <q-item-section>Niveles de Formación</q-item-section>
-          </q-item>
+                <q-item-section avatar>
+                  <q-icon name="img:https://th.bing.com/th/id/OIG.PrebEAn_CQD4FAxQMKQ1?pid=ImgGn&w=1024&h=1024&rs=1" />
+                </q-item-section>
+                <q-item-section>Niveles de Formación</q-item-section>
+              </q-item>
 
               <q-item clickable
                 v-if="useLogin.rol === 'Super' || useLogin.rol === 'Instructor' || useLogin.rol === 'Gestor'" v-ripple
@@ -143,6 +141,13 @@
                 <q-item-section> Instrumentos de Evaluacion </q-item-section>
               </q-item>
 
+              <q-item clickable v-ripple to="/configuracion">
+                <q-item-section avatar>
+                  <q-icon name="img:https://cdn-icons-png.flaticon.com/512/2040/2040504.png" />
+                </q-item-section>
+                <q-item-section> Configuracion </q-item-section>
+              </q-item>
+
               <q-separator />
               <q-item clickable v-ripple @click="useLogin.logout">
                 <q-item-section avatar>
@@ -171,7 +176,7 @@
             <q-item-section>Inicio </q-item-section>
           </q-item>
 
-          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor'"
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'"
             v-ripple to="/usuarios">
             <q-item-section avatar>
               <q-icon name="people" />
@@ -293,6 +298,13 @@
             <q-item-section> Instrumentos de Evaluacion </q-item-section>
           </q-item>
 
+          <q-item clickable v-ripple to="/configuracion">
+            <q-item-section avatar>
+              <q-icon name="img:https://cdn-icons-png.flaticon.com/512/2040/2040504.png" />
+            </q-item-section>
+            <q-item-section> Configuracion </q-item-section>
+          </q-item>
+
           <q-separator />
           <q-item clickable v-ripple @click="useLogin.logout">
             <q-item-section avatar>
@@ -313,15 +325,43 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoginStore } from './stores/login.js';
+import {useconfiguracionStore} from "./stores/configuracion.js"
+let Storecolor = useconfiguracionStore();
 let drawer = ref(false)
 let miniState = ref(true)
 let bd = ref(false)
 let nota = ref(false)
+let colorglobal = ref('');
+const colors = ref('');
 const useLogin = useLoginStore()
 let drawerRight = ref(false)
 const leftDrawerOpen = ref(false);
 const route = useRoute(); // Obtén la información de la ruta actual
 const windowWidth = ref(window.innerWidth);
+
+async function getcolor() {
+  try {
+    let color = await Storecolor.getColor(useLogin.token);
+    colorglobal.value = color.data;
+
+    let cortar = colorglobal.value.map(item => {
+      const matches = item.color.match(/\((\d+),(\d+),(\d+)\)/);
+      if (matches && matches.length === 4) {
+        return `rgb(${matches[1]},${matches[2]},${matches[3]})`;
+      } else {
+        return ''; 
+      }
+    });
+
+    let cortado = cortar.filter(item => item !== '').join(',');
+
+    colors.value = cortado;
+
+    console.log(colors.value);
+  } catch (error) {
+    console.error('Error al obtener colores:', error);
+  }
+}
 
 // Calcula si el ancho de la ventana es menor a 300px (para mostrar u ocultar el menú lateral)
 const isMobile = computed(() => {
@@ -339,12 +379,12 @@ window.addEventListener('resize', () => {
 });
 
 // Cierra el menú lateral cuando se carga la página en dispositivos móviles
-onMounted(() => {
+onMounted(async() => {
   if (isMobile.value) {
     drawer.value = false;
   }
+  await getcolor();
 });
-
 // Observa cambios en el valor de isMobile para cerrar el menú lateral si es necesario
 watch(isMobile, (newValue) => {
   if (newValue) {
@@ -364,6 +404,21 @@ const toggleLeftDrawer = () => {
 
 
 <style scoped>
+#header {
+  background-color: var(--header-background-color);
+  font-family: cursive;
+}
+
+:root {
+  --header-background-color: {
+      {
+      rgbColor
+    }
+  }
+
+  ;
+}
+
 /* Estilo del botón de hamburguesa en dispositivos móviles */
 .q-btn.is-mobile {
   display: block;

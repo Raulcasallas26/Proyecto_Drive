@@ -1,7 +1,7 @@
 import express from "express"
 import mongoose from "mongoose"
 import fileUpload from 'express-fileupload';
-
+import color from "../routes/color.js";
 import login from "../routes/login.js";
 import usuarios from "../routes/Usuarios.js";
 import ciudades from "../routes/Ciudades.js";
@@ -30,6 +30,7 @@ class Server {
     }
 
     routes() {
+        this.app.use('/color', color)
         this.app.use('/login', login);
         this.app.use('/ciudad', ciudades);
         this.app.use('/usuarios', usuarios);

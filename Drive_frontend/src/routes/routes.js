@@ -9,6 +9,7 @@ import proyectos from "../components/proyectos.vue"
 import centrosforma from "../components/centroforma.vue"
 import instructores from "../components/instructores.vue"
 import investigacion from "../components/investigacion.vue"
+import configuracion from "../components/configuracion.vue"
 import nivelesforma from "../components/NivelesFormacion.vue"
 import redConocimiento from "../components/redConocimiento.vue"
 import materialesApoyo from "../components/materialesApoyo.vue"
@@ -55,6 +56,7 @@ const routes = [
     { path: "/niveles", component: nivelesforma, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/centroforma", component: centrosforma, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/instructores", component: instructores, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
+    { path: "/configuracion", component: configuracion, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/investigacion", component: investigacion, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/redConocimento", component: redConocimiento, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/materialesApoyo", component: materialesApoyo, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },

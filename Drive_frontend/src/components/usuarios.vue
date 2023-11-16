@@ -82,17 +82,9 @@
                                 <q-select v-model="RolUsuario" :rules="[(val) => !!val || 'Campo requerido']"
                                     :options="opciones" label="Selecciona un Rol" />
                             </div>
-                            <div class="q-gutter-md">
-                                <input type="file" @change="subir_curriculum" >
-                                <!-- <q-input class="input" type="file" @change="subir_curriculum" 
-                                        label="Archivo o enlace del diseño curricular"
-                                        :rules="[(val) => !!val || 'Campo requerido']" dense clearable
-                                        prepend-icon="attach_file" @clear="limpiarCampo">
-                                        <template v-slot:append>
-                                            <q-icon name="attach_file" style="cursor: pointer"
-                                                @click="abrirSelectorDeArchivos" />
-                                        </template>
-                                    </q-input> -->
+                            <div class="q-gutter-md items-start">
+                                <input type="file" @change="subir_curriculum">
+                                <!-- <q-input @change="subir_curriculum" label="Curriculum" type="file" /> -->
                             </div>
                             <div class="q-gutter-md">
                                 <q-input v-model.number="cedula" type="number" label="Cedula"
@@ -238,7 +230,7 @@ let columns = [
 ];
 
 
-const originalRows = [];
+// const originalRows = [];
 const filter = ref("");
 
 async function listarUsuarios() {
@@ -372,12 +364,12 @@ function edito(props) {
     cedula.value = r.value.cedula;
     telefono.value = r.value.telefono;
     email.value = r.value.email;
-    password.value= r.value.password
+    password.value = r.value.password
     perfilProfesional.value = r.value.perfilProfesional
     curriculum.value = r.value.curriculum
     RolUsuario.value = r.value.RolUsuario
     RedConocimiento.value = r.value.RedConocimiento
-    
+
 }
 
 async function editarUser() {
@@ -385,24 +377,24 @@ async function editarUser() {
     try {
         console.log("hola estoy editando");
         let r = await useUsuario.editUsuarios(
-            indice.value, 
+            indice.value,
             nombre.value,
             apellidos.value,
             cedula.value,
             telefono.value,
-            email.value, 
+            email.value,
             password.value,
             perfilProfesional.value,
-            curriculum.value,            
+            curriculum.value,
             RolUsuario.value.value,
             RedConocimiento.value,
-            
+
         );
         console.log("se insertaron los datos");
-        console.log(r.status , r);
+        console.log(r.status, r);
         if (r.status === 201) {
             console.log(r);
-            console.log("Se edito el usuario con exito"); 
+            console.log("Se edito el usuario con exito");
             listarUsuarios();
             limpiarFormulario();
             alert.value = false; // Cierra la alerta
