@@ -457,12 +457,6 @@ const toggleLeftDrawer = () => {
   background-color: green;
   font-family: cursive;
 }
-
-#header {
-  background-color: green;
-  font-family: cursive;
-}
-
 /*botones */
 #vende {
   display: flex;
