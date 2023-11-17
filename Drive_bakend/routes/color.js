@@ -1,7 +1,19 @@
-import mongoose from "mongoose";
+import httpcolor from "../controllers/color.js";
+import { Router } from "express";
+import {check} from "express-validator"
+import {validarResultados} from "../Middlewares/validaciones.js"
+import { validarJWT, sinTokenMiddleware } from "../Middlewares/validar-jwt.js";
+const router = Router()
 
-const colorSchema = new mongoose.Schema({
-    color: { type: String },
-}); 
-
-export default mongoose.model('Color', colorSchema);
+  router.get("/", httpcolor.getcolor)
+  
+/*   router.get("/:id", httpGuiasAprendiz.getGuiasAprendizId) */
+  
+  router.post("/", [
+    sinTokenMiddleware,
+    validarResultados    
+  ], httpcolor.postcolor)
+  
+  router.put("/:id", httpcolor.putcolor)
+  
+  export default router
