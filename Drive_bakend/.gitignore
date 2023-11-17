@@ -1,2 +1,5 @@
 /node_modules
 /.env
+/zguiaModels.js
+/zguiaControllers.js
+/zguiaRoute.js
