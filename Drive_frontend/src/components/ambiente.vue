@@ -63,13 +63,7 @@
                     {{ ambiente.idCentroDeFormacion }}
                   </p>
                 </div>
-                <div class="buttons">
-                  <button class="rotate-button">
-                    <div class="arrow-icon" :class="{ rotate: isRotated[index] }" @click="toggleDetails(index)">
-                      <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" alt="Arrow" class="arrow-icon" />
-                    </div>
-                  </button>
-                </div>
+                
               </div>
             </div>
           </q-slide-transition>

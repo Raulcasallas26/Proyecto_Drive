@@ -3,20 +3,20 @@
 
 
         <div>
-    <q-btn label="Abrir vista previa" @click="openDocumentPreview" />
+            <q-btn label="Abrir vista previa" @click="openDocumentPreview" />
 
-    <q-dialog v-model="showPreview" position="top">
-      <div class="outlook-modal">
-        <div class="outlook-header">
-          <span class="outlook-title">Vista Previa de Documento</span>
-          <q-btn flat round dense icon="close" @click="closePreview" />
+            <q-dialog v-model="showPreview" position="top">
+                <div class="outlook-modal">
+                    <div class="outlook-header">
+                        <span class="outlook-title">Vista Previa de Documento</span>
+                        <q-btn flat round dense icon="close" @click="closePreview" />
+                    </div>
+                    <div class="outlook-content">
+                        <iframe :src="documentUrl" ref="documentIframe" class="document-iframe"></iframe>
+                    </div>
+                </div>
+            </q-dialog>
         </div>
-        <div class="outlook-content">
-          <iframe :src="documentUrl" ref="documentIframe" class="document-iframe"></iframe>
-        </div>
-      </div>
-    </q-dialog>
-  </div>
 
 
 
@@ -266,17 +266,17 @@ const showPreview = ref(false);
 const documentUrl = ref("");
 
 const openDocumentPreview = () => {
-  documentUrl.value = "https://docs.google.com/document/d/1rkX6Qgp5fRUVVDx4O3rXFlzs9DENrKzK/edit?usp=drive_link&ouid=117914305252683912742&rtpof=true&sd=true"; // Reemplaza con la URL de tu documento
-  showPreview.value = true;
+    documentUrl.value = "https://docs.google.com/document/d/1rkX6Qgp5fRUVVDx4O3rXFlzs9DENrKzK/edit?usp=drive_link&ouid=117914305252683912742&rtpof=true&sd=true"; // Reemplaza con la URL de tu documento
+    showPreview.value = true;
 
-  const iframe = document.querySelector('iframe');
-  iframe.onload = () => {
-    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-  };
+    const iframe = document.querySelector('iframe');
+    iframe.onload = () => {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+    };
 };
 
 const closePreview = () => {
-  showPreview.value = false;
+    showPreview.value = false;
 };
 
 
@@ -485,39 +485,37 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-
-
 .outlook-modal {
-  width: 100%;
-  max-width: 1000px;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
+    width: 100%;
+    max-width: 1000px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
 }
 
 .outlook-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background: #0078d4;
-  color: #fff;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #0078d4;
+    color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .outlook-title {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .outlook-content {
-  padding: 20px;
+    padding: 20px;
 }
 
 .document-iframe {
-  width: 100%;
-  height: 500px;
-  border: none;
+    width: 100%;
+    height: 500px;
+    border: none;
 }
 
 

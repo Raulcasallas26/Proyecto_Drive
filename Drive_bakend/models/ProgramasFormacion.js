@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 
-const   ProgramasFormacionSchema = new mongoose.Schema({
+const ProgramasFormacionSchema = new mongoose.Schema({
     denominacion: {type: String, },
-    codigo: {type: String,  unique: true},
     version: {type: String, },
     estado: { type: Boolean, default: true },
     niveldeformacion:{type: String},
-    archivoOEnlace:{type: String},
+    archivo:{type: String},
 })
 
 export default mongoose.model("programasFormacion", ProgramasFormacionSchema)

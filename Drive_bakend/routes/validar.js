@@ -14,10 +14,10 @@ const validarUnicos = {
             throw new Error(`El E-mail ${ email } ya existe`)
         }
     },
-    validarprogramaFormacion : async (codigo) => {
-        const codigos = await ProgramasFormacion.findOne({codigo})
-        if (codigos) {
-            throw new Error(`El Codigo ${codigo} ya existe`)
+    validarprogramaFormacion : async (denominacion) => {
+        const denominacions = await ProgramasFormacion.findOne({denominacion})
+        if (denominacions) {
+            throw new Error(`El denominacion ${denominacion} ya existe`)
         }
     }
 }

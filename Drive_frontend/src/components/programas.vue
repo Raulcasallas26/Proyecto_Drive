@@ -19,6 +19,13 @@
           </q-input>
         </template>
 
+        <template v-slot:body-cell-archivo="props">
+          <q-td :props="props">
+            <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
+            <p><strong ><a :href="props.row.archivo" target="_blank"> Documento</a></strong>  </p>
+          </q-td>
+        </template>
+
         <template v-slot:body-cell-estado="props">
           <q-td :props="props">
             <span class="text-green" v-if="props.row.estado == true">Activo</span>
@@ -53,9 +60,6 @@
           <q-card flat bordered class="my-card">
             <q-card-section class="q-pa-md">
               <div class="q-gutter-md">
-                <q-input v-model="codigo" label="Código" :rules="[(val) => !!val || 'Campo requerido']" />
-              </div>
-              <div class="q-gutter-md">
                 <q-input v-model="denominacion" label="Denominación" :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
               <div class="q-gutter-md">
@@ -65,18 +69,8 @@
                 <q-select v-model="niveldeformacion" :options="opciones" label="Selecciona un nivel de formacion "
                   :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
-              <!-- <div>
-                <q-select v-model="redDeConocimientoSeleccionada" :options="opcionesRedDeConocimiento"
-                  label="Red de Conocimiento" :rules="[(val) => !!val || 'Campo requerido']" />
-              </div> -->
               <q-card-section>
-                <q-input v-model="archivoOEnlace" class="input" label="Archivo o enlace del diseño curricular"
-                  :rules="[(val) => !!val || 'Campo requerido']" dense clearable prepend-icon="attach_file"
-                  @clear="limpiarCampo">
-                  <template v-slot:append>
-                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                  </template>
-                </q-input>
+                <input type="file" @change="subir_archivo">
               </q-card-section>
             </q-card-section>
             <q-card-section>
@@ -84,7 +78,7 @@
                   border: 2px solid red;
                   border-radius: 20px;
                   text-align: center;
-                  background-color: rgba(255, 0, 0, 0.304);
+                  background-color: rgba(32, 15, 15, 0.304);
                 " v-if="check !== ''">
                 <div>
                   {{ check }}
@@ -117,9 +111,8 @@ let bd = ref(false);
 let r = ref("");
 let niveldeformacion = ref("");
 let alert = ref(false);
-let archivoOEnlace = ref("");
+let archivo = ref("");
 let denominacion = ref("");
-let codigo = ref("");
 let version = ref("");
 let indice = ref(null);
 let opciones = [
@@ -131,10 +124,16 @@ let opciones = [
   "especialización tecnológica",
 ];
 
+function subir_archivo(event) {
+  archivo.value = event.target.files[0]
+  console.log(archivo.value);
+}
+
 let columns = [
-  { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
   { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion", },
   { name: "version", label: "Version", align: "center", field: "version" },
+  { name: "nivel de formacion", label: "Nivel de formacion", align: "center", field: "niveldeformacion" },
+  { name: "archivo", label: "Documentos", align: "center", field: "archivo" },
   { name: "estado", label: "Estado", align: "center", field: "estado" },
   { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
 ];
@@ -153,16 +152,12 @@ function mostrarAlerta(mensaje) {
   check.value = mensaje;
 }
 async function validarYGuardar() {
-  if (codigo.value.trim() === "") {
-    mostrarAlerta("El Codigo es obligatorio");
-  } else if (denominacion.value.trim() === "") {
+  if (denominacion.value.trim() === "") {
     mostrarAlerta("La Denominacion es obligatoria");
   } else if (!version.value) {
     mostrarAlerta("La version es obligatoria");
   } else if (!niveldeformacion.value) {
     mostrarAlerta("el Nivel de formacion es oblogatorio");
-  } else if (!archivoOEnlace.value) {
-    mostrarAlerta("el Diseño curricular es oblogatorio");
   } else {
     guardar();
   }
@@ -173,13 +168,12 @@ async function guardar() {
   try {
     let res = await useProgramas.addProgramasFormacion({
       denominacion: denominacion.value,
-      codigo: codigo.value,
       version: version.value,
       niveldeformacion: niveldeformacion.value,
-      archivoOEnlace: archivoOEnlace.value,
+      archivo: archivo.value,
     });
 
-    if (res.status === 200) {
+    if (res.status === 201) {
       console.log(res);
       console.log("Se guardó un nuevo Programa");
       alert.value = false;
@@ -212,15 +206,13 @@ async function activar(props) {
   console.log(est);
 }
 async function validareditar() {
-  if (codigo.value.trim() === "") {
-    mostrarAlerta("El Codigo es obligatorio");
-  } else if (denominacion.value.trim() === "") {
+  if (denominacion.value.trim() === "") {
     mostrarAlerta("La Denominacion es obligatoria");
   } else if (!version.value) {
     mostrarAlerta("La version es obligatoria");
   } else if (!niveldeformacion.value) {
     mostrarAlerta("el Nivel de formacion es oblogatorio");
-  } else if (!archivoOEnlace.value) {
+  } else if (!archivo.value) {
     mostrarAlerta("el Diseño curricular es oblogatorio");
   } else {
     editarPrograma();
@@ -230,14 +222,14 @@ async function validareditar() {
 async function editarPrograma() {
   loading.value = true;
   try {
-    let res = await useProgramas.editProgramasFormacion(indice.value, {
-      denominacion: denominacion.value,
-      codigo: codigo.value,
-      version: version.value,
-      niveldeformacion: niveldeformacion.value,
-      archivoOEnlace: archivoOEnlace.value,
-    });
-    if (res.status === 200) {
+    let res = await useProgramas.editProgramasFormacion( 
+      indice.value,
+      denominacion.value,
+      version.value,
+      niveldeformacion.value,
+      archivo.value,
+    );
+    if (res.status === 201) {
       console.log("Se guardó un nuevo usuario");
       alert.value = false;
       bd.value = false;
@@ -262,22 +254,19 @@ function edito(props) {
   bd.value = true;
   r.value = props.row;
   indice.value = r.value._id;
-  console.log(indice.value);
   denominacion.value = r.value.denominacion;
-  codigo.value = r.value.codigo;
   version.value = r.value.version;
   niveldeformacion.value = r.value.niveldeformacion;
-  archivoOEnlace.value = r.value.archivoOEnlace;
+  archivo.value = r.value.archivo;
 }
 
 function limpiarFormulario() {
   console.log("limpiando formulario");
   denominacion.value = "";
-  codigo.value = "";
   version.value = "";
   opciones.value = "";
   niveldeformacion.value = "";
-  archivoOEnlace.value = "";
+  archivo.value = "";
   check.value = ""
   alert.value = false
   bd.value = false
@@ -297,7 +286,7 @@ const abrirSelectorDeArchivos = () => {
 const handleFileSelection = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
-    archivoOEnlace.value = selectedFile.name;
+    archivo.value = selectedFile.name;
     alert(`Archivo seleccionado: ${selectedFile.name}`);
   }
   event.target.remove(); // Elimina el input de tipo file después de su uso

@@ -1,4 +1,7 @@
 import ProgramasFormacionModel from "../models/ProgramasFormacion.js";
+import url from "url"
+import path from "path"
+import { v2 as cloudinary } from "cloudinary"
 
 const httpProgramasFormacion = {
     getProgramasFormacion: async (req, res) => {
@@ -12,41 +15,6 @@ const httpProgramasFormacion = {
         }
     },
 
-    // getProgramasFormacionId: async (req, res) => {
-    //     const { id } = req.params;
-    //     try {
-    //         const ProgramasFormacion = await ProgramasFormacionModel.findOne({ id });
-    //         res.json({ ProgramasFormacion })
-    //     } catch (error) {
-    //         res.status(500).json({ mensaje: "Error al obtener la formacion", error })
-    //     }
-    // },
-
-
-    
-
-    // postProgramasFormacion: async (req, res) => {
-    //     const { denominacion, codigo, version, estado, niveldeformacion, archivoOEnlace } =
-    //         req.body;
-
-    //     const ProgramasFormacion = new ProgramasFormacionModel({
-    //         denominacion,
-    //         codigo,
-    //         version,
-    //         niveldeformacion,
-    //         archivoOEnlace,
-    //     });
-    //     try {
-    //         await ProgramasFormacion.save();
-    //         res.json({
-    //             mensaje: "Una formacion insertada!!",
-    //             ProgramasFormacion,
-    //         });
-    //     } catch (error) {
-    //         res.status(500).json({ mensaje: "Error al insertar la formacion", error });
-    //     }
-    // },
-
     postProgramasFormacion: async (req, res) => {
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_NAME,
@@ -56,12 +24,12 @@ const httpProgramasFormacion = {
         });
 
         try {
-            const { denominacion, codigo, version, estado, niveldeformacion 
-            }= req.body;
-            const { archivoOEnlace } = req.files;
-            if (archivoOEnlace) {
-                const extension = archivoOEnlace.name.split(".").pop();
-                const { tempFilePath } = archivoOEnlace;
+            const { denominacion, version, niveldeformacion
+            } = req.body;
+            const { archivo } = req.files;
+            if (archivo) {
+                const extension = archivo.name.split(".").pop();
+                const { tempFilePath } = archivo;
                 const result = await cloudinary.uploader.upload(tempFilePath, {
                     width: 250,
                     crop: "limit",
@@ -69,18 +37,17 @@ const httpProgramasFormacion = {
                     allowedFormats: ["jpg", "png", "docx", "xlsx", "pptx", "pdf"],
                     format: extension,
                 });
-                const buscar = await ProgramasFormacionModel.findOne({ codigo: codigo });
+                const buscar = await ProgramasFormacionModel.findOne({ denominacion: denominacion });
                 if (buscar) {
                     return res.status(404).json({
-                        msg: ` Se encontró un Programas de Formacion con el código ${codigo} en registrado`
+                        msg: ` Se encontró un Programas de Formacion con el código ${denominacion} en registrado`
                     });
                 } else {
                     const nuevoProgramaFormacion = new ProgramasFormacionModel({
                         denominacion: denominacion,
-                        codigo: codigo,
                         version: version,
                         niveldeformacion: niveldeformacion,
-                        archivoOEnlace: result.url,
+                        archivo: result.url,
                     });
                     const ProgramaCreado = await nuevoProgramaFormacion.save();
                     res.status(201).json(ProgramaCreado);
@@ -94,98 +61,90 @@ const httpProgramasFormacion = {
 
 
 
-    putProgramasFormacion: async (req, res) => {
-        const { id } = req.params;
-        const { denominacion, codigo, version, estado, niveldeformacion, archivoOEnlace } =
-            req.body;
-        const programas = await ProgramasFormacionModel.findByIdAndUpdate(
-            id,
-            {
-                denominacion,
-                codigo,
-                version,
-                estado,
-                niveldeformacion,
-                archivoOEnlace
-            },
-            { new: true }
-        );
-        res.json({
-            msg: "ok",
-            programas,
-        });
-    },
-
-    // putUsuarios : async (req, res) => {
-    //     cloudinary.config({
-    //         cloud_name: process.env.CLOUDINARY_NAME,
-    //         api_key: process.env.CLOUDINARY_KEY,
-    //         api_secret: process.env.CLOUDINARY_SECRET,
-    //         secure: true,
+    // putProgramasFormacion: async (req, res) => {
+    //     const { id } = req.params;
+    //     const { denominacion, version, estado, niveldeformacion, archivo } =
+    //         req.body;
+    //     const programas = await ProgramasFormacionModel.findByIdAndUpdate(
+    //         id,
+    //         {
+    //             denominacion,
+    //             version,
+    //             estado,
+    //             niveldeformacion,
+    //             archivo
+    //         },
+    //         { new: true }
+    //     );
+    //     res.json({
+    //         msg: "ok",
+    //         programas,
     //     });
-
-    //     try {
-    //         const { id } = req.params;
-    //         const {
-    //             nombre, apellidos, cedula, telefono, email, password, perfilProfesional, RolUsuario, RedConocimiento
-    //         } = req.body;
-
-
-    //         const buscarCodigo = await ProgramasFormacionModel.findOne({ cedula: cedula });
-    //         if (buscarCodigo && buscarCodigo._id.toString() !== id) {
-    //             return res
-    //                 .status(404)
-    //                 .json({ msg: "Ya se encuentra un Usuario registrado con ese codigo" });
-    //         };
-
-    //         let updatedData = {
-    //             nombre: nombre,
-    //                     apellidos: apellidos,
-    //                     cedula: cedula,
-    //                     telefono: telefono,
-    //                     email: email,
-    //                     password: password,
-    //                     perfilProfesional: perfilProfesional,
-    //                     RolUsuario: RolUsuario,
-    //                     RedConocimiento: RedConocimiento
-    //         };
-
-    //         if (req.files && req.files.archivoOEnlace) {
-    //             const archivoOEnlace = req.files.archivoOEnlace;
-    //             const extension = archivoOEnlace.name.split(".").pop();
-    //             const { tempFilePath } = archivoOEnlace;
-    //             const result = await cloudinary.uploader.upload(tempFilePath, {
-    //                 width: 250,
-    //                 crop: "limit",
-    //                 resource_type: "raw",
-    //                 allowedFormats: ["jpg", "png", "docx", "xlsx", "pptx", "pdf"],
-    //                 format: extension,
-    //             });
-
-    //             const buscar = await ProgramasFormacionModel.findById(id);
-
-    //             if (buscar.archivoOEnlace) {
-    //                 const nombreTemp = buscar.archivoOEnlace.split("/");
-    //                 const nombrecurriculum = nombreTemp[nombreTemp.length - 1];
-    //                 const [public_id] = nombrecurriculum.split(".");
-    //                 await cloudinary.uploader.destroy(public_id);
-    //             };
-
-    //             updatedData.archivoOEnlace = result.url;
-    //         }; 
-
-        
-    //         const buscarUsuario = await ProgramasFormacionModel.findByIdAndUpdate(
-    //             { _id: id },
-    //             { $set: updatedData },
-    //             { new: true }
-    //         );
-    //         res.status(201).json(buscarUsuario);
-    //     } catch (error) {
-    //         console.log(error);
-    //         return res.status(500).json({ error: error.message });
-    //     }
     // },
+
+    putProgramasFormacion: async (req, res) => {
+        cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_NAME,
+            api_key: process.env.CLOUDINARY_KEY,
+            api_secret: process.env.CLOUDINARY_SECRET,
+            secure: true,
+        });
+
+        try {
+            const { id } = req.params;
+            const {
+                denominacion, version, niveldeformacion } = req.body;
+
+
+            const buscarCodigo = await ProgramasFormacionModel.findOne({ denominacion: denominacion });
+            if (buscarCodigo && buscarCodigo._id.toString() !== id) {
+                return res
+                    .status(404)
+                    .json({ msg: "Ya se encuentra un Programa registrado con esta denominacion" });
+            };
+
+            let updatedData = {
+                denominacion: denominacion,
+                version: version,
+                niveldeformacion: niveldeformacion,
+            };
+
+            if (req.files && req.files.archivo) {
+                const archivo = req.files.archivo;
+                const extension = archivo.name.split(".").pop();
+                const { tempFilePath } = archivo;
+                const result = await cloudinary.uploader.upload(tempFilePath, {
+                    width: 250,
+                    crop: "limit",
+                    resource_type: "raw",
+                    allowedFormats: ["jpg", "png", "docx", "xlsx", "pptx", "pdf"],
+                    format: extension,
+                });
+
+                const buscar = await ProgramasFormacionModel.findById(id);
+
+                if (buscar.archivo) {
+                    const nombreTemp = buscar.archivo.split("/");
+                    const nombreArchivo = nombreTemp[nombreTemp.length - 1];
+                    const [public_id] = nombreArchivo.split(".");
+                    await cloudinary.uploader.destroy(public_id);
+                };
+
+                updatedData.archivo = result.url;
+            };
+
+
+            const buscarUsuario = await ProgramasFormacionModel.findByIdAndUpdate(
+                { _id: id },
+                { $set: updatedData },
+                { new: true }
+            );
+            res.status(201).json(buscarUsuario);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: error.message });
+        }
+    },
 
 
 

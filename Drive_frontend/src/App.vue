@@ -49,6 +49,13 @@
                 <q-item-section> Programas de Formacion</q-item-section>
               </q-item>
 
+              <q-item clickable v-ripple to="/materialesforma">
+                <q-item-section avatar>
+                  <q-icon name="img:https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0weUry8lZ8XTLo1lDruF6i2fzqPOQI7bazPybG7eSWIuVvP1xKhm0plAp8l-pbzC8tMo&usqp=CAU" />
+                </q-item-section>
+                <q-item-section> Materiales de Formacion </q-item-section>
+              </q-item>
+
               <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor'"
                 v-ripple to="/ambientes">
                 <q-item-section avatar>
@@ -141,7 +148,7 @@
                 <q-item-section> Instrumentos de Evaluacion </q-item-section>
               </q-item>
 
-              <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'" v-ripple to="/configuracion">
+              <q-item clickable v-ripple to="/configuracion">
                 <q-item-section avatar>
                   <q-icon name="img:https://cdn-icons-png.flaticon.com/512/2040/2040504.png" />
                 </q-item-section>
@@ -164,9 +171,9 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer v-if="!isInLoginComponent && !isMobile" bd=true v-model="drawer" 
-      show-if-above :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay
-      :max-width="100" :breakpoint="500" bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
+    <q-drawer v-if="!isInLoginComponent && !isMobile" bd=true v-model="drawer" show-if-above :mini="miniState"
+      @mouseover="miniState = false" @mouseout="miniState = true" mini-to-overlay :max-width="100" :breakpoint="500"
+      bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }" style="background-color: white">
         <q-list padding>
           <q-item clickable v-ripple id="btn" to="/home">
@@ -176,8 +183,7 @@
             <q-item-section>Inicio </q-item-section>
           </q-item>
 
-          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'"
-            v-ripple to="/usuarios">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'" v-ripple to="/usuarios">
             <q-item-section avatar>
               <q-icon name="people" />
             </q-item-section>
@@ -205,6 +211,13 @@
               <q-icon name="book" />
             </q-item-section>
             <q-item-section> Programas de Formacion</q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/materialesforma">
+            <q-item-section avatar>
+              <q-icon name="img:https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0weUry8lZ8XTLo1lDruF6i2fzqPOQI7bazPybG7eSWIuVvP1xKhm0plAp8l-pbzC8tMo&usqp=CAU" />
+            </q-item-section>
+            <q-item-section> Materiales de Formacion </q-item-section>
           </q-item>
 
           <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor'"
@@ -298,7 +311,7 @@
             <q-item-section> Instrumentos de Evaluacion </q-item-section>
           </q-item>
 
-          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'"  v-ripple to="/configuracion">
+          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'" v-ripple to="/configuracion">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/512/2040/2040504.png" />
             </q-item-section>
@@ -325,7 +338,7 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoginStore } from './stores/login.js';
-import {useconfiguracionStore} from "./stores/configuracion.js"
+import { useconfiguracionStore } from "./stores/configuracion.js"
 let Storecolor = useconfiguracionStore();
 let drawer = ref(false)
 let miniState = ref(true)
@@ -349,15 +362,14 @@ async function getcolor() {
       if (matches && matches.length === 4) {
         return `rgb(${matches[1]},${matches[2]},${matches[3]})`;
       } else {
-        return ''; 
+        return '';
       }
     });
 
     let cortado = cortar.filter(item => item !== '').join(',');
 
     colors.value = cortado;
-    console.log("hola estoy cambienado el color");
-    console.log(colors.value);
+    console.log("color  " + colors.value);
   } catch (error) {
     console.error('Error al obtener colores:', error);
   }
@@ -379,7 +391,7 @@ window.addEventListener('resize', () => {
 });
 
 // Cierra el menú lateral cuando se carga la página en dispositivos móviles
-onMounted(async() => {
+onMounted(async () => {
   if (isMobile.value) {
     drawer.value = false;
   }

@@ -16,6 +16,7 @@ export const useNivelesFormacionStore = defineStore('NivelesFormacion', () => {
             return res;
         } catch (error) {
             console.log('Error en la petición POST');
+            console.log(error);
             console.log(error.response.data.errors[0].msg);
             Notify.create({
                 color: "negative",

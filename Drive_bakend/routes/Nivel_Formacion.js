@@ -5,13 +5,10 @@ import { validarResultados } from "../Middlewares/validaciones.js";
 import { validarJWT } from "../Middlewares/validar-jwt.js";
 const router = Router()
 
-router.get("/", [validarJWT], httpNivelesFormacion.getNivelesFormacion)
-
-router.get("/:id", httpNivelesFormacion.getNivelesFormacionId)
+router.get("/", httpNivelesFormacion.getNivelesFormacion)
 
 router.post("/", [
     check("denominacion", "La denominacion es un campo requerido").notEmpty().trim().isString(),
-    check("codigo", "El Codigo es un campo requerido").notEmpty().trim().isString(),
     validarResultados
 ], httpNivelesFormacion.postNivelesFormacion)
 

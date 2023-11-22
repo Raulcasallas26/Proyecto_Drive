@@ -11,20 +11,17 @@ const router = Router()
   // router.get("/:id", httpProgramasFormacion.getProgramasFormacionId)
   
   router.post("/", [
-    check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
-    check("codigo", "El codigo es un campo obligatorio").notEmpty().trim().trim().isString(),
-    check("codigo").custom(validarUnicos.validarprogramaFormacion), 
-    check("version","la version es un campo obligatorio").notEmpty().trim().isString(),
-    check("niveldeformacion","el nivel de formacion es un campo obligatorio").notEmpty().trim().isString(),
+    check("denominacion", "La denominacion es obligatoria").trim().not().isEmpty(),
+    check("denominacion").custom(validarUnicos.validarprogramaFormacion),
+    check("version","la version es un campo obligatorio").trim().not().isEmpty(),
+    check("niveldeformacion","el nivel de formacion es un campo obligatorio").trim().not().isEmpty(),
     validarResultados
   ], httpProgramasFormacion.postProgramasFormacion)
   
   router.put("/:id",[
-    check("denominacion", "La denominacion es obligatoria").notEmpty().trim().isString(),
-    check("codigo", "El codigo es un campo obligatorio").notEmpty().trim().trim().isString(),
-    check("codigo").custom(validarUnicos.validarprogramaFormacion), 
-    check("version","la version es un campo obligatorio").notEmpty().trim().isString(),
-    check("niveldeformacion","el nivel de formacion es un campo obligatorio").notEmpty().trim().isString(),
+    check("denominacion", "La denominacion es obligatoria").trim().not().isEmpty(),
+    check("version","la version es un campo obligatorio").trim().not().isEmpty(),
+    check("niveldeformacion","el nivel de formacion es un campo obligatorio").trim().not().isEmpty(),
     validarResultados
   ], httpProgramasFormacion.putProgramasFormacion)
   

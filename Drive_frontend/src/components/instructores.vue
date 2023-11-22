@@ -78,17 +78,17 @@
                                 <q-input v-model.number="telefono" type="number" label="Telefono"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
-
+                            <div class="q-gutter-md items-start">
+                                <span>curriculum</span><br>
+                                <input type="file" @change="subir_curriculum">
+                                <!-- <q-input @change="subir_curriculum" label="Curriculum" type="file" /> -->
+                            </div>
                             <div class="q-gutter-md">
                                 <q-input v-model.number="cedula" type="number" label="Cedula"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === true">
                                 <q-input v-model="perfilProfesional" label="Perfil Profecional"
-                                    :rules="[(val) => !!val || 'Campo requerido']" />
-                            </div>
-                            <div class="q-gutter-md" v-if="bd === true">
-                                <q-input v-model="curriculum" label="Curriculum"
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
                             <div class="q-gutter-md" v-if="bd === true">
@@ -145,9 +145,10 @@
                             <p><strong style="font-size:large; ">Cedula:</strong> {{ r.cedula }}</p>
                             <p><strong style="font-size:large; ">E-mail:</strong> {{ r.email }}</p>
                             <p><strong style="font-size:large; ">Nombre:</strong> {{ r.nombre }}</p>
-                            <p><strong style="font-size:large; ">Apellido:</strong> {{ r.apellidos }}</p>
+                            <p><strong style="font-size:large; ">Apellido:</strong> {{ r.apellido }}</p>
                             <p><strong style="font-size:large; ">Telefono:</strong> {{ r.telefono }}</p>
-                            <p><strong style="font-size:large; ">Curriculum:</strong> {{ r.curriculum }}</p>
+                            <p><strong style="font-size:large; ">Curriculum:</strong> <a :href="r.curriculum"
+                                    target="_blank">Curriculum</a> </p>
                             <p><strong style="font-size:large; ">Perfil Profecional:</strong> {{ r.perfilProfesional }}</p>
                             <p><strong style="font-size:large; ">Red de Conocimiento:</strong> {{ r.RedConocimiento }}</p>
                         </q-card-section>
@@ -187,14 +188,20 @@ let cedula = ref("");
 let password = ref("");
 let perfilProfesional = ref("");
 let curriculum = ref("");
-let rolUsuario = ref("");
+let RolUsuario = ref("");
 let RedConocimiento = ref("");
 let loading = ref(false);
 let indice = ref(null);
-let r = ref("");
+let r = ref(""); 
 let opciones = ref([])
 
+RolUsuario.value = "Instructor"
 const emailValido = ref(true); // Inicialmente se asume que el correo es válido
+
+function subir_curriculum(event) {
+    curriculum.value = event.target.files[0]
+    console.log(curriculum.value);
+}
 
 const validarEmail = (val) => {
     // Expresión regular para validar una dirección de correo electrónico
@@ -213,7 +220,7 @@ const validarEmail = (val) => {
 let columns = [
     { name: "perfil", align: "center", label: "Perfil", field: "Perfil" },
     { name: "nombre", align: "center", label: "Nombre", field: "nombre" },
-    { name: "apellido", align: "center", label: "Apellido", field: "apellidos" },
+    { name: "apellido", align: "center", label: "Apellido", field: "apellido" },
     { name: "email", label: "E-mail", align: "center", field: "email" },
     { name: "estado", label: "Estado", align: "center", field: "estado" },
     { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
@@ -279,15 +286,16 @@ async function guardar() {
     try {
         const response = await useUsuario.addUsuarios({
             nombre: nombre.value,
-            apellidos: apellido.value,
+            apellido: apellido.value,
             email: email.value,
             cedula: cedula.value,
+            curriculum:curriculum.value,
             telefono: telefono.value,
-            RolUsuario: "Instructor",
+            RolUsuario: RolUsuario.value,
             password: password.value,
         });
 
-        if (response.status === 200) {
+        if (response.status === 201) {
             console.log("Se guardó un nuevo usuario");
             alert.value = false;
             listarUsuarios();
@@ -316,7 +324,7 @@ async function validaredit() {
         mostrarAlerta("Escriba correctamente el su E-mail");
     } else if (!telefono.value) {
         mostrarAlerta("El Teléfono es obligatorio");
-    } else if (!rolUsuario.value) {
+    } else if (!RolUsuario.value) {
         mostrarAlerta("Rol del usrario es obligatorio");
     } else if (!cedula.value) {
         mostrarAlerta("La Cédula es obligatoria");
@@ -335,51 +343,54 @@ async function validaredit() {
 
 }
 
-function edito(props) {
-    r.value = props.row;
-    bd.value = true;
-    alert.value = true;
-    indice.value = r.value._id;
-    email.value = r.value.email;
-    cedula.value = r.value.cedula;
-    nombre.value = r.value.nombre;
-    telefono.value = r.value.telefono;
-    apellido.value = r.value.apellidos;
-    curriculum.value = r.value.curriculum
-    rolUsuario.value = r.value.RolUsuario
-    RedConocimiento.value = r.value.RedConocimiento
-    perfilProfesional.value = r.value.perfilProfesional
-}
-
-
 function detalles(props) {
     r.value = props.row;
     detalle.value = true;
     email.value = r.value.email;
     cedula.value = r.value.cedula;
     nombre.value = r.value.nombre;
-    apellido.value = r.value.apellidos;
+    apellido.value = r.value.apellido;
     telefono.value = r.value.telefono;
 }
 
+function edito(props) {
+    r.value = props.row;
+    bd.value = true;
+    alert.value = true;
+    indice.value = r.value._id;
+    nombre.value = r.value.nombre;
+    apellido.value = r.value.apellido;
+    cedula.value = r.value.cedula;
+    telefono.value = r.value.telefono;
+    email.value = r.value.email;
+    password.value = r.value.password
+    perfilProfesional.value = r.value.perfilProfesional
+    curriculum.value = r.value.curriculum
+    RolUsuario.value = r.value.RolUsuario
+    RedConocimiento.value = r.value.RedConocimiento
+}
 
 async function editarUser() {
     loading.value = true;
-    console.log("hola estoy editando");
     try {
-        let r = await useUsuario.editUsuarios(indice.value, {
-            email: email.value,
-            cedula: cedula.value,
-            nombre: nombre.value,
-            telefono: telefono.value,
-            apellidos: apellido.value,
-            curriculum: curriculum.value,
-            RolUsuario: rolUsuario.value,
-            RedConocimiento: RedConocimiento.value,
-            perfilProfesional: perfilProfesional.value
-        });
+        console.log("hola estoy editando");
+        let r = await useUsuario.editUsuarios(
+            indice.value,
+            nombre.value,
+            apellido.value,
+            cedula.value,
+            telefono.value,
+            email.value,
+            password.value,
+            perfilProfesional.value,
+            curriculum.value,
+            RolUsuario.value,
+            RedConocimiento.value,
+
+        );
         console.log("se insertaron los datos");
-        if (r.status === 200) {
+        console.log(r.status, r);
+        if (r.status === 201) {
             console.log(r);
             console.log("Se edito el usuario con exito");
             listarUsuarios();
@@ -405,7 +416,7 @@ async function activar(props) {
         console.log(r.value.estado, "resultado del if condicion");
         Notify.create({
             color: "negative",
-            message: "El usuario fue Desactivado",
+            message: "El Instructor fue Desactivado",
             icon: "check",
             position: "top",
             timeout: 3000
@@ -415,7 +426,7 @@ async function activar(props) {
         console.log(r.value.estado, "resultado del else condicion");
         Notify.create({
             color: "positive",
-            message: "El usuario fue Activado",
+            message: "El Instructor fue Activado",
             icon: "check",
             position: "top",
             timeout: 3000
@@ -432,7 +443,7 @@ function limpiarFormulario() {
     telefono.value = "";
     cedula.value = "";
     password.value = "";
-    rolUsuario.value = "";
+    RolUsuario.value = "";
     bd.value = false;
     check.value = ""
 }

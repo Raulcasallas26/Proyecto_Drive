@@ -12,6 +12,7 @@ import investigacion from "../components/investigacion.vue"
 import configuracion from "../components/configuracion.vue"
 import nivelesforma from "../components/NivelesFormacion.vue"
 import redConocimiento from "../components/redConocimiento.vue"
+import materialesforma from "../components/materialesforma.vue";
 import materialesApoyo from "../components/materialesApoyo.vue"
 import registroCalificado from "../components/registroCalificado.vue";
 import retroalimentacionRed from "../components/retroalimentacionRed.vue"
@@ -59,6 +60,7 @@ const routes = [
     { path: "/configuracion", component: configuracion, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/investigacion", component: investigacion, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/redConocimento", component: redConocimiento, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
+    { path: "/materialesforma", component: materialesforma, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/materialesApoyo", component: materialesApoyo, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/registroCalificado", component: registroCalificado, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },
     { path: "/retroalimentacionRed", component: retroalimentacionRed, meta: { rol: ["Super", "Gestor", "Admin", "Instructor"] }, beforeEnter: auth },

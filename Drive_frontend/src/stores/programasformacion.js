@@ -5,9 +5,16 @@ import { ref } from "vue"
 import { Notify } from "quasar"
 export const useProgramasFormacionStore = defineStore(
     "ProgramasFormacion", () => {
-        const addProgramasFormacion = async (info) => {
+        const addProgramasFormacion = async (info, archivo) => {
             try {
-                let res = await axios.post(`${urlBackend}/ProgramasFormacion`, info)
+                const formData = new FormData()
+                for (const key in info) {
+                    formData.append(key, info[key])
+                }
+                formData.append('archivo', archivo)
+                let res = await axios.post(`${urlBackend}/ProgramasFormacion`, formData,{
+                    headers: {"Content-Type":"multipart/form_data"}
+                })
                 Notify.create({
                     color: "positive",
                     message: "Registro de programa exitoso",
@@ -40,9 +47,16 @@ export const useProgramasFormacionStore = defineStore(
                 return error
             }
         }
-        const editProgramasFormacion = async (id, info) => {
+        const editProgramasFormacion = async (id, denominacion, version, niveldeformacion, archivo ) => {
             try {
-                let res = await axios.put(`${urlBackend}/ProgramasFormacion/${id}`, info)
+                const formData = new FormData();
+                formData.append("denominacion", denominacion);
+                formData.append("version", version);
+                formData.append("niveldeformacion", niveldeformacion);
+                formData.append("archivo",archivo);
+                let res = await axios.put(`${urlBackend}/ProgramasFormacion/${id}`, formData, {
+                    headers:{"Content-Type":"multipart/form-data", },
+                })
                 Notify.create({
                     color: "positive",
                     message: "Edicion de programa exitoso",
@@ -52,7 +66,7 @@ export const useProgramasFormacionStore = defineStore(
                 })
                 return res
             } catch (error) {
-                console.log("hay un error en edirUsers");
+                console.log("hay un error en edirUsers", error);
                 Notify.create({
                     color: "negative",
                     message: error.response.data.errors[0].msg,

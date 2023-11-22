@@ -197,8 +197,6 @@ async function validarYGuardar() {
     mostrarAlerta("El Codigo es obligatorio");
   } else if (Nombre.value.trim() === "") {
     mostrarAlerta("El Nombre es obligatorio");
-  } else if (Tipo.value.trim() === "") {
-    mostrarAlerta("El Tipo es obligatorio");
   } else if (descripcion.value.trim() === "") {
     mostrarAlerta("La Descripcion es obligatoria");
   } else if (archivoOEnlace.value.trim() === "") {

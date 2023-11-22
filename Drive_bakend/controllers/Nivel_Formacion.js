@@ -10,31 +10,17 @@ const httpNivelesFormacion = {
         }
     },
 
-    getNivelesFormacionId: async (req, res) => {
-        const { id } = req.params;
-
-        try {
-            const Nivel = await NivelesFormacionModel.findOne({ id });
-            res.json({ Nivel });
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al obtener los niveles de formacion", error })
-        }
-    },
-
     postNivelesFormacion: async (req, res) => {
-        const { codigo, denominacion, } = req.body;
+        const { denominacion } = req.body;
         const Nivel = new NivelesFormacionModel({
-            codigo,
-            denominacion,
-
+            denominacion
         });
-
         try {
-            const nuevoNivelesFormacion = await Nivel.save();
+            const nivelGuargado = await Nivel.save();
 
             res.json({
                 mensaje: "Un nivel de formacion insertado!!",
-                Nivel: nuevoNivelesFormacion
+                nivelGuargado
             });
         } catch (error) {
             res.status(500).json({ mensaje: "Error al insertar los niveles de formacion", error });
@@ -43,19 +29,19 @@ const httpNivelesFormacion = {
 
     putNivelesFormacion: async (req, res) => {
         const { id } = req.params;
-        const { denominacion, codigo } = req.body;
+        const { denominacion } = req.body;
 
         try {
             const NivelActualizado = await NivelesFormacionModel.findOneAndUpdate(
                 { _id: id }, // Cambiado de 'id' a '_id' si estás usando el ID de MongoDB
-                { denominacion, codigo },
+                { denominacion},
                 { new: true }
             );
 
             if (NivelActualizado) {
                 res.json({
                     mensaje: "Registro modificado exitosamente",
-                    Nivel: NivelesFormacionActualizado
+                    NivelActualizado
                 });
             } else {
                 res.json({ mensaje: "No se encontró los niveles de formacion con el  ID proporcionado" });

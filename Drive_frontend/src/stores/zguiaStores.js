@@ -5,9 +5,16 @@ import { ref } from "vue"
 import { Notify } from "quasar"
 export const useUsuariosStore = defineStore(
     "Usuarios", () => {
-        const addUsuarios = async (info) => {
+        const addUsuarios = async (info, curriculum) => {
             try {
-                let res = await axios.post(`${urlBackend}/Usuarios`, info)
+                const formData = new FormData();
+                for (const key in info) {
+                    formData.append(key, info[key])
+                }
+                formData.append('curriculum', curriculum)
+                let res = await axios.post(`${urlBackend}/Usuarios`, formData, {
+                    headers: { "content-Type": "multipart/form-data" }
+                })
                 Notify.create({
                     color: "positive",
                     message: "Registro de usuario exitoso",
@@ -17,6 +24,7 @@ export const useUsuariosStore = defineStore(
                 })
                 return res
             } catch (error) {
+                console.log(error);
                 console.log(error.response.data.errors[0].msg);
                 Notify.create({
                     color: "negative",
@@ -39,9 +47,25 @@ export const useUsuariosStore = defineStore(
                 return error
             }
         }
-        const editUsuarios = async (id, info) => {
+
+
+
+        const editUsuarios = async (id, nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, RolUsuario, RedConocimiento) => {
             try {
-                let res = await axios.put(`${urlBackend}/Usuarios/${id}`, info)
+                const formData = new FormData();
+                formData.append("nombre", nombre);
+                formData.append("apellidos", apellidos);
+                formData.append("cedula", cedula);
+                formData.append("telefono", telefono);
+                formData.append("email", email);
+                formData.append("password", password);
+                formData.append("perfilProfesional", perfilProfesional);
+                formData.append("curriculum", curriculum);
+                formData.append("RolUsuario", RolUsuario);
+                formData.append("RedConocimiento", RedConocimiento);
+                let res = await axios.put(`${urlBackend}/Usuarios/${id}`, formData, {
+                    headers: { "Content-Type": "multipart/form-data", },
+                })
                 Notify.create({
                     color: "positive",
                     message: "Edicion de usuario exitoso",
@@ -51,7 +75,7 @@ export const useUsuariosStore = defineStore(
                 })
                 return res
             } catch (error) {
-                console.log("hay un error en edirUsers");
+                console.log("hay un error en edirUsers", error);
                 Notify.create({
                     color: "negative",
                     message: error.response.data.errors[0].msg,

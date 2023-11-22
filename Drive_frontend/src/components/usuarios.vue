@@ -83,6 +83,7 @@
                                     :options="opciones" label="Selecciona un Rol" />
                             </div>
                             <div class="q-gutter-md items-start">
+                                <span>curriculum</span><br> 
                                 <input type="file" @change="subir_curriculum">
                                 <!-- <q-input @change="subir_curriculum" label="Curriculum" type="file" /> -->
                             </div>
@@ -143,7 +144,7 @@
                 </div>
 
                 <q-card-section class="q-pt-none" id="card">
-                    <q-card flat bordered class="my-card" style="border-radius: 10px;">
+                    <q-card flat bordered class="my-card" style="border-radius: 10px; ">
                         <q-card-section class="q-pa-md">
                             <p><strong style="font-size:large; ">Rol:</strong> {{ r.RolUsuario }}</p>
                             <p><strong style="font-size:large; ">Cedula:</strong> {{ r.cedula }}</p>
@@ -152,7 +153,7 @@
                             <p><strong style="font-size:large; ">Apellido:</strong> {{ r.apellidos }}</p>
                             <p><strong style="font-size:large; ">Telefono:</strong> {{ r.telefono }}</p>
                             <p><strong style="font-size:large; ">Curriculum:</strong> <a :href="r.curriculum"
-                                    target="_blank">{{ r.curriculum }}</a> </p>
+                                    target="_blank">Curriculum</a> </p>
                             <p><strong style="font-size:large; ">Perfil Profesional:</strong> {{ r.perfilProfesional }}</p>
                             <p><strong style="font-size:large; ">Red de Conocimiento:</strong> {{ r.RedConocimiento }}</p>
                         </q-card-section>

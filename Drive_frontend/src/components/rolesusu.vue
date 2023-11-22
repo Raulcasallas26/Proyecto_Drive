@@ -100,7 +100,8 @@ let r = ref("");
 let opciones = [
   "Administrador",
   "Gestor",
-  "Instructor"
+  "Instructor",
+  "Coordinador"
 ];
 
 let columns = [

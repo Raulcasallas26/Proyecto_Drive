@@ -37,19 +37,20 @@
         </div>
 
         <q-dialog v-model="alert">
-            <q-card id="card" >
+            <q-card id="card">
                 <q-card-section>
-                    <div class="text-h4" v-if="bd===false">Registro de Nivel de Formacion</div>
+                    <div class="text-h4" v-if="bd === false">Registro de Nivel de Formacion</div>
                     <div class="text-h4" v-else>Edicion de Nivel de Formacion</div>
                 </q-card-section>
                 <q-card-section class="q-pt-none" id="card">
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
-                            <div class="q-gutter-md">
+                            <!-- <div class="q-gutter-md">
                                 <q-input v-model="codigo" label="Código" :rules="[(val) => !!val || 'Campo requerido']" />
-                            </div>
+                            </div> -->
                             <div class="q-gutter-md">
-                                <q-input v-model="denominacion" label="Denominación"
+                                <q-select v-model="denominacion" :options="opciones"
+                                    label="Selecciona un nivel de formacion "
                                     :rules="[(val) => !!val || 'Campo requerido']" />
                             </div>
 
@@ -92,11 +93,17 @@ let alert = ref(false);
 let denominacion = ref("");
 let codigo = ref("");
 let indice = ref(null);
-
+let opciones = [
+    "Auxiliar",
+    "Operario",
+    "Técnico",
+    "Profundización Técnica",
+    "Tecnólogo",
+    "Especialización Tecnológica",
+];
 
 let columns = [
-    { name: "codigo", align: "center", label: "Codigo", field: "codigo" },
-    { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion",},
+    { name: "denominacion", label: "Denominacion", align: "center", field: "denominacion", },
     { name: "estado", label: "Estado", align: "center", field: "estado" },
     { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
 ];
@@ -110,9 +117,7 @@ async function obtenerformacion() {
 }
 
 async function validarYGuardar() {
-    if (codigo.value.trim() === "") {
-        mostrarAlerta("El Codigo es obligatorio");
-    } else if (denominacion.value.trim() === "") {
+    if (denominacion.value.trim() === "") {
         mostrarAlerta("La Denominacion es obligatoria");
     } else {
         alert.value = false;
@@ -123,7 +128,6 @@ async function guardar() {
     loading.value = true;
     let res = await useNivel.addNivelesFormacion({
         denominacion: denominacion.value,
-        codigo: codigo.value,
     });
     console.log(res);
     console.log("se guardo un nuevo programa");
@@ -145,9 +149,7 @@ async function activar(props) {
     console.log(est);
 }
 async function validareditar() {
-    if (codigo.value.trim() === "") {
-        mostrarAlerta("El Codigo es obligatorio");
-    } else if (denominacion.value.trim() === "") {
+    if (denominacion.value.trim() === "") {
         mostrarAlerta("La Denominacion es obligatoria");
     } else {
         alert.value = false;
@@ -159,7 +161,6 @@ async function editarPrograma() {
     console.log(indice.value);
     let res = await useNivel.editNivelesFormacion(indice.value, {
         denominacion: denominacion.value,
-        codigo: codigo.value,
     });
     console.log(indice.value);
     console.log(res);
@@ -176,12 +177,10 @@ function edito(props) {
     indice.value = r.value._id;
     console.log(indice.value);
     denominacion.value = r.value.denominacion;
-    codigo.value = r.value.codigo;
 }
 
 function limpiarFormulario() {
     denominacion.value = "";
-    codigo.value = "";
     bd.value = false
     check.value = ""
 }

@@ -4,7 +4,6 @@ import url from "url"
 import path from "path"
 import { v2 as cloudinary } from "cloudinary"
 
-
 const httpUsuarios = {
     getUsuarios: async (req, res) => {
         try {
@@ -14,17 +13,7 @@ const httpUsuarios = {
             res.status(500).json({ mensaje: "Error al obtener los Usuarios", error })
         }
     },
-
-    // getUsuariosId: async (req, res) => {
-    //     const { id } = req.params;
-    //     try { 
-    //         const instructor = await InstrutoresModel.findOne({ id });
-    //         res.json({ instructor })
-    //     } catch (error) {
-    //         res.status(500).json({ mensaje: "Error al obtener la formacion", error })
-    //     }
-    // },
-
+    
     postUsuarios: async (req, res) => {
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_NAME,
@@ -65,7 +54,7 @@ const httpUsuarios = {
                         curriculum: result.url,
                         RolUsuario: RolUsuario,
                         RedConocimiento: RedConocimiento
-                    });
+                    }); 
 
                     const salt = bcrypt.genSaltSync();
                     nuevoUsuario.password = bcrypt.hashSync(req.body.password, salt);

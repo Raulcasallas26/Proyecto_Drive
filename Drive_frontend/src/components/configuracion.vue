@@ -26,60 +26,53 @@
         <strong>Perfil profesional:</strong>
         {{ useLogin.datos.perfilProfesional }}
       </p>
-      <p><strong>Hoja de vida:</strong> {{ useLogin.datos.hojadevida }}</p>
+      <!-- {{ useLogin.datos.curriculum }} -->
+      <p><strong>Hoja de vida:</strong> <a :href="useLogin.datos.curriculum " target="_blank">Curriculum</a> </p>
       <p><strong>RolUsuario:</strong> {{ useLogin.datos.RolUsuario }}</p>
     </div>
 
     <div class="card">.</div>
 
-    <div
-      v-if="
-        useLogin.datos.RolUsuario === 'Super' ||
-        useLogin.datos.RolUsuario === 'Administrador'
-      "
-    >
+    <div v-if="useLogin.datos.RolUsuario === 'Super' ||
+      useLogin.datos.RolUsuario === 'Administrador'
+      ">
       <div class="text4">Configuracion de Interfaz</div>
       <div class="text2">Selector de color</div>
       <q-btn label="Editar color" color="primary" @click="abrirModalEdicion(index)"></q-btn>
       <div>
         <q-dialog v-model="showModaldetalles">
-    <q-card class="custom-modal">
-      <q-card-section>
-        <q-card-section class="q-pa-md">
+          <q-card class="custom-modal">
+            <q-card-section>
+              <q-card-section class="q-pa-md">
 
 
 
-          
-        </q-card-section>
-      </q-card-section>
-    </q-card>
-  </q-dialog>
+
+              </q-card-section>
+            </q-card-section>
+          </q-card>
+        </q-dialog>
         <q-dialog v-model="card">
-      <q-card class="my-card" style="width: 20%;">
-       
-
-        <q-card-section >
-          <q-color
-        v-model="color"
-        label="Selecciona un color"
-        dense
-        
-          />
-
-        </q-card-section>
+          <q-card class="my-card" style="width: 20%;">
 
 
-        <q-card-actions align="right">
-          <q-btn v-close-popup flat color="primary" label="Guardar"></q-btn>
-        
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+            <q-card-section>
+              <q-color v-model="color" label="Selecciona un color" dense />
+
+            </q-card-section>
+
+
+            <q-card-actions align="right">
+              <q-btn v-close-popup flat color="primary" label="Guardar"></q-btn>
+
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </div>
       <div class="card2">.</div>
     </div>
-    
-    
+
+
     <!-- modales -->
     <div>
       <q-dialog v-model="showModal">
@@ -89,30 +82,15 @@
             <div class="card">.</div>
             <q-input v-model="nombre" label="Nombre" />
             <q-input v-model="apellido" label="Apellidos" />
-            <q-input
-              v-model="numidentificacion"
-              label="Numero de indentificacion"
-            />
+            <q-input v-model="numidentificacion" label="Numero de indentificacion" />
             <q-input v-model="numtelefono" label="Numero de telefono" />
             <q-input v-model="correo" label="correo electronico" />
             <q-input v-model="perfilprofe" label="Perfil Profesional" />
             <q-card-section>
-              <q-input
-                class="input"
-                v-model="archivoOEnlace"
-                label="hoja de vida"
-                outlined
-                dense
-                clearable
-                prepend-icon="attach_file"
-                @clear="limpiarCampo"
-              >
+              <q-input class="input" v-model="archivoOEnlace" label="hoja de vida" outlined dense clearable
+                prepend-icon="attach_file" @clear="limpiarCampo">
                 <template v-slot:append>
-                  <q-icon
-                    name="attach_file"
-                    style="cursor: pointer"
-                    @click="abrirSelectorDeArchivos"
-                  />
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
                 </template>
               </q-input>
             </q-card-section>
@@ -120,11 +98,7 @@
           <div class="card">.</div>
           <q-card-section>
             <q-btn @click="showModal = false" label="Cancelar" />
-            <q-btn
-              @click="editarinformacion()"
-              color="primary"
-              label="Editar"
-            />
+            <q-btn @click="editarinformacion()" color="primary" label="Editar" />
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -141,7 +115,7 @@ import { load } from "../routes/direccion.js";
 
 const storecolor = useconfiguracionStore();
 const useLogin = useLoginStore();
-let coloredit =ref("")
+let coloredit = ref("")
 const editedColor = ref("");
 const showModal = ref(false);
 let datos = ref("");
@@ -171,7 +145,7 @@ async function getcolor() {
 let idEdicion = ref(null);
 
 const card = ref(false);
-  const abrirModalEdicion = (index) => {
+const abrirModalEdicion = (index) => {
   idEdicion.value = index;
   const color = colors.value[index];
   if (color) {
@@ -213,7 +187,7 @@ const guardarCambios = async () => {
 
 onMounted(async () => {
   await getcolor();
-  
+
 });
 </script>
 
@@ -228,6 +202,7 @@ onMounted(async () => {
   margin-right: 1%;
   height: 1%;
 }
+
 .card2 {
   background-color: rgba(0, 0, 0, 0);
   font-size: 50px;
@@ -236,6 +211,7 @@ onMounted(async () => {
   margin-right: 1%;
   height: 1%;
 }
+
 .text {
   font-size: 400%;
   color: rgb(0, 0, 0);
@@ -245,6 +221,7 @@ onMounted(async () => {
   object-position: center;
   justify-content: center;
 }
+
 /* .selected-color {
   width: 100px;
   height: 100px;
@@ -260,28 +237,33 @@ onMounted(async () => {
   display: flex;
   margin-left: 1%;
 }
+
 .text3 {
   font-size: 240%;
   color: rgb(0, 0, 0);
   display: flex;
   margin-left: 1%;
 }
+
 .datosper {
   font-size: 200%;
   color: rgb(0, 0, 0);
   margin-left: 1%;
   font-family: Arial;
 }
+
 .contac {
   font-size: 200%;
   color: rgb(0, 0, 0);
   margin-left: 1%;
 }
+
 .educa {
   font-size: 200%;
   color: rgb(0, 0, 0);
   margin-left: 1%;
 }
+
 .text4 {
   font-size: 400%;
   color: rgb(0, 0, 0);
@@ -291,6 +273,7 @@ onMounted(async () => {
   object-position: center;
   justify-content: center;
 }
+
 .agregar {
   background-color: green;
   width: 8%;
@@ -302,8 +285,11 @@ onMounted(async () => {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .agregar:hover {
-  transform: scale(1.05); /* Aumenta el tamaño en un 5% */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Agrega una sombra suave */
+  transform: scale(1.05);
+  /* Aumenta el tamaño en un 5% */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  /* Agrega una sombra suave */
 }
 </style>

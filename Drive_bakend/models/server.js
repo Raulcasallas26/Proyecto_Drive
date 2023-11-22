@@ -10,6 +10,7 @@ import GuiasAprendiz from "../routes/GuiasAprendiz.js";
 import RolesUsuarios from "../routes/RolesUsuarios.js";
 import investigacion from "../routes/Investigaciones.js"
 import MaterialesApoyo from "../routes/MaterialesApoyo.js";
+import materialesforma from "../routes/materialesforma.js";
 import NivelesFormacion from "../routes/Nivel_Formacion.js";
 import CentrosFormacion from "../routes/CentrosFormacion.js";
 import RedesConocimiento from "../routes/RedesConocimiento.js";
@@ -38,8 +39,9 @@ class Server {
         this.app.use('/GuiasAprendiz', GuiasAprendiz);
         this.app.use('/RolesUsuarios', RolesUsuarios);
         this.app.use('/investigacion', investigacion);
-        this.app.use('/MaterialesApoyo', MaterialesApoyo);
         this.app.use('/nivelesforma', NivelesFormacion);
+        this.app.use('/MaterialesApoyo', MaterialesApoyo);
+        this.app.use('/materialesforma', materialesforma);
         this.app.use('/CentrosFormmacion', CentrosFormacion);
         this.app.use('/RedesConocimiento', RedesConocimiento);
         this.app.use('/ProgramasFormacion', ProgramasFormacion);
