@@ -37,7 +37,8 @@
         </div>
 
         <q-dialog v-model="alert">
-            <q-card id="card">
+            <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
+            <q-card v-else id="card">
                 <q-card-section>
                     <div class="text-h4" v-if="bd === false">Registro de Nivel de Formacion</div>
                     <div class="text-h4" v-else>Edicion de Nivel de Formacion</div>

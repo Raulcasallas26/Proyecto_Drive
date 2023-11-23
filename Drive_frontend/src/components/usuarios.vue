@@ -45,7 +45,8 @@
             </q-table>
         </div>
         <q-dialog v-model="alert" persistent>
-            <q-card id="card">
+            <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
+            <q-card v-else id="card">
                 <div style="display: flex;">
                     <q-card-section>
                         <div class="text-h4" v-if="bd === false"> Registro Usuarios</div>
@@ -82,10 +83,8 @@
                                 <q-select v-model="RolUsuario" :rules="[(val) => !!val || 'Campo requerido']"
                                     :options="opciones" label="Selecciona un Rol" />
                             </div>
-                            <div class="q-gutter-md items-start">
-                                <span>curriculum</span><br> 
-                                <input type="file" @change="subir_curriculum">
-                                <!-- <q-input @change="subir_curriculum" label="Curriculum" type="file" /> -->
+                            <div class="q-gutter-md">
+                                <input type="file" @change="subir_curriculum" class="custom-file-input">
                             </div>
                             <div class="q-gutter-md">
                                 <q-input v-model.number="cedula" type="number" label="Cedula"
@@ -225,6 +224,7 @@ let columns = [
     { name: "perfil", align: "center", label: "Perfil", field: "Perfil" },
     { name: "nombre", align: "center", label: "Nombre", field: "nombre" },
     { name: "apellido", align: "center", label: "Apellido", field: "apellidos" },
+    { name: "rolUsuario", align: "center", label: "Rol", field: "RolUsuario" },
     { name: "email", label: "E-mail", align: "center", field: "email" },
     { name: "estado", label: "Estado", align: "center", field: "estado" },
     { name: "opciones", label: "Opciones", align: "center", field: "opciones" },
@@ -508,6 +508,29 @@ const handleFileSelection = (event) => {
 };
 </script>
 <style scoped>
+/* Estilos para el input personalizado */
+.custom-file-input {
+    border-bottom: 1px solid #afafaf;
+    color: #afafaf;
+    padding: 8px 12px;
+    font-size: 16px;
+    width: 96%;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* Estilos para cuando el input está enfocado */
+.custom-file-input:hover {
+    border-bottom-color: #000000;
+    color: #000000;
+    /* Cambiar el color de borde al estar enfocado */
+}
+
+.custom-file-input:focus {
+    color: #000000;
+    /* Cambiar el color de borde al estar enfocado */
+}
+
 #card {
     width: 35em;
     max-width: 100%;

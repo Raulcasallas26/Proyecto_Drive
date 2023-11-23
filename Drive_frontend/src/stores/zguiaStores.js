@@ -48,8 +48,6 @@ export const useUsuariosStore = defineStore(
             }
         }
 
-
-
         const editUsuarios = async (id, nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, RolUsuario, RedConocimiento) => {
             try {
                 const formData = new FormData();

@@ -22,7 +22,7 @@
         <template v-slot:body-cell-archivo="props">
           <q-td :props="props">
             <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
-            <p><strong ><a :href="props.row.archivo" target="_blank"> Documento</a></strong>  </p>
+            <p><strong><a :href="props.row.archivo" target="_blank"> Documento</a></strong> </p>
           </q-td>
         </template>
 
@@ -46,7 +46,8 @@
     </div>
 
     <q-dialog v-model="alert" persistent>
-      <q-card id="card">
+      <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
+      <q-card v-else id="card">
         <div style="display: flex;">
           <q-card-section>
             <div class="text-h4" v-if="bd === false">Registrar Programa</div>
@@ -91,7 +92,7 @@
         <q-card-actions align="right">
           <q-btn flat label="Cerrar" @click="limpiarFormulario(), cerrar()" color="primary" v-close-popup />
           <q-btn flat label="Guardar" v-if="bd === false" @click="validarYGuardar()" color="primary" />
-          <q-btn flat label="Editar Usuario" v-else @click="validareditar()" color="primary" />
+          <q-btn flat label="Editar Programa" v-else @click="validareditar()" color="primary" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -222,7 +223,7 @@ async function validareditar() {
 async function editarPrograma() {
   loading.value = true;
   try {
-    let res = await useProgramas.editProgramasFormacion( 
+    let res = await useProgramas.editProgramasFormacion(
       indice.value,
       denominacion.value,
       version.value,

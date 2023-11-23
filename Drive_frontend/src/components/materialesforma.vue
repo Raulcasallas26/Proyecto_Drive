@@ -1,8 +1,7 @@
 <template>
   <div class="card-container">
     <div class="body" style="position: relative">
-      <q-btn style="background-color: green; color: white;" :disable="loading" label="Agregar"
-        @click="showModalAgregar = true" />
+      <q-btn style="background-color: green; color: white" :disable="loading" label="Agregar" @click="agregar()" />
       <div style="margin-left: 5%" class="text-h4">Materiales de Formacion</div>
       <q-space />
       <q-input borderless dense debounce="300" style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
@@ -18,7 +17,6 @@
         <div class="card">
           <div class="top-half">
             <div class="info">
-
               <p><strong>Nombre:</strong> {{ ambiente.nombre }}</p>
               <p><strong>Tipo:</strong> {{ ambiente.tipo }}</p>
             </div>
@@ -33,7 +31,6 @@
               </button>
             </div>
           </div>
-
           <q-slide-transition appear>
             <div v-show="cardStates[index]">
               <div class="bottom-half">
@@ -50,21 +47,21 @@
       </div>
     </div>
     <!-- Modal para agregar ambientes -->
-    <q-dialog v-model="showModalAgregar" persistent>
-      <q-card id="card">
-        <div style="display: flex;">
+    <q-dialog v-model="alert" persistent>
+      <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
+      <q-card v-else id="card">
+        <div style="display: flex">
           <q-card-section>
-            <div class="text-h4">Agregar Materiales</div>
+            <div class="text-h4" v-if="bd === false">Agregar Materiales</div>
+            <div class="text-h4" v-else>Editar Materiales</div>
           </q-card-section>
-          <div style="margin-left: auto; margin-bottom: auto;">
-            <q-btn @click="showModalAgregar = false; limpiarFormulario()" class="close-button" icon="close" />
+          <div style="margin-left: auto; margin-bottom: auto">
+            <q-btn @click="toggleX, limpiarFormulario()" class="close-button" icon="close" v-close-popup />
           </div>
         </div>
-
         <q-card-section class="q-pt-none" id="card">
           <q-card flat bordered class="my-card">
             <q-card-section class="q-pa-md">
-
               <div class="q-gutter-md">
                 <q-input v-model="Nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
@@ -75,96 +72,43 @@
               <div class="q-gutter-md">
                 <q-input v-model="descripcion" label="Descripcion" :rules="[(val) => !!val || 'Campo requerido']" />
               </div>
-              <div class="q-gutter-md">
-                <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
-                  prepend-icon="attach_file" @clear="limpiarCampo">
-                  <template v-slot:append>
-                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                  </template>
-                </q-input>
+              <div class="q-gutter-md items-start">
+                <span>documentos</span><br />
+                <input type="file" @change="subir_documentos" />
+                <!-- <q-input @change="subir_curriculum" label="Curriculum" type="file" /> -->
               </div>
             </q-card-section>
             <q-card-section>
-              <div role="alert"
-                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
-                v-if="check !== ''">
-                <div>{{ check }}</div>
+              <div role="alert" style="
+                  border: 2px solid red;
+                  border-radius: 20px;
+                  text-align: center;
+                  background-color: rgba(255, 0, 0, 0.304);
+                " v-if="check !== ''">
+                <div>
+                  {{ check }}
+                </div>
               </div>
             </q-card-section>
           </q-card>
         </q-card-section>
-
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" @click="showModalAgregar = false; limpiarFormulario()" color="primary" />
-          <q-btn flat label="Agregar" @click="validarYGuardar" color="primary" />
-          <div v-if="validationErrors.codigo" class="error-message">{{ validationErrors.codigo }}</div>
+          <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+          <q-btn flat label="Guardar" v-if="bd === false" @click="validarYGuardar" color="primary" />
+          <q-btn flat label="Editar Usuario" v-else @click="validaredit" color="primary" />
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-
-    <!-- Modal para editar ambientes -->
-    <q-dialog v-model="showModalEdicion" persistent>
-      <q-card id="card">
-        <div style="display: flex;">
-          <q-card-section>
-            <div class="text-h4">Editar Materiales</div>
-          </q-card-section>
-          <div style="margin-left: auto; margin-bottom: auto;">
-            <q-btn @click="showModalEdicion = false; limpiarFormulario()" class="close-button" icon="close" />
-          </div>
-        </div>
-
-        <q-card-section class="q-pt-none" id="card">
-          <q-card flat bordered class="my-card">
-            <q-card-section class="q-pa-md">
-
-              <div class="q-gutter-md">
-                <q-input v-model="Nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
-              </div>
-              <div class="q-gutter-md">
-                <q-select v-model="Tipo" label="Tipo" :options="opcionesTipo"
-                  :rules="[(val) => !!val || 'Campo requerido']" />
-              </div>
-              <div class="q-gutter-md">
-                <q-input v-model="descripcion" label="Descripcion" :rules="[(val) => !!val || 'Campo requerido']" />
-              </div>
-              <div class="q-gutter-md">
-                <q-input class="input" v-model="archivoOEnlace" :rules="[(val) => !!val || 'Campo requerido']"
-                  label="Documentos" outlined dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
-                  <template v-slot:append>
-                    <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                  </template>
-                </q-input>
-              </div>
-            </q-card-section>
-            <q-card-section>
-              <div role="alert"
-                style="border: 2px solid red; border-radius: 20px; text-align: center; background-color: rgba(255, 0, 0, 0.304);"
-                v-if="check !== ''">
-                <div>{{ check }}</div>
-              </div>
-            </q-card-section>
-          </q-card>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Cancelar" @click="showModalEdicion = false; limpiarFormulario()" color="primary" />
-          <q-btn flat label="Guardar Cambios" @click="validaredit" color="primary" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
   </div>
 </template>
-  
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useMaterialesformaStore } from "../stores/materialesforma.js";
-import { useLoginStore } from "../stores/login.js"
-import { load } from "../routes/direccion.js"
+import { useLoginStore } from "../stores/login.js";
+import { load } from "../routes/direccion.js";
 const Storemateriales = useMaterialesformaStore();
-const useLogin = useLoginStore()
+const useLogin = useLoginStore();
 let ambientess = ref([]);
 let showModalAgregar = ref(false);
 let showModalEdicion = ref(false); // Variable para controlar el modal de edición
@@ -174,16 +118,17 @@ let filter = ref("");
 let check = ref("");
 let errorMessage = ref("");
 const validationErrors = ref({});
-
+let alert = ref(false);
+let bd = ref(false);
 let descripcion = ref("");
 let IdCentroFormacion = ref("");
 const archivoOEnlace = ref("");
 const loading = ref(false);
-const Tipo = ref('');
+const Tipo = ref("");
 const opcionesTipo = [
-  { label: 'Equipo', value: 'equipo' },
-  { label: 'Herramienta', value: 'herramienta' },
-  { label: 'Consumible', value: 'consumible' }
+  { label: "Equipo", value: "equipo" },
+  { label: "Herramienta", value: "herramienta" },
+  { label: "Consumible", value: "consumible" },
 ];
 function mostrarAlerta(mensaje) {
   alert.value = true;
@@ -217,25 +162,23 @@ async function agregarAmbiente() {
     console.log(r);
 
     // Resto de la lógica después de la llamada exitosa
-
   } catch (error) {
     // Manejar el error aquí
-    console.error('Error al agregar ambiente:', error);
+    console.error("Error al agregar ambiente:", error);
   } finally {
     // Código que se ejecuta independientemente de si la operación fue exitosa o falló
     loading.value = false;
-    getMaterialesforma()
-    showModalAgregar = false
+    getMaterialesforma();
+    showModalAgregar = false;
   }
 }
 
-
 async function getMaterialesforma() {
-  load.value = true
+  load.value = true;
   console.log(useLogin.token);
   let Formacion = await Storemateriales.getMaterialesforma(useLogin.token);
   ambientess.value = Formacion.data.MaterialesApoyo;
-  load.value = false
+  load.value = false;
 }
 /*    <p><strong>Código:</strong> {{ ambiente.codigo }}</p> */
 const cardStates = ref({});
@@ -245,9 +188,10 @@ const toggleDetails = (index) => {
   cardStates.value[index] = !cardStates.value[index];
   isRotated.value[index] = !isRotated.value[index];
 };
-
-const opciones = [
-];
+function agregar() {
+  alert.value = true;
+}
+const opciones = [];
 
 const abrirSelectorDeArchivos = () => {
   const fileInput = document.createElement("input");
@@ -293,7 +237,8 @@ const abrirModalEdicion = (index) => {
   Tipo.value = ambienteSeleccionado.tipo;
   descripcion.value = ambienteSeleccionado.descripccion;
   archivoOEnlace.value = ambienteSeleccionado.documentos;
-  showModalEdicion.value = true;
+  alert.value = true;
+  bd.value = true;
 };
 async function validaredit() {
   if (Nombre.value.trim() === "") {
@@ -314,7 +259,6 @@ const guardarCambios = async () => {
     console.log("entre a editar");
     const index = idAmbienteEditando.value;
     const ambienteEditado = {
-
       nombre: Nombre.value,
       tipo: Tipo.value.value,
       descripccion: descripcion.value,
@@ -349,7 +293,7 @@ onMounted(async () => {
   await getMaterialesforma();
 });
 </script>
-  
+
 <style scoped>
 .body {
   margin: 1%;
@@ -446,27 +390,26 @@ onMounted(async () => {
 }
 
 .close-button {
-    animation-duration: 0.3s;
-    /* Duración de la animación */
-    animation-timing-function: ease;
-    /* Función de temporización (puedes ajustarla) */
+  animation-duration: 0.3s;
+  /* Duración de la animación */
+  animation-timing-function: ease;
+  /* Función de temporización (puedes ajustarla) */
 }
 
 /* Inicialmente, la "X" estará invisible */
 .close-button:before {
-    opacity: 0;
+  opacity: 0;
 }
 
 /* Cuando la "X" está activa, aplica la animación de entrada */
 .close-button.active:before {
-    animation-name: fadeInX;
-    opacity: 1;
+  animation-name: fadeInX;
+  opacity: 1;
 }
 
 /* Cuando la "X" está inactiva, aplica la animación de salida */
 .close-button:not(.active):before {
-    animation-name: fadeOutX;
-    opacity: 0;
+  animation-name: fadeOutX;
+  opacity: 0;
 }
 </style>
-  

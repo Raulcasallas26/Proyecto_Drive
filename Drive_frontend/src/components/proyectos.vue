@@ -15,19 +15,18 @@
             </q-input>
         </div>
         <div>
-            <div v-for="(proyecto, index) in Program" :key="index">
+            <div v-for="(proyecto, index) in Proyec" :key="index">
                 <div class="card">
                     <div class="top-half" style="display: flex;">
                         <div class="info" @click="toggleDetails(index)">
-                            <p><strong>Código:</strong> {{ proyecto.codigo }}</p>
-                            <p><strong>Nombre:</strong> {{ proyecto.nombre }}</p>
+                            <p><strong>Nombre:</strong> {{ proyecto.nombre }} </p>
+                            <p><strong>Version: </strong> {{ proyecto.version }} </p>
                             <strong>Estado: </strong>
                             <span class="text-green" v-if="proyecto.estado === true">
                                 Activo</span>
                             <span class="text-red" v-else> Inactivo</span>
                         </div>
                         <div style="display: flex; margin-left: auto; margin-bottom: auto;">
-                            <p><strong>Version: </strong> {{ proyecto.version }} &nbsp; &nbsp; </p>
                             <strong>Fecha:</strong>
                             <p>{{ proyecto.fecha ? proyecto.fecha.substring(0, 10) : '' }} </p>
                         </div>
@@ -64,8 +63,9 @@
                             <div class="bottom-half">
                                 <div class="info">
                                     <p><strong>Descripcion:</strong> {{ proyecto.descripcion }}</p>
-                                    <p><strong>Documento:</strong> {{ proyecto.documento }}</p>
-                                    <p><strong>ID Programa:</strong>{{ proyecto.idCentroDeFormacion }}</p>
+                                    <p><strong>Documento: </strong> <a :href="proyecto.documento"
+                                            target="_blank">Documento</a> </p>
+                                    <p><strong>Programa:</strong>{{ proyecto.Programa }}</p>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,8 @@
 
         <div>
             <q-dialog v-model="alert" persistent>
-                <q-card id="card">
+            <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
+                <q-card v-else id="card">
                     <div style="display: flex;">
                         <q-card-section>
                             <div class="text-h4">Registro de Proyecto</div>
@@ -89,15 +90,22 @@
                         <q-card flat bordered class="my-card">
                             <q-card-section class="q-pa-md">
                                 <div class="q-gutter-md">
-                                    <q-input v-model="codigo" label="Código"
-                                        :rules="[(val) => !!val || 'Campo requerido']" />
-                                </div>
-                                <div class="q-gutter-md">
                                     <q-input v-model="nombre" label="Nombre"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div class="q-gutter-md">
+                                    <q-input v-model="descripcion" label="Descripcion"
+                                        :rules="[(val) => !!val || 'Campo requerido']" />
+                                </div>
+                                <div class="q-gutter-md">
                                     <q-input v-model="version" label="Versión"
+                                        :rules="[(val) => !!val || 'Campo requerido']" />
+                                </div>
+                                <div class="q-gutter-md">
+                                    <input type="file" @change="subir_documento" class="custom-file-input">
+                                </div>
+                                <div class="q-gutter-md">
+                                    <q-select v-model="Programa" :options="opciones" label="Programa"
                                         :rules="[(val) => !!val || 'Campo requerido']" />
                                 </div>
                                 <div class="q-gutter-md" v-show="bd === true">
@@ -112,25 +120,6 @@
                                                     </q-date>
                                                 </q-popup-proxy>
                                             </q-icon>
-                                        </template>
-                                    </q-input>
-                                </div>
-                                <div class="q-gutter-md">
-                                    <q-input v-model="descripcion" label="Descripcion"
-                                        :rules="[(val) => !!val || 'Campo requerido']" />
-                                </div>
-                                <div class="q-gutter-md">
-                                    <q-select v-model="programa" :options="opcionesPrograma" label="Programa"
-                                        :rules="[(val) => !!val || 'Campo requerido']" />
-                                </div>
-                                <div class="q-gutter-md">
-                                    <q-input class="input" v-model="documento"
-                                        label="Archivo o enlace del diseño curricular"
-                                        :rules="[(val) => !!val || 'Campo requerido']" dense clearable
-                                        prepend-icon="attach_file" @clear="limpiarCampo">
-                                        <template v-slot:append>
-                                            <q-icon name="attach_file" style="cursor: pointer"
-                                                @click="abrirSelectorDeArchivos" />
                                         </template>
                                     </q-input>
                                 </div>
@@ -149,8 +138,8 @@
 
                     <q-card-actions align="right">
                         <q-btn flat label="Cerrar" @click="limpiarFormulario(), cerrar()" color="primary" v-close-popup />
-                        <q-btn flat label="Guardar" v-if="bd === false" @click="guardar()" color="primary" />
-                        <q-btn flat label="Editar Proyecto" v-else @click="editar()" color="primary" />
+                        <q-btn flat label="Guardar" v-if="bd === false" @click="validarYGuardar()" color="primary" />
+                        <q-btn flat label="Editar Proyecto" v-else @click="validarYEditar()" color="primary" />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -160,13 +149,16 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { Notify } from "quasar"
+import { useProgramasFormacionStore } from "../stores/programasformacion.js";
 import { useProyectosStore } from "../stores/Proyecto.js";
-import {useLoginStore} from "../stores/login.js"
+import { useLoginStore } from "../stores/login.js"
 import { load } from "../routes/direccion.js"
+const useProgramas = useProgramasFormacionStore();
 const useProyecto = useProyectosStore();
 const useLogin = useLoginStore()
 const loading = ref(false);
-let Program = ref([]);
+let Proyec = ref([]);
 let alert = ref(false);
 let check = ref("")
 let indice = ref(null);
@@ -176,40 +168,165 @@ let codigo = ref("");
 let descripcion = ref("");
 let fecha = ref("")
 let version = ref("")
-let programa = ref("")
 let documento = ref("")
-let IdPrograma = ref("");
-let opcionesPrograma = ref([])
-let tok = ref(useLogin.token)
+let Programa = ref("");
+let Programas = ref([])
+let opciones = ref([])
 
-console.log(tok.value);
+function subir_documento(event) {
+    documento.value = event.target.files[0]
+    console.log(documento.value);
+}
+
+async function obtenerformacion() {
+    load.value = true
+    let programas = await useProgramas.getProgramasFormacion(useLogin.token);
+    console.log(programas);
+    Programas.value = programas.data.ProgramasFormacion;
+    opciones.value = Programas.value.map(item => ({
+        value: item.denominacion,
+        label: item.denominacion,
+    }))
+    load.value = false
+}
 
 async function ListarProyectos() {
     load.value = true
     let Proyectos = await useProyecto.getProyectos(useLogin.token);
     console.log(Proyectos);
-    Program.value = Proyectos.data.Proyecto;
+    Proyec.value = Proyectos.data.Proyecto;
     load.value = false
+}
+
+function mostrarAlerta(mensaje) {
+    alert.value = true;
+    check.value = mensaje;
+}
+
+async function validarYGuardar() {
+    if (nombre.value.trim() === "") {
+        mostrarAlerta("El Nombre es obligatorio");
+    } else if (descripcion.value.trim() === "") {
+        mostrarAlerta("La descripcion es obligatoria");
+    } else if (version.value.trim() === "") {
+        mostrarAlerta("La version es obligatoria");
+    } else if (!documento.value) {
+        mostrarAlerta("El documento es obligatorio");
+    } else if (!Programa.value) {
+        mostrarAlerta("El programa es obligatorio");
+    } else {
+        guardar()
+    }
 }
 
 async function guardar() {
     loading.value = true;
-    console.log(tok.value);
-    let r = await useProyecto.addProyectos({
-        codigo: codigo.value,
-        nombre: nombre.value,
-        version: version.value,
-        descripcion: descripcion.value,
-        fecha: fecha.value,
-        documento: documento.value,
-        IdPrograma: IdPrograma.value,
-    });
-    console.log(r);
-    loading.value = false
-    alert.value = false
-    ListarProyectos();
-    limpiarFormulario()
+    try {
+        let r = await useProyecto.addProyectos({
+            nombre: nombre.value,
+            version: version.value,
+            descripcion: descripcion.value,
+            documento: documento.value,
+            Programa: Programa.value.value,
+        });
+        console.log(r.status);
+        if (response.status == 201) {
+            console.log("Se guardó un nuevo Proyecto")
+            alert.value = false
+            ListarProyectos();
+            limpiarFormulario()
+            // Cierra la alerta
+        } else {
+            console.error("Error al guardar el Proyecto");
+            // Puedes mostrar un mensaje de error aquí si es necesario
+        }
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        // Puedes manejar errores de red u otros errores aquí si es necesario
+    } finally {
+        loading.value = false;
+    }
 }
+
+async function validarYEditar() {
+    if (nombre.value.trim() === "") {
+        mostrarAlerta("El Nombre es obligatorio");
+    } else if (descripcion.value.trim() === "") {
+        mostrarAlerta("La descripcion es obligatoria");
+    } else if (version.value.trim() === "") {
+        mostrarAlerta("La version es obligatoria");
+    } else if (!documento.value) {
+        mostrarAlerta("El documento es obligatorio");
+    } else if (!Programa.value) {
+        mostrarAlerta("El programa es obligatorio");
+        console.log(cedula.value);
+    } else {
+        editar()
+    }
+}
+
+const edito = (index) => {
+    let r = Proyec.value[index];
+    bd.value = true
+    indice.value = r._id;
+    alert.value = true;
+    nombre.value = r.nombre;
+    descripcion.value = r.descripcion;
+    version.value = r.version;
+    documento.value = r.documento;
+    Programa.value = r.Programa;
+    fecha.value = r.fecha;
+};
+
+async function editar() {
+    loading.value = true;
+    try {
+        console.log("hola estoy editando");
+        
+        let proyectoData = {
+            nombre: nombre.value,
+            descripcion: descripcion.value,
+            version: version.value,
+            documento: documento.value,
+            fecha: fecha.value,
+        };
+
+        if (Programa.value && Programa.value.value) {
+            proyectoData.Programa = Programa.value.value;
+        }
+
+        let r = await useProyecto.editProyectos(
+            indice.value,
+            proyectoData.nombre,
+            proyectoData.descripcion,
+            proyectoData.version,
+            proyectoData.documento,
+            proyectoData.Programa,
+            proyectoData.fecha
+        );
+
+        console.log("se insertaron los datos");
+        console.log(r.status, r);
+        
+        if (r.status === 201) {
+            console.log(r);
+            console.log("Se edito el proyecto con exito");
+            ListarProyectos();
+            limpiarFormulario();
+            alert.value = false; // Cierra la alerta
+        } else {
+            console.error("Error al editar el usuario");
+            // Puedes mostrar un mensaje de error aquí si es necesario
+        }
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        console.log(error);
+        // Puedes manejar errores de red u otros errores aquí si es necesario
+    } finally {
+        loading.value = false;
+    }
+}
+
 
 function limpiarFormulario() {
     codigo.value = ""
@@ -218,53 +335,34 @@ function limpiarFormulario() {
     descripcion.value = ""
     fecha.value = ""
     documento.value = ""
-    IdPrograma.value = ""
+    Programa.value = ""
     alert.value = false
     bd.value = false
+    check.value = ""
 }
 
-const edito = (index) => {
-    let r = Program.value[index];
-    bd.value = true
-    indice.value = r._id;
-    alert.value = true;
-    codigo.value = r.codigo;
-    nombre.value = r.nombre;
-    version.value = r.version;
-    descripcion.value = r.descripcion;
-    fecha.value = r.fecha;
-    documento.value = r.documento;
-    IdPrograma.value = r.IdPrograma;
-};
-
-const editar = async () => {
-    loading.value = true
-    let r = await useProyecto.editProyectos(indice.value, {
-        codigo: codigo.value,
-        nombre: nombre.value,
-        version: version.value,
-        descripcion: descripcion.value,
-        fecha: fecha.value,
-        documento: documento.value,
-        IdPrograma: IdPrograma.value,
-    });
-    console.log(r);
-    bd.value = false
-    loading.value = false
-    ListarProyectos()
-    limpiarFormulario()
-};
-
 async function activar(proyecto) {
-    console.log("hola");
-    console.log(proyecto.estado);
     let r = proyecto;
     if (r.estado === true) {
         r.estado = false;
         console.log(r.estado, "resultado del if");
+        Notify.create({
+            color: "negative",
+            message: "El usuario fue Desactivado",
+            icon: "check",
+            position: "top",
+            timeout: 3000
+        })
     } else {
         r.estado = true;
         console.log(r.estado, "resultado del else");
+        Notify.create({
+            color: "positive",
+            message: "El usuario fue Activado",
+            icon: "check",
+            position: "top",
+            timeout: 3000
+        })
     }
     let est = await useProyecto.activarProyectos(r._id);
     console.log(est);
@@ -283,6 +381,7 @@ function agregar() {
 
 onMounted(async () => {
     await ListarProyectos();
+    await obtenerformacion();
 });
 
 const toggleDetails = (index) => {
@@ -334,6 +433,28 @@ const handleFileSelection = (event) => {
 </script>
 
 <style scoped>
+.custom-file-input {
+    border-bottom: 1px solid #afafaf;
+    color: #afafaf;
+    padding: 8px 12px;
+    font-size: 16px;
+    width: 96%;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* Estilos para cuando el input está enfocado */
+.custom-file-input:hover {
+    border-bottom-color: #000000;
+    color: #000000;
+    /* Cambiar el color de borde al estar enfocado */
+}
+
+.custom-file-input:focus {
+    color: #000000;
+    /* Cambiar el color de borde al estar enfocado */
+}
+
 .body {
     display: flex;
     flex-wrap: wrap;
@@ -383,23 +504,106 @@ const handleFileSelection = (event) => {
 
 .card {
     border: 1px solid #ccc;
-    padding: 16px;
-    margin: 16px;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .top-half {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+}
+
+.info {
+    flex: 1;
+    padding-right: 10px;
+}
+
+.info p {
+    margin: 6px 0;
+    word-wrap: break-word;
+    /* Para que el texto se ajuste en varios renglones */
 }
 
 .buttons {
     display: flex;
-    gap: 8px;
+    align-items: center;
 }
 
-.bottom-half {
-    margin-top: 16px;
+.rotate-button,
+.editar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.arrow-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Estilos para los estados */
+.text-green {
+    color: green;
+}
+
+.text-red {
+    color: red;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.top-half {
+    display: flex;
+    align-items: center;
+}
+
+.info {
+    flex: 1;
+    padding-right: 10px;
+}
+
+.info p {
+    margin: 6px 0;
+    word-wrap: break-word;
+    /* Para que el texto se ajuste en varios renglones */
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+}
+
+.rotate-button,
+.editar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.arrow-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Estilos para los estados */
+.text-green {
+    color: green;
+}
+
+.text-red {
+    color: red;
 }
 
 

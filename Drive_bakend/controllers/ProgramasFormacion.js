@@ -89,26 +89,21 @@ const httpProgramasFormacion = {
             api_secret: process.env.CLOUDINARY_SECRET,
             secure: true,
         });
-
         try {
             const { id } = req.params;
             const {
                 denominacion, version, niveldeformacion } = req.body;
-
-
             const buscarCodigo = await ProgramasFormacionModel.findOne({ denominacion: denominacion });
             if (buscarCodigo && buscarCodigo._id.toString() !== id) {
                 return res
                     .status(404)
                     .json({ msg: "Ya se encuentra un Programa registrado con esta denominacion" });
             };
-
             let updatedData = {
                 denominacion: denominacion,
                 version: version,
                 niveldeformacion: niveldeformacion,
             };
-
             if (req.files && req.files.archivo) {
                 const archivo = req.files.archivo;
                 const extension = archivo.name.split(".").pop();
@@ -120,26 +115,21 @@ const httpProgramasFormacion = {
                     allowedFormats: ["jpg", "png", "docx", "xlsx", "pptx", "pdf"],
                     format: extension,
                 });
-
                 const buscar = await ProgramasFormacionModel.findById(id);
-
                 if (buscar.archivo) {
                     const nombreTemp = buscar.archivo.split("/");
                     const nombreArchivo = nombreTemp[nombreTemp.length - 1];
                     const [public_id] = nombreArchivo.split(".");
                     await cloudinary.uploader.destroy(public_id);
                 };
-
                 updatedData.archivo = result.url;
             };
-
-
-            const buscarUsuario = await ProgramasFormacionModel.findByIdAndUpdate(
+            const buscarPrograma = await ProgramasFormacionModel.findByIdAndUpdate(
                 { _id: id },
                 { $set: updatedData },
                 { new: true }
             );
-            res.status(201).json(buscarUsuario);
+            res.status(201).json(buscarPrograma);
         } catch (error) {
             console.log(error);
             return res.status(500).json({ error: error.message });

@@ -1,22 +1,11 @@
 <template>
   <div class="card-container">
     <div class="body">
-      <q-btn
-        style="background-color: green"
-        :disable="loading"
-        label="Agregar"
-        @click="showModalAgregar = true"
-      />
+      <q-btn style="background-color: green" :disable="loading" label="Agregar" @click="showModalAgregar = true" />
       <div style="margin-left: 5%" class="text-h4">Guias de Aprendizaje</div>
       <q-space />
-      <q-input
-        borderless
-        dense
-        debounce="300"
-        style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
-        color="primary"
-        v-model="filter"
-      >
+      <q-input borderless dense debounce="300" style="border-radius: 10px; border: grey solid 0.5px; padding: 5px"
+        color="primary" v-model="filter">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
@@ -29,58 +18,36 @@
           <p><strong>Nombre:</strong> {{ instru.nombre }}</p>
           <div class="nnn">
             <button class="boton">
-              <img
-                src="https://cdn.icon-icons.com/icons2/916/PNG/512/Menu_icon_icon-icons.com_71858.png"
-                alt="Icono"
-                class="img"
-              />
+              <img src="https://cdn.icon-icons.com/icons2/916/PNG/512/Menu_icon_icon-icons.com_71858.png" alt="Icono"
+                class="img" />
 
-              <q-menu
-                class="menu"
-                style="width: 4%; align-items: center; justify-content: center"
-              >
+              <q-menu class="menu" style="width: 4%; align-items: center; justify-content: center">
                 <q-list>
                   <q-item clickable v-close-popup>
                     <q-item-section>
                       <button class="img3">
-                        <img
-                          src="https://cdn-icons-png.flaticon.com/512/724/724933.png"
-                          alt=""
-                          class="img2"
-                        />
+                        <img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="" class="img2" />
                       </button>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup>
                     <q-item-section>
                       <button class="img3" @click="abrirModalEdicion(index)">
-                        <img
-                          src="https://cdn.icon-icons.com/icons2/3230/PNG/512/edit_modify_icon_196940.png"
-                          alt=""
-                          class="img2"
-                        />
+                        <img src="https://cdn.icon-icons.com/icons2/3230/PNG/512/edit_modify_icon_196940.png" alt=""
+                          class="img2" />
                       </button>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup>
                     <q-item-section>
                       <button class="img3" @click="detalles(index)">
-                        <img
-                          src="https://cdn-icons-png.flaticon.com/512/1/1755.png"
-                          alt=""
-                          class="img2"
-                        />
+                        <img src="https://cdn-icons-png.flaticon.com/512/1/1755.png" alt="" class="img2" />
                       </button>
                     </q-item-section>
                   </q-item>
                   <q-item clickable v-close-popup>
                     <q-item-section>
-                      <button
-                        id="boton-estado"
-                        class="img3"
-                        @click="activar(instru)"
-                        v-if="instru.estado === false"
-                      >
+                      <button id="boton-estado" class="img3" @click="activar(instru)" v-if="instru.estado === false">
                         ✅
                       </button>
                       <button class="img3" @click="activar(instru)" v-else>
@@ -104,64 +71,27 @@
         <q-card class="custom-modal">
           <q-card-section>
             <div class="text2">Agregar Guia</div>
-            <q-input
-              v-model="codigo"
-              label="Codigo de la Guia"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-input
-              v-model="nombre"
-              label="Nombre de la Guia"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-input
-              v-model="fase"
-              label="Fase de la Guia"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-select
-              v-model="InstrumentosEvaluacion"
-              label="Instrumento de Evaluacion"
-              :options="InstrumentosEvaluacionOptions"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-select
-              v-model="MaterialesApoyo"
-              label="Material de Apoyo"
-              :options="MaterialesApoyoOptions"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
+            <q-input v-model="codigo" label="Codigo de la Guia" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-input v-model="nombre" label="Nombre de la Guia" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-input v-model="fase" label="Fase de la Guia" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-select v-model="InstrumentosEvaluacion" label="Instrumento de Evaluacion"
+              :options="InstrumentosEvaluacionOptions" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-select v-model="MaterialesApoyo" label="Material de Apoyo" :options="MaterialesApoyoOptions"
+              :rules="[(val) => !!val || 'Campo requerido']" />
             <q-card-section>
-              <q-input
-                class="input"
-                v-model="archivoOEnlace"
-                label="Documentos"
-                outlined
-                dense
-                clearable
-                :rules="[(val) => !!val || 'Campo requerido']"
-                prepend-icon="attach_file"
-                @clear="limpiarCampo"
-              >
+              <q-input class="input" v-model="archivoOEnlace" label="Documentos" outlined dense clearable
+                :rules="[(val) => !!val || 'Campo requerido']" prepend-icon="attach_file" @clear="limpiarCampo">
                 <template v-slot:append>
-                  <q-icon
-                    name="attach_file"
-                    style="cursor: pointer"
-                    @click="abrirSelectorDeArchivos"
-                  />
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
                 </template>
               </q-input>
             </q-card-section>
-            <div
-              role="alert"
-              style="
+            <div role="alert" style="
                 border: 2px solid red;
                 border-radius: 20px;
                 text-align: center;
                 background-color: rgba(255, 0, 0, 0.304);
-              "
-              v-if="check !== ''"
-            >
+              " v-if="check !== ''">
               <div>
                 {{ check }}
               </div>
@@ -180,64 +110,27 @@
         <q-card class="custom-modal">
           <q-card-section>
             <div class="text2">Editar Instrumento</div>
-            <q-input
-              v-model="codigo"
-              label="Codigo de la Guia"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-input
-              v-model="nombre"
-              label="Nombre"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-input
-              v-model="fase"
-              label="Fase de la Guia"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-select
-              v-model="InstrumentosEvaluacion"
-              label="Instrumento de Evaluacion"
-              :options="InstrumentosEvaluacionOptions"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
-            <q-select
-              v-model="MaterialesApoyo"
-              label="Material de Apoyo"
-              :options="MaterialesApoyoOptions"
-              :rules="[(val) => !!val || 'Campo requerido']"
-            />
+            <q-input v-model="codigo" label="Codigo de la Guia" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-input v-model="nombre" label="Nombre" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-input v-model="fase" label="Fase de la Guia" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-select v-model="InstrumentosEvaluacion" label="Instrumento de Evaluacion"
+              :options="InstrumentosEvaluacionOptions" :rules="[(val) => !!val || 'Campo requerido']" />
+            <q-select v-model="MaterialesApoyo" label="Material de Apoyo" :options="MaterialesApoyoOptions"
+              :rules="[(val) => !!val || 'Campo requerido']" />
             <q-card-section>
-              <q-input
-                class="input"
-                :rules="[(val) => !!val || 'Campo requerido']"
-                v-model="archivoOEnlace"
-                label="Documentos"
-                outlined
-                dense
-                clearable
-                prepend-icon="attach_file"
-                @clear="limpiarCampo"
-              >
+              <q-input class="input" :rules="[(val) => !!val || 'Campo requerido']" v-model="archivoOEnlace"
+                label="Documentos" outlined dense clearable prepend-icon="attach_file" @clear="limpiarCampo">
                 <template v-slot:append>
-                  <q-icon
-                    name="attach_file"
-                    style="cursor: pointer"
-                    @click="abrirSelectorDeArchivos"
-                  />
+                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
                 </template>
               </q-input>
             </q-card-section>
-            <div
-              role="alert"
-              style="
+            <div role="alert" style="
                 border: 2px solid red;
                 border-radius: 20px;
                 text-align: center;
                 background-color: rgba(255, 0, 0, 0.304);
-              "
-              v-if="check !== ''"
-            >
+              " v-if="check !== ''">
               <div>
                 {{ check }}
               </div>
@@ -245,77 +138,64 @@
           </q-card-section>
           <q-card-section>
             <q-btn @click="limpiarDatos" label="Cancelar" />
-            <q-btn
-              @click="validaredit()"
-              color="primary"
-              label="Guardar Cambios"
-            />
+            <q-btn @click="validaredit()" color="primary" label="Guardar Cambios" />
           </q-card-section>
         </q-card>
       </q-dialog>
     </div>
     <div>
-  <q-dialog v-model="showModaldetalles">
-    <q-card class="custom-modal">
-      <q-card-section>
-        <q-card-section class="q-pa-md">
-          <p>
-            <strong style="font-size: large">Fase:</strong>
-            {{ fase }}
-          </p>
-          <p>
-            <strong style="font-size: large">Codigo:</strong>
-            {{ codigo }}
-          </p>
-          <p>
-            <strong style="font-size: large">Nombre:</strong>
-            {{ nombre }}
-          </p>
-          
-          <p>
-            <strong style="font-size: large">Documentos:</strong>
-            {{ archivoOEnlace }}
-          </p>
-          <p>
-            <strong style="font-size: large">Materiales de Apoyo:</strong>
-            {{ MaterialesApoyo }}
-          </p>
-          <p>
-            <strong style="font-size: large">Instrumentos de Evaluacion:</strong>
-            {{ InstrumentosEvaluacion }}
-          </p>
-          
-          
-        </q-card-section>
-        <q-spinner-ios
-          v-if="loading == true"
-          color="green"
-          size="2em"
-          :thickness="10"
-        />
-        <!-- <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito()">📝</q-btn> -->
-        <q-card-section>
-          <div
-            role="alert"
-            style="
+      <q-dialog v-model="showModaldetalles">
+        <q-card class="custom-modal">
+          <q-card-section>
+            <q-card-section class="q-pa-md">
+              <p>
+                <strong style="font-size: large">Fase:</strong>
+                {{ fase }}
+              </p>
+              <p>
+                <strong style="font-size: large">Codigo:</strong>
+                {{ codigo }}
+              </p>
+              <p>
+                <strong style="font-size: large">Nombre:</strong>
+                {{ nombre }}
+              </p>
+
+              <p>
+                <strong style="font-size: large">Documentos:</strong>
+                {{ archivoOEnlace }}
+              </p>
+              <p>
+                <strong style="font-size: large">Materiales de Apoyo:</strong>
+                {{ MaterialesApoyo }}
+              </p>
+              <p>
+                <strong style="font-size: large">Instrumentos de Evaluacion:</strong>
+                {{ InstrumentosEvaluacion }}
+              </p>
+
+
+            </q-card-section>
+            <q-spinner-ios v-if="loading == true" color="green" size="2em" :thickness="10" />
+            <!-- <q-btn v-else class="q-mx-sm" color="primary" outline @click="edito()">📝</q-btn> -->
+            <q-card-section>
+              <div role="alert" style="
               border: 2px solid red;
               border-radius: 20px;
               text-align: center;
               background-color: rgba(255, 0, 0, 0.304);
-            "
-            v-if="check !== ''"
-          >
-            <div>{{ check }}</div>
-          </div>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cerrar" @click="limpiarDatos" color="primary" v-close-popup />
-          <!-- <q-btn flat label="Editar Usuario" @click="validaredit()" color="primary" /> -->
-        </q-card-actions>
-      </q-card-section>
-    </q-card>
-  </q-dialog>
-</div>
+            " v-if="check !== ''">
+                <div>{{ check }}</div>
+              </div>
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn flat label="Cerrar" @click="limpiarDatos" color="primary" v-close-popup />
+              <!-- <q-btn flat label="Editar Usuario" @click="validaredit()" color="primary" /> -->
+            </q-card-actions>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+    </div>
 
   </div>
 </template>
@@ -326,7 +206,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useGuiasAprendizStore } from "../stores/GuiasAprediz.js";
 import { useInstrumentosEvaluacionStore } from "../stores/InstrumentosEvaluacion";
 import { useMaterialesApoyoStore } from "../stores/MaterialesApoyo.js";
-import {useLoginStore} from "../stores/login.js"
+import { useLoginStore } from "../stores/login.js"
 
 const route = useRoute();
 const router = useRouter();
@@ -622,6 +502,7 @@ onMounted(async () => {
   transition: 0.2s;
   margin-bottom: 0%;
 }
+
 .boton:hover {
   width: 7%;
   transform: scale(1.3);
@@ -630,6 +511,7 @@ onMounted(async () => {
 .img {
   width: 40%;
 }
+
 .img2 {
   width: 90%;
   background-color: transparent;
@@ -638,11 +520,14 @@ onMounted(async () => {
 
 .img3 {
   width: 100%;
-  background-color: transparent; /* Elimina el fondo */
-  border: none; /* Elimina el borde */
+  background-color: transparent;
+  /* Elimina el fondo */
+  border: none;
+  /* Elimina el borde */
   margin-left: 0%;
   transition: 0.2s;
 }
+
 .nnn {
   align-items: end;
   display: flex;
@@ -650,11 +535,13 @@ onMounted(async () => {
   margin: 1%;
   margin-top: -2.4%;
 }
+
 .divisor {
   background-color: rgba(0, 0, 0, 0.311);
   margin: 1%;
   font-size: 2px;
 }
+
 .body {
   display: flex;
   flex-wrap: wrap;
@@ -671,11 +558,13 @@ onMounted(async () => {
   font-size: 200%;
   margin: 1%;
 }
+
 .text2 {
   font-size: 400%;
   color: green;
   margin-top: 2%;
 }
+
 .text3 {
   font-size: 300%;
   margin-left: 1%;

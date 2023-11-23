@@ -54,7 +54,7 @@
               </button>
               <div class="bottom-half">
                 <div class="info">
-                  <p>
+                  <p style="column-gap: 30px; ">
                     <strong>Descripción:</strong> {{ ambiente.descripcion }}
                   </p>
                   <p><strong>Documentos:</strong> {{ ambiente.documentos }}</p>

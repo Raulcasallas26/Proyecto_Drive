@@ -75,7 +75,8 @@
 
         <div>
             <q-dialog v-model="alert" persistent>
-                <q-card id="card">
+            <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
+                <q-card v-else id="card">
                     <div style="display: flex;">
                         <q-card-section>
                             <div class="text-h4">Registro de Investigaciones</div>

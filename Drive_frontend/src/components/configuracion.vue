@@ -27,7 +27,7 @@
         {{ useLogin.datos.perfilProfesional }}
       </p>
       <!-- {{ useLogin.datos.curriculum }} -->
-      <p><strong>Hoja de vida:</strong> <a :href="useLogin.datos.curriculum " target="_blank">Curriculum</a> </p>
+      <p><strong>Hoja de vida:</strong> <a :href="useLogin.datos.curriculum" target="_blank">Curriculum</a> </p>
       <p><strong>RolUsuario:</strong> {{ useLogin.datos.RolUsuario }}</p>
     </div>
 
@@ -76,7 +76,8 @@
     <!-- modales -->
     <div>
       <q-dialog v-model="showModal">
-        <q-card class="custom-modal">
+        <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
+        <q-card v-else class="custom-modal">
           <q-card-section>
             <div class="text4">Editar Información Personal</div>
             <div class="card">.</div>

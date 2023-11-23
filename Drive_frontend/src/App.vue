@@ -49,13 +49,6 @@
                 <q-item-section> Programas de Formacion</q-item-section>
               </q-item>
 
-              <q-item clickable v-ripple to="/materialesforma">
-                <q-item-section avatar>
-                  <q-icon name="img:https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0weUry8lZ8XTLo1lDruF6i2fzqPOQI7bazPybG7eSWIuVvP1xKhm0plAp8l-pbzC8tMo&usqp=CAU" />
-                </q-item-section>
-                <q-item-section> Materiales de Formacion </q-item-section>
-              </q-item>
-
               <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor'"
                 v-ripple to="/ambientes">
                 <q-item-section avatar>
@@ -148,6 +141,13 @@
                 <q-item-section> Instrumentos de Evaluacion </q-item-section>
               </q-item>
 
+              <q-item clickable v-ripple to="/materialesforma">
+                <q-item-section avatar>
+                  <q-icon name="img:https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0weUry8lZ8XTLo1lDruF6i2fzqPOQI7bazPybG7eSWIuVvP1xKhm0plAp8l-pbzC8tMo&usqp=CAU" />
+                </q-item-section>
+                <q-item-section> Materiales de Formacion </q-item-section>
+              </q-item>
+
               <q-item clickable v-ripple to="/configuracion">
                 <q-item-section avatar>
                   <q-icon name="img:https://cdn-icons-png.flaticon.com/512/2040/2040504.png" />
@@ -211,13 +211,6 @@
               <q-icon name="book" />
             </q-item-section>
             <q-item-section> Programas de Formacion</q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/materialesforma">
-            <q-item-section avatar>
-              <q-icon name="img:https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0weUry8lZ8XTLo1lDruF6i2fzqPOQI7bazPybG7eSWIuVvP1xKhm0plAp8l-pbzC8tMo&usqp=CAU" />
-            </q-item-section>
-            <q-item-section> Materiales de Formacion </q-item-section>
           </q-item>
 
           <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin' || useLogin.rol === 'Gestor'"
@@ -309,6 +302,13 @@
               <q-icon name="quiz" />
             </q-item-section>
             <q-item-section> Instrumentos de Evaluacion </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple to="/materialesforma">
+            <q-item-section avatar>
+              <q-icon name="img:https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0weUry8lZ8XTLo1lDruF6i2fzqPOQI7bazPybG7eSWIuVvP1xKhm0plAp8l-pbzC8tMo&usqp=CAU" />
+            </q-item-section>
+            <q-item-section> Materiales de Formacion </q-item-section>
           </q-item>
 
           <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'" v-ripple to="/configuracion">
