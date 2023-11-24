@@ -311,7 +311,7 @@
             <q-item-section> Materiales de Formacion </q-item-section>
           </q-item>
 
-          <q-item clickable v-if="useLogin.rol === 'Super' || useLogin.rol === 'Admin'" v-ripple to="/configuracion">
+          <q-item clickable v-ripple to="/configuracion">
             <q-item-section avatar>
               <q-icon name="img:https://cdn-icons-png.flaticon.com/512/2040/2040504.png" />
             </q-item-section>

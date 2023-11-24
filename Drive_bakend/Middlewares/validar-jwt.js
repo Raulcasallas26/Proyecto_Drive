@@ -15,10 +15,26 @@ export const validarJWT = async (req, res, next) => {
     } catch (error) {
         console.log(error);
         return res.status(401).json({ message: "Token no valido" });
-    }
+    } 
 };
 
 // Middleware para rutas que no requieren token
 export const sinTokenMiddleware = (req, res, next) => {
     next(); // Continúa con la ejecución sin requerir token
 };
+
+export const generarJWTreset = (uid) => {
+    return new Promise((resolve, reject) => {
+        const payload = { uid };
+        jwt.sign(payload, process.env.CLAVETOCKREST, {
+            expiresIn: "30m"//4h
+        }, (err, token) => {
+            if (err) {
+                console.log(err);
+                reject("No se pudo generar el token")
+            } else {
+                resolve(token)
+            }
+        })
+    })
+}

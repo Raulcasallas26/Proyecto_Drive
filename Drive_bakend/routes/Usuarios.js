@@ -6,7 +6,7 @@ import validarUnicos from "./validar.js"
 import { validarJWT } from "../Middlewares/validar-jwt.js";
 const router = Router()
 
-router.get("/", httpUsuarios.getUsuarios),
+router.get("/",[validarJWT], httpUsuarios.getUsuarios),
   // router.get("/:id", httpUsuarios.getUsuariosId)
 
   router.post("/", [

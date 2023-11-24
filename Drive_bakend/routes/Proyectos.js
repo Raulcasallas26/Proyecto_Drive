@@ -6,7 +6,7 @@ import { validarJWT } from "../Middlewares/validar-jwt.js";
 
 const router = Router()
 
-router.get("/", httpProyecto.getProyecto)
+router.get("/",[validarJWT], httpProyecto.getProyecto)
 
 // router.get("/:id", httpProyecto.getProyectoId) 
 

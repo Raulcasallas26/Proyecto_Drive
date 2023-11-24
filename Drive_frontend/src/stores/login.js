@@ -5,10 +5,9 @@ import { useRouter } from "vue-router"
 import { ref } from "vue"
 export const useLoginStore = defineStore(
     "login", () => {
-        let loading = ref(false)
         let token = ref("")
+        let tokenreset = ref("")
         let rol = ref("")
-
         let router = useRouter()
         let datos = ref("")
 
@@ -18,6 +17,7 @@ export const useLoginStore = defineStore(
                     cedula,
                     password
                 }
+                console.log(cedula);
                 const res = await axios.post(`${urlBackend}/login `, info)
                 token.value = res.data.tockent
                 rol.value = res.data.usuario.RolUsuario
@@ -39,8 +39,25 @@ export const useLoginStore = defineStore(
             router.push("/")
         }
 
+        const reset = async (email, subject, body) => {
+            try {
+                const info = {
+                    email, 
+                    subject, 
+                    body
+                }
+                const res = await axios.post(`${urlBackend}/reset `, info)
+                tokenreset.value = res.data.token
+                return res
+            } catch (error) {
+                console.log("error en la petición de restablecer contraseña");
+                console.log(error);
+                return res
+            }
+        }
+
         return {
-            validar, token, logout, rol, datos
+            validar, token, logout, rol, datos, reset
         }
     },
     {

@@ -12,31 +12,27 @@ const httpAmbientesFormacion = {
         }
     },
 
-    getAmbientesFormacionId: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const AmbientesFormacion = await AmbientesFormacionModel.findOne({ id });
-            res.json({ AmbientesFormacion })
-        } catch (error) {
-            res.status(500).json({ mensaje: "Error al obtener informacion", error })
-        }
-    },
+    // getAmbientesFormacionId: async (req, res) => {
+    //     const { id } = req.params;
+    //     try {
+    //         const AmbientesFormacion = await AmbientesFormacionModel.findOne({ id });
+    //         res.json({ AmbientesFormacion })
+    //     } catch (error) {
+    //         res.status(500).json({ mensaje: "Error al obtener informacion", error })
+    //     }
+    // },
 
     postAmbientesFormacion: async (req, res) => {
-        const { id, codigo, nombre, tipo, descripcion, documentos, idCentroDeFormacion } = req.body;
+        const {nombre, tipo, descripcion, documentos, idCentroDeFormacion } = req.body;
         const AmbientesFormacion = new AmbientesFormacionModel({
-            id,
-            codigo,
             nombre,
             tipo,
             descripcion,
             documentos,
             idCentroDeFormacion
         });
-
         try {
             const nuevoAmbientesFormacion = await AmbientesFormacion.save();
-
             res.json({
                 mensaje: "Un ambiente insertado!!",
                 nuevoAmbientesFormacion
@@ -46,12 +42,12 @@ const httpAmbientesFormacion = {
         }
     },
 
+    
     putAmbientesFormacion: async (req, res) => {
         const { id } = req.params;
-        const { codigo, nombre, tipo, descripcion, documentos, idCentroDeFormacion } = req.body;
+        const {  nombre, tipo, descripcion, documentos, idCentroDeFormacion } = req.body;
         const AmbientesFormacion = await AmbientesFormacionModel.findByIdAndUpdate(id,
             {
-                codigo,
                 nombre,
                 tipo,
                 descripcion,
@@ -63,6 +59,7 @@ const httpAmbientesFormacion = {
             AmbientesFormacion
         })
     },
+
 
     putAmbientesFormacionEstado: async (req, res) => {
         const { id } = req.params

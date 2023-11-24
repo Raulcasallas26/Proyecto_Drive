@@ -210,7 +210,6 @@ async function activar(ambiente) {
 
 async function getAmbientesformacion() {
   load.value = true
-  console.log(useLogin.token);
   let Formacion = await useambiente.getAmbientesFormacion(useLogin.token);
   ambientess.value = Formacion.data.AmbientesFormacion;
   load.value = false

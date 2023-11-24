@@ -2,7 +2,8 @@
   <div class="card-container">
     <div class="body">
       <div class="text">Información Personal</div>
-      <button class="agregar" @click="showModal = true">Editar</button>
+      <q-btn style="background-color: green; color: white" :disable="loading" class="agregar" label="Editar"
+        @click="showModal = true" />
     </div>
 
     <div class="text2">Datos Personales</div>
@@ -79,7 +80,7 @@
         <q-spinner-ios v-if="loading == true" color="green" size="20em" :thickness="100" />
         <q-card v-else class="custom-modal">
           <q-card-section>
-            <div class="text4">Editar Información Personal</div>
+            <div class="text3">Editar Información Personal</div>
             <div class="card">.</div>
             <q-input v-model="nombre" label="Nombre" />
             <q-input v-model="apellido" label="Apellidos" />
@@ -87,20 +88,15 @@
             <q-input v-model="numtelefono" label="Numero de telefono" />
             <q-input v-model="correo" label="correo electronico" />
             <q-input v-model="perfilprofe" label="Perfil Profesional" />
-            <q-card-section>
-              <q-input class="input" v-model="archivoOEnlace" label="hoja de vida" outlined dense clearable
-                prepend-icon="attach_file" @clear="limpiarCampo">
-                <template v-slot:append>
-                  <q-icon name="attach_file" style="cursor: pointer" @click="abrirSelectorDeArchivos" />
-                </template>
-              </q-input>
-            </q-card-section>
+            <div class="q-gutter-md">
+              <input type="file" @change="subir_curriculum" class="custom-file-input">
+            </div>
           </q-card-section>
           <div class="card">.</div>
-          <q-card-section>
-            <q-btn @click="showModal = false" label="Cancelar" />
-            <q-btn @click="editarinformacion()" color="primary" label="Editar" />
-          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Cerrar" @click="limpiarFormulario()" color="primary" v-close-popup />
+            <q-btn flat label="Editar Perfil" @click="guardarCambios()" color="primary" />
+          </q-card-actions>
         </q-card>
       </q-dialog>
     </div>
@@ -196,6 +192,29 @@ onMounted(async () => {
 /* .body{
   display: flex;
 } */
+.custom-file-input {
+  border-bottom: 1px solid #afafaf;
+  margin: 20px;
+  color: #afafaf;
+  padding: 8px 12px;
+  font-size: 16px;
+  width: 96%;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* Estilos para cuando el input está enfocado */
+.custom-file-input:hover {
+  border-bottom-color: #000000;
+  color: #000000;
+  /* Cambiar el color de borde al estar enfocado */
+}
+
+.custom-file-input:focus {
+  color: #000000;
+  /* Cambiar el color de borde al estar enfocado */
+}
+
 .card {
   background-color: rgba(0, 0, 0, 0.164);
   font-size: 2px;
@@ -276,15 +295,7 @@ onMounted(async () => {
 }
 
 .agregar {
-  background-color: green;
-  width: 8%;
-  height: 20%;
-  border-radius: 8px;
   margin-left: 90%;
-  color: white;
-  font-size: 150%;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .agregar:hover {

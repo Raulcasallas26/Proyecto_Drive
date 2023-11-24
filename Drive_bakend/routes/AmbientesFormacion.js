@@ -8,10 +8,7 @@ const router = Router()
 
 router.get("/", [validarJWT], httpAmbientesFormacion.getAmbientesFormacion)
 
-router.get("/:id", httpAmbientesFormacion.getAmbientesFormacionId)
-
 router.post("/", [
-  check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
   check("nombre", "el nombre es obligatorio",).notEmpty().trim().isString(),
   check("tipo", "el tipo es obligatorio").notEmpty().trim().isString(),
   check("descripcion", "la descricion es obligatoria").notEmpty().trim().isString(),
@@ -21,7 +18,6 @@ router.post("/", [
 ], httpAmbientesFormacion.postAmbientesFormacion)
 
 router.put("/:id", [
-  check("codigo", "El codigo es obligatorio").notEmpty().trim().isString(),
   check("nombre", "el nombre es obligatorio",).notEmpty().trim().isString(),
   check("tipo", "el tipo es obligatorio").notEmpty().trim().isString(),
   check("descripcion", "la descricion es obligatoria").notEmpty().trim().isString(),

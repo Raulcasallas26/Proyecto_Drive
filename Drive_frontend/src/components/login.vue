@@ -67,8 +67,7 @@
                     <q-card flat bordered class="my-card">
                         <q-card-section class="q-pa-md">
                             <div class="q-gutter-md">
-                                <q-input v-model="email" type="email" label="E-mail"
-                                    :rules="[validarEmail]">
+                                <q-input v-model="email" type="email" label="E-mail" :rules="[validarEmail]">
                                     <template v-slot:append>
                                         <q-icon name="email" />
                                     </template>
@@ -94,7 +93,8 @@
             </q-card>
         </q-dialog>
         <q-dialog v-model="compruevaCorreo">
-            <q-card id="card">
+            <q-spinner-ios v-if="loading === true" color="green" size="20em" :thickness="10" />
+            <q-card v-else id="card">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                     <path fill="#008000" fill-opacity="0.5"
                         d="M0,288L12.6,250.7C25.3,213,51,139,76,112C101.1,85,126,107,152,117.3C176.8,128,202,128,227,149.3C252.6,171,278,213,303,224C328.4,235,354,213,379,181.3C404.2,149,429,107,455,96C480,85,505,107,531,106.7C555.8,107,581,85,606,85.3C631.6,85,657,107,682,122.7C707.4,139,733,149,758,176C783.2,203,808,245,834,272C858.9,299,884,309,909,304C934.7,299,960,277,985,261.3C1010.5,245,1036,235,1061,208C1086.3,181,1112,139,1137,138.7C1162.1,139,1187,181,1213,202.7C1237.9,224,1263,224,1288,229.3C1313.7,235,1339,245,1364,229.3C1389.5,213,1415,171,1427,149.3L1440,128L1440,0L1427.4,0C1414.7,0,1389,0,1364,0C1338.9,0,1314,0,1288,0C1263.2,0,1238,0,1213,0C1187.4,0,1162,0,1137,0C1111.6,0,1086,0,1061,0C1035.8,0,1011,0,985,0C960,0,935,0,909,0C884.2,0,859,0,834,0C808.4,0,783,0,758,0C732.6,0,707,0,682,0C656.8,0,632,0,606,0C581.1,0,556,0,531,0C505.3,0,480,0,455,0C429.5,0,404,0,379,0C353.7,0,328,0,303,0C277.9,0,253,0,227,0C202.1,0,177,0,152,0C126.3,0,101,0,76,0C50.5,0,25,0,13,0L0,0Z">
@@ -117,7 +117,8 @@
                 </q-card-section>
 
                 <q-card-actions align="right">
-                    <q-btn flat label="Iniciar sesion" to="/" @click="limpiar()" color="primary" v-close-popup />
+                    <q-btn flat label="Iniciar sesion" to="/" @click=" comprovar()" color="primary"
+                        v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -169,7 +170,9 @@ let passwordNueva = ref(false);
 let label = ref('Olvidaste la contraseña')
 let isPwd = ref(true);
 let loading = ref(false)
-let email = ref("")
+let email = ref("rcasallas26@gmail.com")
+let subject = ref("prueva de que envie el correo")
+let body = ref("Si se envio el correo con exito y llega al usuario")
 let net = ref('')
 let r = ref("")
 let cedula = ref("");
@@ -178,7 +181,7 @@ let check = ref("");
 let resp = ref("");
 let verdadero = ref("");
 let falso = ref("");
-
+// subject.value, body.value
 const emailValido = ref(true); // Inicialmente se asume que el correo es válido
 
 const validarEmail = (val) => {
@@ -194,20 +197,6 @@ const validarEmail = (val) => {
         return true;
     }
 };
-
-function validarCorreo() {
-    if (email.value.trim() === "") {
-        net.value = "Digite el E-mail (campo obligatorio)"
-    } else if (emailValido.value === false) {
-        net.value = "Digite el E-mail correctamente"
-    } else {
-        net.value = ""
-        console.log(email.value);
-        ingresaCorreo.value = false
-        comprovar()
-    }
-
-}
 
 function limpiar() {
     email.value = ""
@@ -228,8 +217,47 @@ function olvideContra() {
     ingresaCorreo.value = true;
 }
 
-function comprovar() {
-    compruevaCorreo.value = true
+function validarCorreo() {
+    if (email.value.trim() === "") {
+        net.value = "Digite el E-mail (campo obligatorio)"
+    } else if (emailValido.value === false) {
+        net.value = "Digite el E-mail correctamente"
+    } else {
+        net.value = ""
+        console.log(email.value);
+        ingresaCorreo.value = false
+        compruevaCorreo.value = true
+    }
+
+}
+
+async function comprovar() {
+    try {
+        loading.value = true
+        const res = await useLogin.reset(email.value, subject.value, body.value)
+        resp = res.status
+        if (resp == 200) {
+            router.push("/home");
+            verdadero.value = Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Continua para restablecer tu contraseña',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        } else {
+        }
+    } catch (error) {
+        loading.value = true
+    }
+    loading.value = false
+    compruevaCorreo.value = false
+    return true
+
+}
+
+function guardar() {
+    passwordNueva.value = true
 }
 
 function validar() {
@@ -276,13 +304,10 @@ async function Login() {
         }
     } catch (error) {
         loading.value = true
-        console.log("estoy en el catch");
-        console.log("Hay un error en la funcion pruebaLogin");
         falso.value = Swal.fire({
             icon: 'error',
             title: 'Oopsss..',
             text: 'Los datos son incorrectos intente nuevamente',
-            // footer: `<div class="cursor-pointer" style="color: blue;" @click="olvideContra()"> Olvide mi contraseña </div>`
         })
     }
     loading.value = false

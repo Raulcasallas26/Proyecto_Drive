@@ -13,7 +13,7 @@ const httpUsuarios = {
             res.status(500).json({ mensaje: "Error al obtener los Usuarios", error })
         }
     },
-    
+
     postUsuarios: async (req, res) => {
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_NAME,
@@ -54,7 +54,7 @@ const httpUsuarios = {
                         curriculum: result.url,
                         RolUsuario: RolUsuario,
                         RedConocimiento: RedConocimiento
-                    }); 
+                    });
 
                     const salt = bcrypt.genSaltSync();
                     nuevoUsuario.password = bcrypt.hashSync(req.body.password, salt);
@@ -68,7 +68,7 @@ const httpUsuarios = {
         }
     },
 
-    putUsuarios : async (req, res) => {
+    putUsuarios: async (req, res) => {
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_NAME,
             api_key: process.env.CLOUDINARY_KEY,
@@ -92,14 +92,14 @@ const httpUsuarios = {
 
             let updatedData = {
                 nombre: nombre,
-                        apellidos: apellidos,
-                        cedula: cedula,
-                        telefono: telefono,
-                        email: email,
-                        password: password,
-                        perfilProfesional: perfilProfesional,
-                        RolUsuario: RolUsuario,
-                        RedConocimiento: RedConocimiento
+                apellidos: apellidos,
+                cedula: cedula,
+                telefono: telefono,
+                email: email,
+                password: password,
+                perfilProfesional: perfilProfesional,
+                RolUsuario: RolUsuario,
+                RedConocimiento: RedConocimiento
             };
 
             if (req.files && req.files.curriculum) {
@@ -126,7 +126,7 @@ const httpUsuarios = {
                 updatedData.curriculum = result.url;
             };
 
-        
+
             const buscarUsuario = await UsuariosModel.findByIdAndUpdate(
                 { _id: id },
                 { $set: updatedData },
@@ -155,6 +155,43 @@ const httpUsuarios = {
             usuarioAutenticado
         })
     },
+//     const sendEmail = async (email, subject, body) => {
+//         try {
+//             let pass = process.env.FROM_EMAIL_2FA;
+//             const transporter = nodemailer.createTransport({
+//                 host: "smtp.gmail.com",
+//                 port: 465,
+//                 secure: true,
+//                 auth: {
+//                     user: process.env.FROM_EMAIL,
+//                     pass, // naturally, replace both with your real credentials or an application-specific password
+//                 },
+//             });
+
+//             const options = () => {
+//                 return {
+//                     from: "Multichap" < ${ process.env.FROM_EMAIL }> ,
+//                         to: email,
+//                             subject: subject,
+//                                 text: body
+//             };
+//         };
+
+//         // Send email
+//         transporter.sendMail(options(), (error, info) => {
+//             if (error) {
+//                 return error;
+//             } else {
+//                 return res.status(200).json({
+//                     success: true,
+//                 });
+//             }
+//         });
+//     } catch(error) {
+
+//         return error;
+//     }
+// };
 }
 
 export default httpUsuarios
