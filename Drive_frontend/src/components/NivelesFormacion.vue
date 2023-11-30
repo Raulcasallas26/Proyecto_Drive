@@ -79,7 +79,7 @@
         </q-dialog>
     </div>
 </template>
-  
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useNivelesFormacionStore } from "../stores/Nivel_Formacion.js";

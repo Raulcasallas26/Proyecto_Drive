@@ -137,9 +137,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAmbientesFormacionStore } from "../stores/AmbientesFormacion.js";
+import { useNivelesFormacionStore } from "../stores/Nivel_Formacion.js";
 import { useLoginStore } from "../stores/login.js"
 import { load } from "../routes/direccion.js"
 const useambiente = useAmbientesFormacionStore();
+const useNivel = useNivelesFormacionStore();
 const useLogin = useLoginStore()
 let ambientess = ref([]);
 let modal = ref(false);
@@ -153,6 +155,13 @@ let Descripcion = ref("");
 let IdCentroFormacion = ref("");
 let archivoOEnlace = ref("");
 const loading = ref(false);
+
+async function obtenerformacion() {
+    let Niveles = await useNivel.getNivelesFormacion(useLogin.token);
+    console.log(Niveles);
+    formacion.value = Niveles.data.Nivel;
+}
+
 
 function mostrarAlerta(mensaje) {
   alert.value = true;

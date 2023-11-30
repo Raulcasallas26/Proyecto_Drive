@@ -116,14 +116,7 @@ let archivo = ref("");
 let denominacion = ref("");
 let version = ref("");
 let indice = ref(null);
-let opciones = [
-  "auxiliar",
-  "operario",
-  "técnico",
-  "profundización técnica",
-  "tecnólogo",
-  "especialización tecnológica",
-];
+
 
 function subir_archivo(event) {
   archivo.value = event.target.files[0]

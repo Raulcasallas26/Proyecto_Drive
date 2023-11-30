@@ -377,6 +377,21 @@ async function editarUser() {
     loading.value = true;
     try {
         console.log("hola estoy editando");
+
+        let UsuarioData = {
+            nombre: nombre.value,
+            apellidos: apellidos.value,
+            email: email.value,
+            cedula: cedula.value,
+            curriculum: curriculum.value,
+            telefono: telefono.value,
+            RolUsuario: RolUsuario.value,
+            password: password.value,
+        }
+        
+
+
+
         let r = await useUsuario.editUsuarios(
             indice.value,
             nombre.value,
