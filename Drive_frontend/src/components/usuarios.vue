@@ -384,27 +384,30 @@ async function editarUser() {
             cedula: cedula.value,
             telefono: telefono.value,
             email: email.value,
-            curriculum: curriculum.value,
             password: password.value,
+            perfilProfesional: perfilProfesional.value,
+            curriculum: curriculum.value,
+            RolUsuario: RolUsuario.value,
+            RedConocimiento: RedConocimiento.value,
         }
 
         if (RolUsuario.value && RolUsuario.value.value) {
-            UsuarioData.RolUsuario = UsuarioData.value.value
+            UsuarioData.RolUsuario = RolUsuario.value.value
         }
 
 
         let r = await useUsuario.editUsuarios(
             indice.value,
-            nombre.value,
-            apellidos.value,
-            cedula.value,
-            telefono.value,
-            email.value,
-            password.value,
-            perfilProfesional.value,
-            curriculum.value,
-            RolUsuario.value.value,
-            RedConocimiento.value,
+            UsuarioData.nombre,
+            UsuarioData.apellidos,
+            UsuarioData.cedula,
+            UsuarioData.telefono,
+            UsuarioData.email,
+            UsuarioData.password,
+            UsuarioData.perfilProfesional,
+            UsuarioData.curriculum,
+            UsuarioData.RolUsuario,
+            UsuarioData.RedConocimiento,
 
         );
         console.log("se insertaron los datos");

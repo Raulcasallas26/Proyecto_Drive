@@ -11,7 +11,7 @@ router.get("/",[validarJWT], httpUsuarios.getUsuarios),
 
   router.post("/", [
     check("nombre", "El nombre es obligatorio").trim().not().isEmpty(),
-    check("apellido", "el apellido es obligatorio",).trim().not().isEmpty().isString(),
+    check("apellidos", "el apellido es obligatorio",).trim().not().isEmpty().isString(),
     check("cedula", "el numero de cedula es obligatorio").trim().not().isEmpty().isNumeric(),
     check("cedula").custom(validarUnicos.validarCedula),
     check("telefono", "el telefono es obligatorio").trim().not().isEmpty().isNumeric(),
@@ -25,7 +25,7 @@ router.get("/",[validarJWT], httpUsuarios.getUsuarios),
 
 router.put("/:id", [
   check("nombre", "El nombre es obligatorio").notEmpty().trim().isString(),
-  check("apellido", "El apellido es obligatorio").notEmpty().trim().isString(),
+  check("apellidos", "El apellido es obligatorio").notEmpty().trim().isString(),
   check("cedula", "El numero de cedula es obligatorio").trim().not().isEmpty(),
   check("telefono", "El telefono es obligatorio").trim().not().isEmpty(),
   check("email", "El correo es obligatorio").trim().not().isEmpty(),

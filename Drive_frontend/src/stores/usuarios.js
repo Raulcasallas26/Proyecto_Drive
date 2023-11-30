@@ -50,11 +50,11 @@ export const useUsuariosStore = defineStore(
 
 
 
-        const editUsuarios = async (id, nombre, apellido, cedula, telefono, email, password, perfilProfesional, curriculum, RolUsuario, RedConocimiento) => {
+        const editUsuarios = async (id, nombre, apellidos, cedula, telefono, email, password, perfilProfesional, curriculum, RolUsuario, RedConocimiento) => {
             try {
                 const formData = new FormData();
                 formData.append("nombre", nombre);
-                formData.append("apellido", apellido);
+                formData.append("apellidos", apellidos);
                 formData.append("cedula", cedula);
                 formData.append("telefono", telefono);
                 formData.append("email", email);

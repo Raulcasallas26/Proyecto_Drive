@@ -24,7 +24,7 @@ const httpUsuarios = {
 
         try {
             const {
-                nombre, apellido, cedula, telefono, email, password, perfilProfesional, RolUsuario, RedConocimiento
+                nombre, apellidos, cedula, telefono, email, password, perfilProfesional, RolUsuario, RedConocimiento
             } = req.body;
             const { curriculum } = req.files;
             if (curriculum) {
@@ -45,7 +45,7 @@ const httpUsuarios = {
                 } else {
                     const nuevoUsuario = new UsuariosModel({
                         nombre: nombre,
-                        apellido: apellido,
+                        apellidos: apellidos,
                         cedula: cedula,
                         telefono: telefono,
                         email: email,
@@ -79,7 +79,7 @@ const httpUsuarios = {
         try {
             const { id } = req.params;
             const {
-                nombre, apellido, cedula, telefono, email, password, perfilProfesional, RolUsuario, RedConocimiento
+                nombre, apellidos, cedula, telefono, email, password, perfilProfesional, RolUsuario, RedConocimiento
             } = req.body;
 
 
@@ -92,7 +92,7 @@ const httpUsuarios = {
 
             let updatedData = {
                 nombre: nombre,
-                        apellido: apellido,
+                        apellidos: apellidos,
                         cedula: cedula,
                         telefono: telefono,
                         email: email,

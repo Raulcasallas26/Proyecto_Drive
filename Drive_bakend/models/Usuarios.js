@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const UsuariosSchema = new mongoose.Schema({
     nombre:{type:String, require: true},
-    apellido:{type:String, require: true},
+    apellidos:{type:String, require: true},
     cedula:{type:String, require: true, unique:true},
     telefono:{type:String, require: true},
     email:{type:String, require: true, unique:true}, 
