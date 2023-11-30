@@ -29,7 +29,7 @@ router.put("/:id", [
   check("cedula", "El numero de cedula es obligatorio").trim().not().isEmpty(),
   check("telefono", "El telefono es obligatorio").trim().not().isEmpty(),
   check("email", "El correo es obligatorio").trim().not().isEmpty(),
-  // check("email", "Formato de E-mail no valido").isEmail(),
+  check("email", "Formato de E-mail no valido").isEmail(),
   check("perfilProfesional", "El perfil profecional es obligatorio").notEmpty().trim().isString(),
   check("curriculum").optional(),
   check("RolUsuario", "El rol del usuario es obligatorio").notEmpty().trim().isString(),
