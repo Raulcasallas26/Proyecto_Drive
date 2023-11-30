@@ -381,15 +381,16 @@ async function editarUser() {
         let UsuarioData = {
             nombre: nombre.value,
             apellidos: apellidos.value,
-            email: email.value,
             cedula: cedula.value,
-            curriculum: curriculum.value,
             telefono: telefono.value,
-            RolUsuario: RolUsuario.value,
+            email: email.value,
+            curriculum: curriculum.value,
             password: password.value,
         }
-        
 
+        if (RolUsuario.value && RolUsuario.value.value) {
+            UsuarioData.RolUsuario = UsuarioData.value.value
+        }
 
 
         let r = await useUsuario.editUsuarios(
